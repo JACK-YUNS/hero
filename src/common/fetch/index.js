@@ -25,7 +25,7 @@ const setUserInfo = function (user) {
 export default function fetch(options) {
   return new Promise((resolve, reject) => {
     // https://github.com/mzabriskie/axios
-
+  console.info(server_base_url);
     //创建一个axios实例
     const instance = axios.create({
       //设置默认根地址
@@ -34,13 +34,15 @@ export default function fetch(options) {
       timeout: 2000,
       //设置请求时的header
       headers: {
-        'Github-url': 'https://github.com/zzmhot/vue-admin',
+        'Authorization': 'https://github.com/zzmhot/vue-admin',
         'X-Powered-By': 'zzmhot'
       }
     })
     //请求处理
+    console.info(options)
     instance(options)
       .then(({data: {code, msg, data}}) => {
+      console.info(data)
         //请求成功时,根据业务判断状态
         if (code === port_code.success) {
           resolve({code, msg, data})

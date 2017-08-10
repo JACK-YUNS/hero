@@ -55,8 +55,10 @@
           //登录提交
           this.$fetch.api_user.login(this.form)
             .then(({data, msg}) => {
+              console.log(data.token)
               this.set_user_info({
                 user: data,
+                token:token,
                 login: true
               })
               this.$message.success(msg)

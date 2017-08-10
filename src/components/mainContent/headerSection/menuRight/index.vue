@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-right" v-if="get_user_info.login">
+  <div class="menu-right" v-if="true">
     <div class="notification-menu">
       <el-dropdown trigger="click" class="notification-list">
         <div class="notification-btn">
