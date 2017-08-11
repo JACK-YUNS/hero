@@ -107,12 +107,12 @@
           width="80">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="userName"
           label="姓名"
           >
         </el-table-column>
         <el-table-column
-          prop="goodsId"
+          prop="agentCode"
           label="工号"
          >
           <!--<template scope="props">
@@ -139,11 +139,12 @@
           label="所在组">
         </el-table-column>
         <el-table-column
-          prop="work"
+          prop="gradeLevel"
           label="职级">
         </el-table-column>
         <el-table-column
-          prop="time"
+          prop="companyDate"
+          :formatter="dateFormat"
           label="入职时间">
         </el-table-column>
         <el-table-column
@@ -183,6 +184,8 @@
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios';
   import {port_user, port_code} from 'common/port_uri'
+  import moment from "moment"
+
 
   export default{
     data(){
@@ -271,7 +274,15 @@
       this.get_table_data()
     },
     methods: {
-    	updateCity: function () {
+      //时间格式化
+      dateFormat:function(row, column) {
+        var date = row[column.property];
+        if (date == undefined) {
+          return "";
+        }
+        return moment(date).format("YYYY-MM-DD");
+      },
+    updateCity: function () {
                 for (var i in this.arr) {
                     var obj = this.arr[i];
                     if (obj.name == this.prov) {
@@ -389,7 +400,7 @@
         .then(response => {
           this.table_data = response.data.records
           this.currentPage = response.data.current
-          this.total = resonse.data.total
+          this.total = response.data.total
           this.load_data = false
         })
         .catch(() => {
