@@ -10,7 +10,7 @@
  */
 
 //数据列表
-export const list = "/api/get/table/list"
+export const list = "/api/user/page"
 //根据id查询数据
 export const get = "/api/get/table/get"
 //根据id删除数据

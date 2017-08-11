@@ -89,7 +89,7 @@
 				></el-autocomplete>
 				<el-button type="success">确定</el-button>
 		</div>
-    	
+
       <el-table
         :data="table_data"
         v-loading="load_data"
@@ -120,7 +120,7 @@
           </template>-->
         </el-table-column>
         <el-table-column
-          prop="goodsName"
+          prop="mobile"
           label="手机号"
           width="100">
         </el-table-column>
@@ -182,10 +182,11 @@
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
   import axios from 'axios';
+  import {port_user, port_code} from 'common/port_uri'
 
   export default{
     data(){
-    	 
+
       return {
       			arr: [
 								{name: "选择省份", sub: [{name: "请选择"}], type: 1},
@@ -264,7 +265,7 @@
       bottomToolBar
     },
      computed: {
-   
+
   },
     created(){
       this.get_table_data()
@@ -363,7 +364,7 @@
       handleSelect(item) {
         console.log(item);
       },
-    
+
       //刷新
       on_refresh(){
         this.get_table_data()
@@ -371,31 +372,31 @@
       //获取数据
       get_table_data(){
         this.load_data = false
-        axios.get('http://jspang.com/DemoApi/oftenGoods.php')
-		      .then(response => {
-		        console.log(response)
-		        this.table_data=response.data;
-		      })
-		      .catch(error => {
-		//          console.log(error)
-						this.load_data = false
-		        alert('网络错误，不能访问')
-		      })
-//      this.$fetch.api_table.list({
-//        page: this.currentPage,
-//        length: this.length
-//      })
-//        .then(({data: {result, page, total}}) => {
-//          this.table_data = result
-//          this.currentPage = page
-//          this.total = total
-//          this.load_data = false
-//        })
-//        .catch(() => {
-//          this.load_data = false
-//        })
+//        axios.get('http://jspang.com/DemoApi/oftenGoods.php')
+//		      .then(response => {
+//		        console.log(response)
+//		        this.table_data=response.data;
+//		      })
+//		      .catch(error => {
+//		//          console.log(error)
+//						this.load_data = false
+//		        alert('网络错误，不能访问')
+//		      })
+      this.$fetch.api_table.list({
+        current: this.currentPage,
+        pageSize: this.length
+      })
+        .then(response => {
+          this.table_data = response.data.records
+          this.currentPage = response.data.current
+          this.total = resonse.data.total
+          this.load_data = false
+        })
+        .catch(() => {
+          this.load_data = false
+        })
       },
-  
+
       //单个删除
       delete_data(item){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {

@@ -15,6 +15,9 @@ import router from 'src/router'
 import {Message} from 'element-ui'
 import store from 'store'
 import {SET_USER_INFO} from 'store/actions/type'
+import {cookieStorage} from 'common/storage'
+
+
 import {server_base_url} from 'common/config'
 
 //设置用户信息action
@@ -22,11 +25,15 @@ const setUserInfo = function (user) {
   store.dispatch(SET_USER_INFO, user)
 }
 
+
+
+
+
 export default function fetch(options) {
   return new Promise((resolve, reject) => {
     // https://github.com/mzabriskie/axios
-  console.info(server_base_url);
     //创建一个axios实例
+    const token = cookieStorage.get('user_info').token || '';
     const instance = axios.create({
       //设置默认根地址
       baseURL: server_base_url,
@@ -34,15 +41,12 @@ export default function fetch(options) {
       timeout: 2000,
       //设置请求时的header
       headers: {
-        'Authorization': 'https://github.com/zzmhot/vue-admin',
-        'X-Powered-By': 'zzmhot'
+        'Authorization': token
       }
     })
     //请求处理
-    console.info(options)
     instance(options)
       .then(({data: {code, msg, data}}) => {
-      console.info(data)
         //请求成功时,根据业务判断状态
         if (code === port_code.success) {
           resolve({code, msg, data})

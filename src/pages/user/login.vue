@@ -24,9 +24,10 @@
   </div>
 </template>
 <script type="text/javascript">
-  import {mapActions} from 'vuex'
-  import {port_user, port_code} from 'common/port_uri'
+  import {mapGetters, mapActions} from 'vuex'
+  import {port_table, port_code} from 'common/port_uri'
   import {SET_USER_INFO} from 'store/actions/type'
+  import {GET_USER_INFO} from 'store/getters/type'
 
   export default{
     data(){
@@ -43,6 +44,11 @@
         load_data: false
       }
     },
+    computed: {
+      ...mapGetters({
+        get_user_info: GET_USER_INFO
+      })
+    },
     methods: {
       ...mapActions({
         set_user_info: SET_USER_INFO
@@ -55,23 +61,22 @@
           //登录提交
           this.$fetch.api_user.login(this.form)
             .then(({data, msg}) => {
-              console.log(data.token)
               this.set_user_info({
                 user: data,
-                token:token,
+                token:data.token,//用户登录后的token
                 login: true
               })
               this.$message.success(msg)
               setTimeout(this.$router.push({path: '/'}), 500)
             })
-            .catch(({code}) => {
+            .catch(({code,msg}) => {
               this.load_data = false
-              if (code === port_code.error) {
-                this.$notify.info({
-                  title: '温馨提示',
-                  message: '账号和密码都为：admin'
-                })
-              }
+//              if (code === port_code.error) {
+//                this.$notify.info({
+//                  title: '温馨提示',
+//                  message: msg
+//                })
+//              }
             })
         })
       }
