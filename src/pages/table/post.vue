@@ -41,7 +41,9 @@
 		    </el-option>
 		  </el-select>
         <el-button type="success">搜索</el-button>
-				<el-button type="success">新建</el-button>
+				<router-link :to="{name: 'posterAdd'}" tag="span">
+	        <el-button type="success">新建</el-button>
+	      </router-link>
 		</div>
     	
       <el-table
@@ -61,7 +63,7 @@
           width="80">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="title"
           label="主标题"
           >
         </el-table-column>
@@ -85,7 +87,8 @@
           sortable>
         </el-table-column>
         <el-table-column
-          prop="zip"
+          prop="aTime"
+          :formatter="dateFormat"
           label="创建时间"
           width="120">
         </el-table-column>
@@ -115,7 +118,7 @@
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-size="10"
+            :page-size=length
             layout="total, prev, pager, next"
             :total="total">
           </el-pagination>
@@ -126,6 +129,7 @@
 </template>
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
+  import moment from "moment"
   import axios from 'axios';
 
   export default{
@@ -140,7 +144,7 @@
         //当前页码
         currentPage: 1,
         //数据总条目
-        total: 100,
+        total: 0,
         //每页显示多少条数据
         length: 15,
         //请求时的loading效果
@@ -196,6 +200,14 @@
       this.get_table_data()
     },
     methods: {
+    	//时间格式化
+      dateFormat:function(row, column) {
+        var date = row[column.property];
+        if (date == undefined) {
+          return "";
+        }
+        return moment(date).format("YYYY-MM-DD");
+      },
     	updateCity: function () {
                 for (var i in this.arr) {
                     var obj = this.arr[i];
@@ -297,29 +309,19 @@
       //获取数据
       get_table_data(){
         this.load_data = false
-        axios.get('http://jspang.com/DemoApi/oftenGoods.php')
-		      .then(response => {
-		        console.log(response)
-		        this.table_data=response.data;
-		      })
-		      .catch(error => {
-		//          console.log(error)
-						this.load_data = false
-		        alert('网络错误，不能访问')
-		      })
-//      this.$fetch.api_table.list({
-//        page: this.currentPage,
-//        length: this.length
-//      })
-//        .then(({data: {result, page, total}}) => {
-//          this.table_data = result
-//          this.currentPage = page
-//          this.total = total
-//          this.load_data = false
-//        })
-//        .catch(() => {
-//          this.load_data = false
-//        })
+        this.$fetch.api_wechat.posterList({
+          current: this.currentPage,
+          pageSize: this.length
+        })
+          .then(response => {
+	          this.table_data = response.data.records
+	          this.currentPage = response.data.current
+	          this.total = response.data.total
+	          this.load_data = false
+	        })
+          .catch(() => {
+            this.load_data = false
+          })
       },
   
       //单个删除

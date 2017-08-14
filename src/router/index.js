@@ -59,6 +59,14 @@ import homeRoleComponent from 'pages/home/role'
 import homeUserComponent from 'pages/home/user'
 //homeUseradd table
 import homeUseraddComponent from 'pages/home/userAdd'
+//wordadd newadd
+import wordAddComponent from 'pages/newadd/wordadd'
+//posteradd newadd
+import posterAddComponent from 'pages/newadd/posteradd'
+//templateadd newadd
+import templateAddComponent from 'pages/newadd/templateadd'
+//articleadd newadd
+import articleAddComponent from 'pages/newadd/articleadd'
 Vue.use(VueRouter)
 
 //使用AMD方式加载
@@ -156,6 +164,38 @@ const routes = [{
     component: saveTableComponent,
     meta: {
       title: "添加数据",
+      auth: true
+    }
+  }, {
+    path: '/newadd/add',
+    name: 'wordAdd',
+    component: wordAddComponent,
+    meta: {
+      title: "新建金句",
+      auth: true
+    }
+  }, {
+    path: '/newadd/add',
+    name: 'posterAdd',
+    component: posterAddComponent,
+    meta: {
+      title: "新建海报",
+      auth: true
+    }
+  }, {
+    path: '/newadd/add',
+    name: 'templateAdd',
+    component: templateAddComponent,
+    meta: {
+      title: "新建模板",
+      auth: true
+    }
+  }, {
+    path: '/newadd/add',
+    name: 'articleAdd',
+    component: articleAddComponent,
+    meta: {
+      title: "新建文章",
       auth: true
     }
   }, {

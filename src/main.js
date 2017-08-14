@@ -32,6 +32,12 @@ import App from './App'
 //导入mock数据
 // import './mock'
 
+//引入带样式编辑器
+import VueQuillEditor from 'vue-quill-editor'
+
+//使用vue-quill-editor
+Vue.use(VueQuillEditor)
+
 //使用element-ui
 Vue.use(ElementUI)
 
