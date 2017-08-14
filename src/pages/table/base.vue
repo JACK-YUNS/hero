@@ -104,16 +104,18 @@
         <el-table-column
           type="index"
           label="序号"
-          width="80">
+          width="50">
         </el-table-column>
         <el-table-column
           prop="userName"
           label="姓名"
+          width="100"
           >
         </el-table-column>
         <el-table-column
           prop="agentCode"
           label="工号"
+          width="130"
          >
           <!--<template scope="props">
             <span v-text="props.row.sex == 1 ? '男' : '女'"></span>
@@ -122,20 +124,20 @@
         <el-table-column
           prop="mobile"
           label="手机号"
-          width="100">
+          width="130">
         </el-table-column>
         <el-table-column
-          prop="birthday"
+          prop="area.areaName"
           label="所在区"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="zip"
+          prop="area.deptName"
           label="所在部"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="area.groupName"
           label="所在组">
         </el-table-column>
         <el-table-column
@@ -171,7 +173,7 @@
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-size="10"
+            :page-size="length"
             layout="total, prev, pager, next"
             :total="total">
           </el-pagination>
@@ -237,9 +239,9 @@
         //当前页码
         currentPage: 1,
         //数据总条目
-        total: 100,
+        total: 0,
         //每页显示多少条数据
-        length: 15,
+        length: 20,
         //请求时的loading效果
         load_data: true,
         //批量选择数组
