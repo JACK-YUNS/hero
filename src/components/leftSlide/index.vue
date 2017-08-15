@@ -64,7 +64,7 @@
           }]
         }, {
           title: "人员",
-          path: "/table",
+          path: "/list",
           icon: "fa-table",
           child: [{
             title: "概况",

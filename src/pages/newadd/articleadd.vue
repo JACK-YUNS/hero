@@ -23,6 +23,9 @@
 					      <el-radio label="趣味"></el-radio>
 					    </el-radio-group>
 					  </el-form-item>
+					  <el-form-item >
+					    <div id="summernote"></div>
+					  </el-form-item>
 					  
             <el-form-item label="类型：">
 					    <el-radio-group v-model="form.articletype">
@@ -152,6 +155,56 @@
     },
     components: {
       panelTitle
+    },
+    mounted(){
+    	$('#summernote').summernote({
+    		lang: 'zh-CN',
+    		placeholder: '请输入内容...',
+    		height: 300,
+    		minHeight: null,
+    		maxHeight: null,
+    		focus: true,
+//  		toolbar: [
+//  		  ['style',['bold','italic','clear']],
+//  		  ['fontsize',['fontsize']],
+//  		  ['para',['ul','ol','paragraph']],
+//  		  ['insert',['picture','link']]
+//  		],
+    		callback: {
+    			onImageUpload : function(files){
+                QiniuUploadUtil.uploadFile(files[0], uptoken, function(data){
+                    // 插入到summernote
+                    $this.summernote('insertImage', qiniuDomain + data['key'], function($image) {
+                        // todo，后续可以对image对象增加新的css式样等等，这里默认
+                        $image.css({
+                            display: '',
+                            width: '100%'
+                        });
+                    });
+                }, function(){
+                    alert("上传失败");
+                });                 
+            }
+    		}
+    	}),
+    	function sendFile(file){
+    	API.getImageToken().then(response => {
+    		console.log('富文本编辑器--getImageToken==Success>>>token='+response.token)
+    		var data = new FormData()
+    		data.append('file',file)
+    		data.append('token',response.token)
+    		API.unloadImage(data).then(response => {
+    			var imageQiNiuUrl = API.QiNiu_HOST + response.key
+    			$('#summernote').summernote('editor.insertImage',imageQiNiuUrl)
+    		})
+    	})
     }
+    }
+    
   }
 </script>
+<style scoped="scoped">
+	.note-image-input ,.form-control {
+     display: block; 
+}
+</style>
