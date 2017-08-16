@@ -2,6 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var webpack = require("webpack")
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
@@ -28,9 +29,17 @@ module.exports = {
       'store': resolve('src/store'),
       'pages': resolve('src/pages'),
       'plugins': resolve('src/plugins'),
-      'components': resolve('src/components')
+      'components': resolve('src/components'),
+      'jquery': 'jquery' 
     }
   },
+   // 增加一个plugins
+   plugins: [
+      new webpack.ProvidePlugin({
+          $: "jquery",
+          jQuery: "jquery"
+      })
+   ],
   module: {
     rules: [
       {

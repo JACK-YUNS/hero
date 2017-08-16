@@ -130,3 +130,9 @@
     }
   }
 </script>
+<style scoped="scoped">
+	.el-upload__input {
+    display: none!important;
+}
+
+</style>
