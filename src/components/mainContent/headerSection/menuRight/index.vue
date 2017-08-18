@@ -7,7 +7,7 @@
           <span v-text="get_user_info.user.name"></span>
           <span class="icon"></span>
         </div>
-        <el-dropdown-menu slot="dropdown" class="dropdown-menu">
+        <el-dropdown-menu slot="dropdown">
           <el-dropdown-item class="dropdown-list">
             <a href="javascript:" class="dropdown-btn" @click="user_click(0)">
               <i class="icon fa fa-user"></i>

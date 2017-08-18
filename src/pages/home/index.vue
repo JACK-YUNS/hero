@@ -82,7 +82,8 @@
     mixins: [treeter],
     components: {
       'imp-panel': panel,
-      'el-select-tree': selectTree
+      'el-select-tree': selectTree,
+      panelTitle
     },
     data(){
       return {

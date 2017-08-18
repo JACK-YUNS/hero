@@ -46,6 +46,20 @@
     data(){
       return {
         nav_menu_data: [{
+          title: "智慧营业区",
+          path: "/business",
+          icon: "fa-list",
+          child: [{
+            title: "基本设置",
+            path: "/business/basic"
+          }, {
+            title: "早会流程",
+            path: "/business/goodmorning"
+          }, {
+            title: "团队风采",
+            path: "/business/team"
+          }]
+        },{
           title: "系统管理",
           path: "/home",
           icon: "fa-home",
