@@ -74,7 +74,7 @@
          >
         </el-table-column>
         <el-table-column
-          prop="goodsName"
+        	prop="1"
           label="分类"
           width="100">
         </el-table-column>
@@ -135,6 +135,7 @@
     	 
       return {
         restaurants: [],
+        aType:111,
         state4: '',
         timeout:  null,
 //    	el: '#test',
@@ -206,30 +207,7 @@
         }
         return moment(date).format("YYYY-MM-DD");
       },
-    	updateCity: function () {
-                for (var i in this.arr) {
-                    var obj = this.arr[i];
-                    if (obj.name == this.prov) {
-                        this.cityArr = obj.sub;
-                        break;
-                    }
-                }
-                this.city = this.cityArr[1].name;
-            },
-            updateDistrict: function () {
-                for (var i in this.cityArr) {
-                    var obj = this.cityArr[i];
-                    if (obj.name == this.city) {
-                        this.districtArr = obj.sub;
-                        break;
-                    }
-                }
-                if(this.districtArr && this.districtArr.length > 0 && this.districtArr[1].name) {
-                    this.district = this.districtArr[1].name;
-                } else {
-                    this.district = '';
-                }
-            },
+    	
             loadAll() {
         return [
           { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
@@ -312,7 +290,10 @@
           pageSize: this.length
         })
           .then(response => {
+          	
             this.table_data = response.data.records
+            //this.table_data[0].set("aType","1");
+            console.log(this.table_data)
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
 	          this.load_data = false
@@ -423,19 +404,7 @@
         });
       }
     },
-    beforeMount: function () {
-            this.updateCity();
-            this.updateDistrict();
-        },
-        watch: {
-            prov: function () {
-                this.updateCity();
-                this.updateDistrict();
-            },
-            city: function () {
-                this.updateDistrict();
-            }
-        },
+   
     mounted() {
       this.restaurants = this.loadAll();
     }

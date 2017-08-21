@@ -5,7 +5,7 @@
          v-loading="load_data"
          element-loading-text="拼命加载中">
       <el-row>
-        <el-col :span="24">
+        <el-col :span="18">
           <el-form ref="form" :model="form">
             <el-form-item  prop="name">
             	<p>选择早会日期</p>
@@ -17,7 +17,7 @@
               <el-button>8月5日</el-button>
               <el-button>8月6日</el-button>
             </el-form-item>
-           <el-form-item  prop="name">
+           <el-form-item  :model="form">
             	<p>添加流程<span class="rull">每个环节名称不超过14个汉字</span></p>
               <el-form-item label="1" prop="name">
 	              <el-input v-model="form.name" placeholder="太平之歌" style="width: 300px;"></el-input>
@@ -28,10 +28,16 @@
 	            <el-form-item label="3" prop="subname">
 	              <el-input v-model="form.subname" placeholder="蓄客播报" style="width: 300px;"></el-input>
 	            </el-form-item>
-	            <el-form-item label="5" prop="subname">
-	              <el-input v-model="form.subname" placeholder="请输入第四个环节" style="width: 300px;"></el-input>
-	            </el-form-item>
+	            <el-form :inline="true" :model="form" class="demo-form-inline">
+						  <el-form-item label="4">
+						    <el-input v-model="form.user" placeholder="请输入第四个环节" style="width: 300px;"></el-input>
+						  </el-form-item>
+						  <el-form-item>
+						   <el-button type="success" icon="plus" size="primary">添加流程节点</el-button>
+						  </el-form-item>
+						</el-form>
 	          </el-form-item>
+	           
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
               <el-button @click="$router.back()">取消</el-button>
@@ -51,9 +57,11 @@
         form: {
           name: null,
           subname: '',
+          user: '',
           age: 20,
           type: [],
           desc: '',
+           user: '',
           resource:'',
           num: 1,
           choose:'',
@@ -61,6 +69,10 @@
           birthday: this.$dateFormat(new Date, "yyyy-MM-dd"),
           address: null,
           zip: 412300
+        },
+        formInline: {
+          user: '',
+          region: ''
         },
         route_id: this.$route.params.id,
         load_data: false,
