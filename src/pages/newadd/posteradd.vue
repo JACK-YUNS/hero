@@ -7,8 +7,8 @@
       <el-row>
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-            <el-form-item label="主标题:" prop="name">
-              <el-input v-model="form.name" placeholder="请输入内容" style="width: 500px;"></el-input>
+            <el-form-item label="主标题:" prop="title">
+              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="类型：">
 					    <el-radio-group v-model="form.resource">
@@ -31,14 +31,14 @@
 					  </el-form-item>
             <el-form-item label="是否首页展示：">
 					    <el-radio-group v-model="form.choose">
-					      <el-radio label="是"></el-radio>
+					      <el-radio label="">是</el-radio>
 					      <el-radio label="否"></el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="是否首页展示：">
 					    <el-radio-group v-model="form.select">
-					      <el-radio label="不推荐"></el-radio>
-					      <el-radio label="推荐"></el-radio>
+					      <el-radio label="1">不推荐</el-radio>
+					      <el-radio label="2">推荐</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
             <el-form-item>
@@ -81,17 +81,22 @@
       }
     },
     created(){
-      this.route_id && this.get_form_data()
+      this.route_id 
+      console.log(this.route_id)
+      if(this.route_id>0){
+      	this.get_form_data();
+      	console.log(this.route_id)
+      }
     },
     methods: {
       //获取数据
       get_form_data(){
         this.load_data = true
-        this.$fetch.api_wechat.templateList({
+        this.$fetch.api_wechat.findPosterById({
           id: this.route_id
         })
-          .then(({data}) => {
-            this.form = data
+          .then(response => {	
+            this.form = response.data
             this.load_data = false
           })
           .catch(() => {

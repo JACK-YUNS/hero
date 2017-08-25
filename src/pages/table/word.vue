@@ -4,9 +4,9 @@
       <el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
-      <router-link :to="{name: 'tableAdd'}" tag="span">
+      <!--<router-link :to="{name: 'tableAdd'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
-      </router-link>
+      </router-link>-->
     </panel-title>
     <div class="panel-body">
     	<div id="example"> 
@@ -41,10 +41,9 @@
 		    </el-option>
 		  </el-select>
         <el-button type="success">搜索</el-button>
-        <router-link :to="{name: 'wordAdd'}" tag="span">
+        <router-link :to="{name: 'wordAdd',params: {id: ''}}" tag="span">
 	        <el-button type="success">新建</el-button>
 	      </router-link>
-				
 		</div>
     	
       <el-table
@@ -61,12 +60,17 @@
         <el-table-column
           type="index"
           label="序号"
-          width="80">
+          width="80"
+          >
         </el-table-column>
         <el-table-column
-          prop="title"
           label="主标题"
           >
+           <template scope="props">
+           	<router-link :to="{name: 'wordAdd',params: {id: props.row.id}}" tag="span">
+			        <span class="link-type">{{props.row.title}}</span>
+			      </router-link>
+	        </template>
         </el-table-column>
         <el-table-column
           prop="subtitle"
@@ -74,15 +78,20 @@
          >
         </el-table-column>
         <el-table-column
-        	prop="1"
+        	 prop="assortmentType"
           label="分类"
+          :formatter="typeFormat"
           width="100">
         </el-table-column>
         <el-table-column
-          prop="birthday"
+          aTime="aTime"
+          :formatter="sortFormat"
           label="排序"
           width="120"
           sortable>
+          <template scope="props">
+	            <span class="link-type" @click="handleUpdate(props.row)">{{props.row.sort | sortFormat}}</span>
+          </template>
         </el-table-column>
         <el-table-column
            prop="aTime"
@@ -95,13 +104,30 @@
           width="200"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit" @click="open4" prop="do">
-	            <span v-text="props.row.do == 0 ? '取消模板' : '设置模板'"></span>
+            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate">
+	            <span>取消模板</span>
 	          </el-button>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index, props.row)">删除</el-button>
+	          <el-button type="info" size="small" icon="edit"  prop="template" v-else @click="addtemplate">
+	            <span>设置模板</span>
+	          </el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data('id'+'='+props.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      
+       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+	      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
+	        <el-form-item label="排序">
+	          <el-input ></el-input>
+	        </el-form-item>
+	      </el-form>
+	      <div slot="footer" class="dialog-footer">
+	        <el-button @click="dialogFormVisible = false">取 消</el-button>
+	        <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
+	        <el-button v-else type="primary" @click="update">确 定</el-button>
+	      </div>
+	    </el-dialog>
+				
       <bottom-tool-bar>
         <!--<el-button
           type="danger"
@@ -134,8 +160,27 @@
     data(){
     	 
       return {
+      	
+        dialogFormVisible: false,
+        dialogStatus: '',
+        textMap: {
+          update: '编辑',
+          create: '创建'
+        },
+        dialogPvVisible: false,
+       
+      	temp: {
+          id: undefined,
+          importance: 0,
+          remark: '',
+          timestamp: 0,
+          title: '',
+          subtitle:'',
+          type: '',
+          status: 'published'
+        },
+        formLabelWidth: '120px',
         restaurants: [],
-        aType:111,
         state4: '',
         timeout:  null,
 //    	el: '#test',
@@ -198,6 +243,33 @@
     created(){
       this.get_table_data()
     },
+     filters: {
+      statusFilter(status) {
+        const statusMap = {
+          published: 'success',
+          draft: 'gray',
+          deleted: 'danger'
+        };
+        return statusMap[status]
+      },
+      typeFilter(type) {
+        return calendarTypeKeyValue[type]
+      },
+      sortFormat:function(sort) {
+        
+        var myDate=new Date('2020-01-01 00:00:00')
+        if (sort < myDate.getTime()) {
+          return 0;
+        }
+        else if(sort == null){
+        	return 0;
+        }
+        else{
+        	 return sort - myDate.getTime();
+        }
+       
+      }
+    },
     methods: {
     	//时间格式化
       dateFormat:function(row, column) {
@@ -207,7 +279,29 @@
         }
         return moment(date).format("YYYY-MM-DD");
       },
-    	
+      typeFormat:function(row, column) {
+        var aType = row[column.property];
+        if (aType == undefined) {
+          return "";
+        }
+        var arr = ['','保险理念 ','励志成长 ','生活锦囊 ','增员攻略'];
+        return arr[aType];
+      },
+    	sortFormat:function(row, column,cellValue) {
+        var aSort = row[column.property];
+        var aTime = row['aTime'];
+        var myDate=new Date('2020-01-01 00:00:00')
+        if (aSort == aTime) {
+          return 0;
+        }
+        else if(aSort == null){
+        	return 0;
+        }
+        else{
+        	 return aSort - myDate.getTime();
+        }
+       
+      },
             loadAll() {
         return [
           { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
@@ -289,10 +383,8 @@
           current: this.currentPage,
           pageSize: this.length
         })
-          .then(response => {
-          	
+          .then(response => {	
             this.table_data = response.data.records
-            //this.table_data[0].set("aType","1");
             console.log(this.table_data)
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
@@ -310,8 +402,9 @@
           cancelButtonText: '取消',
           type: 'warning'
         })
-          .then((index, row) => {
+          .then((id) => {
             this.load_data = true;
+            console.log(item)
             try{
                         this.$message({
                             type: 'success',
@@ -326,13 +419,13 @@
                     });
                     console.log('删除失败')
                 }
-//          this.$fetch.api_table.del(item)
-//            .then(({msg}) => {
-//              this.get_table_data()
-//              this.$message.success(msg)
-//            })
-//            .catch(() => {
-//            })
+            this.$fetch.api_wechat.delImage(item)
+              .then(({msg}) => {
+                this.get_table_data()
+                this.$message.success(msg)
+              })
+              .catch(() => {
+              })
           })
           .catch(() => {
           })
@@ -357,7 +450,7 @@
             this.load_data = true
 //          this.table_data=[];
             if(this.batch_select){
-            	console.log(this.batch_select)
+//          	console.log(this.batch_select)
             	this.load_data = false;
             	this.table_data.splice(index, this.batch_select.length);
             }
@@ -372,35 +465,61 @@
           .catch(() => {
           })
       },
-       open4() {
-        const h = this.$createElement;
-        this.$msgbox({
-          title: '消息',
-          message: h('p', null, [
-            h('span', null, '确定要取消模板吗？')
-          ]),
-          showCancelButton: true,
+			//删除模板
+       deltemplate() {
+         this.$confirm('请确定是否取消模板?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              instance.confirmButtonText = '执行中...';
-              setTimeout(() => {
-                done();
-                setTimeout(() => {
-                  instance.confirmButtonLoading = false;
-                }, 300);
-              }, 3000);
-            } else {
-              done();
-            }
-          }
-        }).then(action => {
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
           this.$message({
             type: 'info',
-            message: '更改成功'
-          });
+            message: '已取消删除'
+          });          
+        });
+      },
+			//设置模板
+			addtemplate(){
+				
+			},
+       handleUpdate(row) {
+        this.temp = Object.assign({}, row);
+        this.dialogStatus = 'update';
+        this.dialogFormVisible = true;
+      },
+      create() {
+        this.temp.id = parseInt(Math.random() * 100) + 1024;
+        this.temp.timestamp = +new Date();
+        this.temp.author = '原创作者';
+        this.list.unshift(this.temp);
+        this.dialogFormVisible = false;
+        this.$notify({
+          title: '成功',
+          message: '创建成功',
+          type: 'success',
+          duration: 2000
+        });
+      },
+      update() {
+        this.temp.timestamp = +this.temp.timestamp;
+        for (const v of this.list) {
+          if (v.id === this.temp.id) {
+            const index = this.list.indexOf(v);
+            this.list.splice(index, 1, this.temp);
+            break;
+          }
+        }
+        this.dialogFormVisible = false;
+        this.$notify({
+          title: '成功',
+          message: '更新成功',
+          type: 'success',
+          duration: 2000
         });
       }
     },
@@ -413,4 +532,5 @@
 <style scoped="scoped">
  .el-select{margin-bottom: 10px;}
  .el-autocomplete{margin-bottom: 10px;}
+ .link-type{color: #007ACC;}
 </style>

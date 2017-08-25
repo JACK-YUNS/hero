@@ -69,12 +69,16 @@ import templateAddComponent from 'pages/newadd/templateadd'
 import articleAddComponent from 'pages/newadd/articleadd'
 //meetingadd newadd
 import meetingAddComponent from 'pages/newadd/meetingadd'
+//imagesadd newadd
+import imagesAddComponent from 'pages/newadd/imagesadd'
 //basic business
 import basicComponent from 'pages/business/basic'
 //goodmorning business
 import goodmorningComponent from 'pages/business/goodmorning'
 //team business
 import teamComponent from 'pages/business/team'
+//knowledge business
+import knowledgeComponent from 'pages/business/knowledge'
 Vue.use(VueRouter)
 
 //使用AMD方式加载
@@ -215,6 +219,14 @@ const routes = [{
       auth: true
     }
   }, {
+    path: '/newadd/add',
+    name: 'imagesAdd',
+    component: imagesAddComponent,
+    meta: {
+      title: "上传图片",
+      auth: true
+    }
+  }, {
     path: '/charts/bar',
     name: 'chartsBar',
     component: barChartsComponent,
@@ -300,6 +312,14 @@ const routes = [{
     component: teamComponent,
      meta: {
       title: "团队风采",
+      auth: true
+    }
+  }, {
+    path: '/business/knowledge',
+    name: 'business',
+    component: knowledgeComponent,
+     meta: {
+      title: "长见识",
       auth: true
     }
   }]

@@ -7,20 +7,20 @@
       <el-row>
         <el-col :span="20">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-            <el-form-item label="主标题:" prop="name">
-              <el-input v-model="form.name" placeholder="请输入内容" style="width: 500px;"></el-input>
+            <el-form-item label="主标题:" prop="title">
+              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
-            <el-form-item label="副标题:" prop="subname">
-              <el-input v-model="form.subname" placeholder="请输入内容" style="width: 500px;"></el-input>
+            <el-form-item label="副标题:" prop="subtitle">
+              <el-input v-model="form.subtitle" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="分类：">
-					    <el-radio-group v-model="form.resource">
-					      <el-radio label="咨询-理财"></el-radio>
-					      <el-radio label="咨询-生活"></el-radio>
-					      <el-radio label="咨询-教育"></el-radio>
-					      <el-radio label="咨询-房产"></el-radio>
-					      <el-radio label="保险意识"></el-radio>
-					      <el-radio label="趣味"></el-radio>
+					    <el-radio-group v-model="form.assortmentType">
+					      <el-radio label="1">咨询-理财</el-radio>
+					      <el-radio label="2">咨询-生活</el-radio>
+					      <el-radio label="3">咨询-教育</el-radio>
+					      <el-radio label="4">咨询-房产</el-radio>
+					      <el-radio label="5">保险意识</el-radio>
+					      <el-radio label="6">趣味</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item >
@@ -28,22 +28,22 @@
 					  </el-form-item>
 					  
             <el-form-item label="类型：">
-					    <el-radio-group v-model="form.articletype">
-					      <el-radio label="无"></el-radio>
-					      <el-radio label="最新"></el-radio>
-					      <el-radio label="必转"></el-radio>
+					    <el-radio-group v-model="form.specialType">
+					      <el-radio label="1">无</el-radio>
+					      <el-radio label="2">最新</el-radio>
+					      <el-radio label="3">必转</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="首页：">
-					    <el-radio-group v-model="form.index">
-					      <el-radio label="是"></el-radio>
-					      <el-radio label="否"></el-radio>
+					    <el-radio-group v-model="form.isTop">
+					      <el-radio label="1">是</el-radio>
+					      <el-radio label="2">否</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="封面：">
-					    <el-radio-group v-model="form.picture">
-					      <el-radio label="单图"></el-radio>
-					      <el-radio label="三图"></el-radio>
+					    <el-radio-group v-model="form.showType">
+					      <el-radio label="1">单图</el-radio>
+					      <el-radio label="2">三图</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					   <el-form-item label="上传图片：">
@@ -112,7 +112,7 @@
       //获取数据
       get_form_data(){
         this.load_data = true
-        this.$fetch.api_wechat.templateList({
+        this.$fetch.api_wechat.findArticleById({
           id: this.route_id
         })
           .then(({data}) => {

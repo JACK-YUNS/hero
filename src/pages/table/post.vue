@@ -41,7 +41,7 @@
 		    </el-option>
 		  </el-select>
         <el-button type="success">搜索</el-button>
-				<router-link :to="{name: 'posterAdd'}" tag="span">
+				<router-link :to="{name: 'posterAdd',params: {id: ''}}" tag="span">
 	        <el-button type="success">新建</el-button>
 	      </router-link>
 		</div>
@@ -66,25 +66,34 @@
           prop="title"
           label="主标题"
           >
+           <template scope="props">
+           	<router-link :to="{name: 'posterAdd',params: {id: props.row.id}}" tag="span">
+			        <span class="link-type">{{props.row.title}}</span>
+			      </router-link>
+	        </template>
         </el-table-column>
         <el-table-column
-          prop="goodsId"
+          prop="assortmentType"
           label="分类"
+          :formatter="typeFormat"
          >
         </el-table-column>
         <el-table-column
-          prop="yes"
           label="是否首页"
           width="100">
           <template scope="props">
-	            <span v-text="props.row.yes == 1 ? '是' : '否'"></span>
+	            <span v-text="props.row.isTop == 0 ? '是' : '否'"></span>
 	          </template>
         </el-table-column>
         <el-table-column
-          prop="birthday"
+          aTime="aTime"
+          :formatter="sortFormat"
           label="排序"
           width="120"
           sortable>
+          <template scope="props">
+	            <span class="link-type">{{props.row.sort | sortFormat}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="aTime"
@@ -199,6 +208,22 @@
     created(){
       this.get_table_data()
     },
+    filters: {
+      sortFormat:function(sort) {
+        
+        var myDate=new Date('2020-01-01 00:00:00')
+        if (sort < myDate.getTime()) {
+          return 0;
+        }
+        else if(sort == null){
+        	return 0;
+        }
+        else{
+        	 return sort - myDate.getTime();
+        }
+       
+      }
+    },
     methods: {
     	//时间格式化
       dateFormat:function(row, column) {
@@ -207,6 +232,29 @@
           return "";
         }
         return moment(date).format("YYYY-MM-DD");
+      },
+      typeFormat:function(row, column) {
+        var aType = row[column.property];
+        if (aType == undefined) {
+          return "";
+        }
+        var arr = ['','理念 ','问候 ','励志 '];
+        return arr[aType];
+      },
+      sortFormat:function(row, column,cellValue) {
+        var aSort = row[column.property];
+        var aTime = row['aTime'];
+        var myDate=new Date('2020-01-01 00:00:00')
+        if (aSort == aTime) {
+          return 0;
+        }
+        else if(aSort == null){
+        	return 0;
+        }
+        else{
+        	 return aSort - myDate.getTime();
+        }
+       
       },
     	
             loadAll() {
@@ -410,4 +458,5 @@
 <style scoped="scoped">
  .el-select{margin-bottom: 10px;}
  .el-autocomplete{margin-bottom: 10px;}
+  .link-type{color: #007ACC;}
 </style>

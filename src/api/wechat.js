@@ -3,37 +3,37 @@ import fetch from 'common/fetch'
 import {port_wechat} from 'common/port_uri'
 
 //文章列表
-export function articleList(params) {
+export function articleList(data) {
   return fetch({
     url: port_wechat.articleList,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 
 //海报列表
-export function posterList(params) {
+export function posterList(data) {
   return fetch({
     url: port_wechat.posterList,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 
 //模板列表
-export function templateList(params) {
+export function templateList(data) {
   return fetch({
     url: port_wechat.templateList,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 //图文列表
-export function imageTextList(params) {
+export function imageTextList(data) {
   return fetch({
     url: port_wechat.imageTextList,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 //批量删除
@@ -44,4 +44,35 @@ export function batch_del(data) {
     data
   })
 }
-
+//金句详情
+export function findImageById(data) {
+  return fetch({
+    url: port_wechat.findImageById,
+    method: 'post',
+    data
+  })
+}
+//金句单个删除
+export function delImage(data) {
+  return fetch({
+    url: port_wechat.delImage,
+    method: 'post',
+    data
+  })
+}
+//海报详情
+export function findPosterById(data) {
+  return fetch({
+    url: port_wechat.findPosterById,
+    method: 'post',
+    data
+  })
+}
+//文章详情
+export function findArticleById(data) {
+  return fetch({
+    url: port_wechat.findArticleById,
+    method: 'post',
+    data
+  })
+}

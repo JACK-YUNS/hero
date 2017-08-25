@@ -58,6 +58,9 @@
           }, {
             title: "团队风采",
             path: "/business/team"
+          },{
+            title: "长见识",
+            path: "/business/knowledge"
           }]
         },{
           title: "系统管理",

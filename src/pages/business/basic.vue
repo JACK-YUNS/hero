@@ -30,7 +30,7 @@
 		              <el-input v-model="form.subname" placeholder="最多15个汉字" style="width: 500px;"></el-input>
 		            </el-form-item>
 		            <el-form-item label="文案：">
-							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="最多50个汉字"></el-input>
+							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="最多50个汉字" maxlength=50></el-input>
 							  </el-form-item>
 		            <el-form-item>
 		              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
@@ -40,7 +40,7 @@
               <el-tab-pane label="重要通知" class="area">
                 <el-form ref="form" :model="form"  label-width="100px">
 		            <el-form-item label="通知内容：">
-							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="暂无通知（最多60个汉字）"></el-input>
+							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="暂无通知（最多60个汉字）" maxlength=60></el-input>
 							  </el-form-item>
 		            <el-form-item>
 		              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>

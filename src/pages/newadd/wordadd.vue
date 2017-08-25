@@ -7,23 +7,24 @@
       <el-row>
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-            <el-form-item label="主标题:" prop="name">
-              <el-input v-model="form.name" placeholder="请输入内容" style="width: 500px;"></el-input>
+            <el-form-item label="主标题:" prop="title">
+              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
-            <el-form-item label="副标题:" prop="subname">
-              <el-input v-model="form.subname" placeholder="请输入内容" style="width: 500px;"></el-input>
+            <el-form-item label="副标题:" prop="subtitle">
+              <el-input v-model="form.subtitle" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="类型：">
-					    <el-radio-group v-model="form.resource">
-					      <el-radio label="保险理念"></el-radio>
-					      <el-radio label="励志成长"></el-radio>
-					      <el-radio label="生活锦囊"></el-radio>
-					      <el-radio label="轻松一刻"></el-radio>
+					    <el-radio-group v-model="form.assortmentType">
+					      <el-radio label="1">保险理念</el-radio>
+					      <el-radio label="2">励志成长</el-radio>
+					      <el-radio label="3">生活锦囊</el-radio>
+					      <el-radio label="4">轻松一刻</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
             <el-form-item label="内容：">
-					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc"></el-input>
+					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.contents"></el-input>
 					  </el-form-item>
+					  
 					   <el-form-item label="上传图片：">
 					    <el-upload
 						  action="https://jsonplaceholder.typicode.com/posts/"
@@ -37,9 +38,9 @@
 						</el-dialog>
 					  </el-form-item>
             <el-form-item label="是否首页展示：">
-					    <el-radio-group v-model="form.choose">
-					      <el-radio label="是"></el-radio>
-					      <el-radio label="否"></el-radio>
+					    <el-radio-group v-model="form.isTop">
+					      <el-radio label="0">是</el-radio>
+					      <el-radio label="1">否</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
             <el-form-item>
@@ -59,13 +60,13 @@
     data(){
       return {
         form: {
-          name: null,
-          subname: '',
+          titile: null,
+          subtitle: '',
           age: 20,
           type: [],
-          desc: '',
-          resource:'',
-          choose:'',
+          contents: '',
+          assortmentType:'',
+          isTop:'',
           dialogImageUrl: '',
         	dialogVisible: false,
           birthday: this.$dateFormat(new Date, "yyyy-MM-dd"),
@@ -81,18 +82,24 @@
       }
     },
     created(){
-      this.route_id && this.get_form_data()
+      this.route_id
+      if(this.route_id>0){
+      	this.get_form_data();
+      	console.log(this.route_id)
+      }
     },
     methods: {
       //获取数据
       get_form_data(){
         this.load_data = true
-        this.$fetch.api_wechat.templateList({
+        
+        this.$fetch.api_wechat.findImageById({
           id: this.route_id
         })
-          .then(({data}) => {
-            this.form = data
+          .then(response => {	
+            this.form = response.data
             this.load_data = false
+            console.log(response.data)
           })
           .catch(() => {
             this.load_data = false
