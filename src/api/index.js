@@ -13,12 +13,14 @@ import * as api_file from './file'
 import * as api_table from './table'
 import * as api_user from './user'
 import * as api_wechat from './wechat'
+import * as api_qiniu from './qiniu'
 
 const apiObj = {
   api_file,
   api_table,
   api_user,
-  api_wechat
+  api_wechat,
+  api_qiniu
 }
 
 const install = function (Vue) {

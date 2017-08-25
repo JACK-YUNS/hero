@@ -11,32 +11,33 @@
               <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="类型：">
-					    <el-radio-group v-model="form.resource">
-					      <el-radio label="理念"></el-radio>
-					      <el-radio label="问候"></el-radio>
-					      <el-radio label="励志"></el-radio>
+					    <el-radio-group v-model="form.assortmentType">
+					      <el-radio label="1">理念</el-radio>
+					      <el-radio label="2">问候</el-radio>
+					      <el-radio label="3">励志</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					   <el-form-item label="上传图片：">
-					    <el-upload
-						  action="https://jsonplaceholder.typicode.com/posts/"
-						  list-type="picture-card"
-						  :on-preview="handlePictureCardPreview"
-						  :on-remove="handleRemove">
-						  <i class="el-icon-plus"></i>
-						</el-upload>
-						<el-dialog v-model="form.dialogVisible" size="tiny">
-						  <img width="100%" :src="form.dialogImageUrl" alt="">
-						</el-dialog>
+					    <el-upload 
+					    	action="//up.qbox.me/" 
+					    	:on-success="handleAvatarSuccess" 
+					    	:on-error="handleError" 
+					    	:on-remove="handleRemove"
+					    	:before-upload="beforeAvatarUpload" 
+					    	:data="postData"
+					    	:file-list="fileList"
+					    	list-type="picture-card"> 
+					    	<i class="el-icon-plus"></i>
+					    </el-upload>
 					  </el-form-item>
             <el-form-item label="是否首页展示：">
-					    <el-radio-group v-model="form.choose">
-					      <el-radio label="">是</el-radio>
-					      <el-radio label="否"></el-radio>
+					    <el-radio-group v-model="form.isTop">
+					      <el-radio label="1">是</el-radio>
+					      <el-radio label="2">否</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="是否首页展示：">
-					    <el-radio-group v-model="form.select">
+					    <el-radio-group v-model="form.isRecommend">
 					      <el-radio label="1">不推荐</el-radio>
 					      <el-radio label="2">推荐</el-radio>
 					    </el-radio-group>
@@ -53,24 +54,21 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
-
+ 	import {port_qiniu} from 'common/port_uri'
   export default{
     data(){
       return {
+      	postData: {token:''},
+      	fileList:[],
         form: {
-          name: null,
-          subhead: '',
-          age: 20,
-          type: [],
-          desc: '',
-          resource:'',
-          choose:'',
-          select:'',
-          dialogImageUrl: '',
-        	dialogVisible: false,
-          birthday: this.$dateFormat(new Date, "yyyy-MM-dd"),
-          address: null,
-          zip: 412300
+          titile: '',
+          subtitle: '',
+          contents: '',
+          assortmentType:'',
+          isTop:'',
+          imageUrl: '',
+          pics: [],
+        	dialogVisible:true, 
         },
         route_id: this.$route.params.id,
         load_data: false,
@@ -81,8 +79,7 @@
       }
     },
     created(){
-      this.route_id 
-      console.log(this.route_id)
+     this.getToken()
       if(this.route_id>0){
       	this.get_form_data();
       	console.log(this.route_id)
@@ -98,28 +95,63 @@
           .then(response => {	
             this.form = response.data
             this.load_data = false
+            
+          	var arr =[];
+					  arr.push({
+		          url: this.form.pics,
+		          status: 'finished'
+		        });
+						this.fileList = arr;
+						console.log("filelist-size:"+this.fileList.length)
+            this.load_data = false
+            console.log(this.fileList)
           })
           .catch(() => {
             this.load_data = false
           })
       },
-      //时间选择改变时
-      on_change_birthday(val){
-        this.$set(this.form, 'birthday', val)
+     getToken(){
+      	this.$fetch.api_qiniu.getToken({
+        })
+          .then(response => {	
+          	console.log(response)
+            this.postData = {token : response.data}
+            this.load_data = false
+          })
+          .catch(() => {
+            this.load_data = false
+          })
       },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
+      handleAvatarSuccess(res, file,fileList) {
+      	this.fileList = fileList;
+      	//上传成功后在图片框显示图片
+      	var imageUrl ='http://resources.kangxun360.com/'+ res.key 
+      	console.log(imageUrl)
+
       },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
+      handleRemove(file,fileList){
+      	this.fileList = fileList;
+      },
+      handleError(res) { 
+      		//显示错误
+      		console.log(res)
+      }, 
+      beforeAvatarUpload(file) { 
+
       },
       //提交
       on_submit_form(){
+
+      	if(this.fileList[0].url.indexOf('resources.kangxun360.com') != -1){
+      		this.form.pics = this.fileList[0].url; 
+      	}else{
+      		this.form.pics = 'http://resources.kangxun360.com/' + this.fileList[0].response.key; 
+      	}
+      	
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          this.$fetch.api_table.save(this.form)
+          this.$fetch.api_wechat.savePoster(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
               setTimeout(this.$router.back(), 500)

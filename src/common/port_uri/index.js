@@ -14,11 +14,13 @@ import * as port_user from './user'
 import * as port_table from './table'
 import * as port_file from './file'
 import * as port_wechat from './wechat'
+import * as port_qiniu from './qiniu'
 
 export {
   port_code,
   port_user,
   port_table,
   port_file,
-  port_wechat
+  port_wechat,
+  port_qiniu
 }

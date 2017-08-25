@@ -23,7 +23,7 @@
 					      <el-radio label="6">趣味</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
-					  <el-form-item >
+					  <el-form-item v-model="form.contents">
 					    <div id="summernote"></div>
 					  </el-form-item>
 					  
@@ -36,8 +36,8 @@
 					  </el-form-item>
 					  <el-form-item label="首页：">
 					    <el-radio-group v-model="form.isTop">
-					      <el-radio label="1">是</el-radio>
-					      <el-radio label="2">否</el-radio>
+					      <el-radio label="0">是</el-radio>
+					      <el-radio label="1">否</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="封面：">
@@ -59,7 +59,7 @@
 							</el-dialog>
 					  </el-form-item>
 					  <el-form-item label="文案：">
-					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc"></el-input>
+					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.articleCopy"></el-input>
 					  </el-form-item>
 					  <el-form-item label="排序：">
 					    <el-input-number v-model="form.num" @change="handleChange" :min="1" :max="10"></el-input-number>
@@ -81,21 +81,14 @@
     data(){
       return {
         form: {
-          name: null,
-          subname: '',
-          age: 20,
-          type: [],
-          desc: '',
-          resource:'',
-          picture:'',
-          index:'',
-          num:'',
-          articletype:'',
-          dialogImageUrl: '',
-        	dialogVisible: false,
-          birthday: this.$dateFormat(new Date, "yyyy-MM-dd"),
-          address: null,
-          zip: 412300
+          title: null,
+          subtitle: '',
+          assortmentType: '',
+          specialType:'',
+          isTop:'',
+          showType:'',
+          articleCopy:'',
+          contents:''
         },
         route_id: this.$route.params.id,
         load_data: false,

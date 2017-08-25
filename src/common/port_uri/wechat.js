@@ -15,3 +15,7 @@ export const delImage = "/api/wechat/delImage"
 export const findPosterById = "/api/wechat/findPosterById"
 //文章详情
 export const findArticleById = "/api/wechat/findArticleById"
+//更新、新增数据
+export const saveImage = "/api/wechat/saveImage"
+//更新、新增数据
+export const savePoster = "/api/wechat/savePoster"

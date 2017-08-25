@@ -76,3 +76,19 @@ export function findArticleById(data) {
     data
   })
 }
+//更新、新增数据
+export function saveImage(data) {
+  return fetch({
+    url: port_wechat.saveImage,
+    method: 'post',
+    data
+  })
+}
+//海报更新、新增数据
+export function savePoster(data) {
+  return fetch({
+    url: port_wechat.savePoster,
+    method: 'post',
+    data
+  })
+}
