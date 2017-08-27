@@ -15,6 +15,7 @@ import * as port_table from './table'
 import * as port_file from './file'
 import * as port_wechat from './wechat'
 import * as port_qiniu from './qiniu'
+import * as port_wisdom from './wisdom'
 
 export {
   port_code,
@@ -22,5 +23,6 @@ export {
   port_table,
   port_file,
   port_wechat,
-  port_qiniu
+  port_qiniu,
+  port_wisdom
 }

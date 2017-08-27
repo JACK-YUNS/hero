@@ -24,13 +24,13 @@
               <el-tab-pane label="欢迎信息" class="area">
               	<el-form ref="form" :model="form"  label-width="100px">
                 <el-form-item label="营业区名称:" prop="name">
-		              <el-input v-model="form.name" placeholder="最多10个汉字" style="width: 500px;"></el-input>
+		              <el-input v-model="form.name" placeholder="最多10个汉字" style="width: 500px;" :maxlength=10></el-input>
 		            </el-form-item>
 		            <el-form-item label="欢迎词:" prop="word">
-		              <el-input v-model="form.subname" placeholder="最多15个汉字" style="width: 500px;"></el-input>
+		              <el-input v-model="form.subname" placeholder="最多15个汉字" style="width: 500px;" :maxlength=15></el-input>
 		            </el-form-item>
 		            <el-form-item label="文案：">
-							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="最多50个汉字" maxlength=50></el-input>
+							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="最多50个汉字" :maxlength=50></el-input>
 							  </el-form-item>
 		            <el-form-item>
 		              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
@@ -40,7 +40,7 @@
               <el-tab-pane label="重要通知" class="area">
                 <el-form ref="form" :model="form"  label-width="100px">
 		            <el-form-item label="通知内容：">
-							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="暂无通知（最多60个汉字）" maxlength=60></el-input>
+							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="暂无通知（最多60个汉字）" :maxlength=60></el-input>
 							  </el-form-item>
 		            <el-form-item>
 		              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
@@ -66,15 +66,38 @@
           word:'',
           desc: ''
         },
+        table_data:[],
+         route_id: this.$route.params.id,
+        load_data: false,
+        on_submit_loading: false,
         rules: {
           name: [{required: true, message: '主标题不能为空', trigger: 'blur'}]
         }
       }
     },
     created(){
-     
+      this.get_table_data()
+      console.log('1')
     },
     methods: {
+    	//获取数据
+       get_table_data(){
+        this.load_data = false
+        this.$fetch.api_wechat.imageTextList({
+          current: this.currentPage,
+          pageSize: this.length
+        })
+          .then(response => {	
+            this.table_data = response.data.records
+            console.log(this.table_data)
+	          this.currentPage = response.data.current
+	          this.total = response.data.total
+	          this.load_data = false
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+      },
       handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw);
       },

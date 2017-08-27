@@ -79,6 +79,8 @@ import goodmorningComponent from 'pages/business/goodmorning'
 import teamComponent from 'pages/business/team'
 //knowledge business
 import knowledgeComponent from 'pages/business/knowledge'
+//personlist newadd
+import personlistComponent from 'pages/newadd/personlist'
 Vue.use(VueRouter)
 
 //使用AMD方式加载
@@ -184,6 +186,14 @@ const routes = [{
     component: wordAddComponent,
     meta: {
       title: "新建金句",
+      auth: true
+    }
+  }, {
+    path: '/newadd/add',
+    name: 'personlist',
+    component: personlistComponent,
+    meta: {
+      title: "",
       auth: true
     }
   }, {

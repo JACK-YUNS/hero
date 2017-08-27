@@ -7,21 +7,21 @@
       <el-row>
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-            <el-form-item label="主标题:" prop="name">
-              <el-input v-model="form.name" placeholder="请输入内容" style="width: 500px;"></el-input>
+            <el-form-item label="主标题:" prop="title">
+              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
-            <el-form-item label="副标题:" prop="subname">
-              <el-input v-model="form.subname" placeholder="请输入内容" style="width: 500px;"></el-input>
+            <el-form-item label="副标题:" prop="subtitle">
+              <el-input v-model="form.subtitle" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="类型：">
-					    <el-radio-group v-model="form.resource">
+					    <el-radio-group v-model="form.assortmentType">
 					      <el-radio label="图文"></el-radio>
 					      <el-radio label="海报"></el-radio>
 					      <el-radio label="文章"></el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="排序：">
-					    <el-input-number v-model="form.num" @change="handleChange" :min="1" :max="10"></el-input-number>
+					    <el-input-number v-model="form.sort" @change="handleChange" :min="1" :max="10"></el-input-number>
 					  </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
@@ -40,18 +40,15 @@
     data(){
       return {
         form: {
-          name: null,
-          subname: '',
-          age: 20,
-          type: [],
-          desc: '',
-          resource:'',
-          num: 1,
-          choose:'',
-          select:'',
-          birthday: this.$dateFormat(new Date, "yyyy-MM-dd"),
-          address: null,
-          zip: 412300
+          title: null,
+          subtitle: '',
+          contents: '',
+          assortmentType:'',
+          isTop:'',
+          imageUrl: '',
+          pics: [],
+          sort: '',
+        	dialogVisible:true,
         },
         route_id: this.$route.params.id,
         load_data: false,
@@ -68,7 +65,7 @@
       //获取数据
       get_form_data(){
         this.load_data = true
-        this.$fetch.api_wechat.templateList({
+        this.$fetch.api_wechat.findTemplateById({
           id: this.route_id
         })
           .then(({data}) => {

@@ -19,3 +19,5 @@ export const findArticleById = "/api/wechat/findArticleById"
 export const saveImage = "/api/wechat/saveImage"
 //更新、新增数据
 export const savePoster = "/api/wechat/savePoster"
+//模板详情
+export const findTemplateById = "/api/wechat/findTemplateById"

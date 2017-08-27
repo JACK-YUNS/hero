@@ -47,22 +47,23 @@
 					    </el-radio-group>
 					  </el-form-item>
 					   <el-form-item label="上传图片：">
-					    <el-upload
-							  action="https://jsonplaceholder.typicode.com/posts/"
-							  list-type="picture-card"
-							  :on-preview="handlePictureCardPreview"
-							  :on-remove="handleRemove">
-							  <i class="el-icon-plus"></i>
-							</el-upload>
-							<el-dialog v-model="form.dialogVisible" size="tiny">
-							  <img width="100%" :src="form.dialogImageUrl" alt="">
-							</el-dialog>
+					    <el-upload 
+					    	action="//up.qbox.me/" 
+					    	:on-success="handleAvatarSuccess" 
+					    	:on-error="handleError" 
+					    	:on-remove="handleRemove"
+					    	:before-upload="beforeAvatarUpload" 
+					    	:data="postData"
+					    	:file-list="fileList"
+					    	list-type="picture-card"> 
+					    	<i class="el-icon-plus"></i>
+					    </el-upload>
 					  </el-form-item>
 					  <el-form-item label="文案：">
 					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.articleCopy"></el-input>
 					  </el-form-item>
 					  <el-form-item label="排序：">
-					    <el-input-number v-model="form.num" @change="handleChange" :min="1" :max="10"></el-input-number>
+					    <el-input-number v-model="form.sort" @change="handleChange" :min="1" :max="10"></el-input-number>
 					  </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
@@ -80,6 +81,8 @@
   export default{
     data(){
       return {
+      	postData: {token:''},
+      	fileList:[],
         form: {
           title: null,
           subtitle: '',
@@ -88,6 +91,8 @@
           isTop:'',
           showType:'',
           articleCopy:'',
+          imageUrl: '',
+          pics: [],
           contents:''
         },
         route_id: this.$route.params.id,
@@ -99,7 +104,11 @@
       }
     },
     created(){
-      this.route_id && this.get_form_data()
+     this.getToken()
+      if(this.route_id>0){
+      	this.get_form_data();
+      	console.log(this.route_id)
+      }
     },
     methods: {
       //获取数据
@@ -108,30 +117,73 @@
         this.$fetch.api_wechat.findArticleById({
           id: this.route_id
         })
-          .then(({data}) => {
-            this.form = data
+          .then(response => {	
+          	this.form = response.data
+            var picArr = JSON.parse(this.form.pics);
+          	var arr =[];
+            $.each(picArr, function(index, value, array) {
+						  arr.push({
+			          url: value.pic,
+			          status: 'finished'
+			        });
+						});
+						this.fileList = arr;
+            this.load_data = false
+            console.log(this.fileList)
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+      },
+      getToken(){
+      	this.$fetch.api_qiniu.getToken({
+        })
+          .then(response => {	
+          	console.log(response)
+            this.postData = {token : response.data}
             this.load_data = false
           })
           .catch(() => {
             this.load_data = false
           })
       },
-      //时间选择改变时
-      on_change_birthday(val){
-        this.$set(this.form, 'birthday', val)
+      handleAvatarSuccess(res, file,fileList) {
+      	this.fileList = fileList;
+      	//上传成功后在图片框显示图片
+      	var imageUrl ='http://resources.kangxun360.com/'+ res.key 
+      	console.log(imageUrl)
+
       },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
+      handleRemove(file,fileList){
+      	this.fileList = fileList;
       },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
-      handleChange(value) {
-        console.log(value);
+      handleError(res) { 
+      		//显示错误
+      		console.log(res)
+      }, 
+      beforeAvatarUpload(file) { 
+
       },
       //提交
       on_submit_form(){
+      	console.info(123123121233123)
+      	var arr =[];
+      	console.log(this.fileList.length)
+        $.each(this.fileList, function(index, value, array) {
+        	console.log(value.url)
+        	 if(value.url.indexOf('resources.kangxun360.com') != -1){
+        	 		arr.push({
+			          pic:value.url
+			      	});
+        	 }else{
+	        	 	arr.push({
+			          pic: 'http://resources.kangxun360.com/'+ value.response.key
+			      	});
+        	 }
+					
+				});
+				console.info(arr[0].pic)
+      	this.form.pics = JSON.stringify(arr); 
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true

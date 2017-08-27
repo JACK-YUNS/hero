@@ -107,10 +107,14 @@
           width="50">
         </el-table-column>
         <el-table-column
-          prop="userName"
           label="姓名"
           width="100"
           >
+          <template scope="props">
+           	<router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">
+			        <span class="link-type">{{props.row.userName}}</span>
+			      </router-link>
+	        </template>
         </el-table-column>
         <el-table-column
           prop="agentCode"

@@ -92,3 +92,11 @@ export function savePoster(data) {
     data
   })
 }
+//模板详情
+export function findTemplateById(data) {
+  return fetch({
+    url: port_wechat.findTemplateById,
+    method: 'post',
+    data
+  })
+}
