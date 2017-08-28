@@ -55,20 +55,13 @@
     data(){
       return {
         form: {
-          name: null,
-          subname: '',
-          user: '',
-          age: 20,
-          type: [],
-          desc: '',
-           user: '',
-          resource:'',
-          num: 1,
-          choose:'',
-          select:'',
-          birthday: this.$dateFormat(new Date, "yyyy-MM-dd"),
-          address: null,
-          zip: 412300
+          id:	9,
+					areaName:	'宣威',
+					meetingDate:	'',
+					aTime:	null,
+					cTime:'',
+					flag:	0,
+					flow:	[]
         },
         formInline: {
           user: '',
@@ -116,7 +109,7 @@
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          this.$fetch.api_table.save(this.form)
+          this.$fetch.api_wisdom.saveEarlyMetting(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
               setTimeout(this.$router.back(), 500)
