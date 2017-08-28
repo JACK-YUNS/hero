@@ -1,12 +1,12 @@
 <template>
   <div class="panel">
     <panel-title :title="$route.meta.title">
-      <el-button @click.stop="on_refresh" size="small">
+      <!--<el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
       <router-link :to="{name: 'tableAdd'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
-      </router-link>
+      </router-link>-->
     </panel-title>
     <div class="panel-body">
 			<router-link :to="{name: 'meetingAdd'}" tag="span">
@@ -24,7 +24,6 @@
 		        	<el-steps :space="40" direction="vertical">
 							  <el-step v-for="item in props.row.flow" :title="item.content"></el-step>
 							</el-steps>
-							<el-button type="primary"   @click="open4" prop="do" style="float: right;margin-top: -5%;">复制添加</el-button>
 		        </el-form>
 		      </template>
 		    </el-table-column>
@@ -59,17 +58,7 @@
         table_data: [],
         length: 7,
         //请求时的loading效果
-        load_data: true,
-        items:[{
-        	title:'1'
-        	},{
-        	title:'2'
-        	},{
-        	title:'3'
-        	},{
-        	title:'4'
-        	}]
-        
+        load_data: true
       }
     },
     components: {
@@ -83,17 +72,6 @@
       this.get_table_data()
     },
     methods: {
-    	//时间格式化
-      dateFormat:function(row, column) {
-        var date = row[column.property];
-        if (date == undefined) {
-          return "";
-        }
-        return moment(date).format("YYYY-MM-DD");
-      },
-    	
-     
-    
       //刷新
       on_refresh(){
         this.get_table_data()
@@ -105,7 +83,12 @@
           areaName: '宣威'
         })
           .then(response => {
-            this.table_data = response.data
+          	var list = response.data;
+          	$.each(list, function(index, value, array) {
+						 	list[index].flow = JSON.parse(list[index].flow)
+						});
+          	
+            this.table_data = list;
 	          this.load_data = false
           })
           .catch(() => {
