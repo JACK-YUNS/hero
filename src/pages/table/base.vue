@@ -536,4 +536,5 @@
 <style scoped="scoped">
  .el-select{margin-bottom: 10px;}
  .el-autocomplete{margin-bottom: 10px;}
+ .link-type{color: #007ACC;}
 </style>

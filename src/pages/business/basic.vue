@@ -8,29 +8,34 @@
               <el-tab-pane label="智慧营业区封面" class="area">
               	<el-form ref="form" :model="form" :rules="rules">
                 <el-form-item label="跟换封面图片：">
-               	<el-upload
-								  class="avatar-uploader"
-								  action="https://jsonplaceholder.typicode.com/posts/"
-								  :show-file-list="false"
-								  :on-success="handleAvatarSuccess"
-								  :before-upload="beforeAvatarUpload">
-								  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-								  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-								  <div class="el-upload__tip" slot="tip">上传封面图片大小不能超过 3MB!</div>
-								</el-upload>
+	               	<el-upload 
+						    	action="//up.qbox.me/" 
+						    	:on-success="handleAvatarSuccess" 
+						    	:on-error="handleError" 
+						    	:on-remove="handleRemove"
+						    	:before-upload="beforeAvatarUpload" 
+						    	:data="postData"
+						    	:file-list="fileList"
+						    	list-type="picture-card"> 
+						    	<i class="el-icon-plus"></i>
+						    	<div class="el-upload__tip" slot="tip">上传封面图片大小不能超过 3MB!</div>
+						    </el-upload>
+						    <el-form-item>
+			              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
+		            </el-form-item>
                 </el-form-item>
                 </el-form>
               </el-tab-pane>
               <el-tab-pane label="欢迎信息" class="area">
               	<el-form ref="form" :model="form"  label-width="100px">
-                <el-form-item label="营业区名称:" prop="name">
-		              <el-input v-model="form.name" placeholder="最多10个汉字" style="width: 500px;" :maxlength=10></el-input>
+                <el-form-item label="营业区名称:" prop="areaName">
+		              <el-input v-model="form.areaName" placeholder="最多10个汉字" style="width: 500px;" :maxlength=10></el-input>
 		            </el-form-item>
-		            <el-form-item label="欢迎词:" prop="word">
-		              <el-input v-model="form.subname" placeholder="最多15个汉字" style="width: 500px;" :maxlength=15></el-input>
+		            <el-form-item label="欢迎词:" prop="welcome">
+		              <el-input v-model="form.welcome" placeholder="最多15个汉字" style="width: 500px;" :maxlength=15></el-input>
 		            </el-form-item>
 		            <el-form-item label="文案：">
-							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="最多50个汉字" :maxlength=50></el-input>
+							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.chiefInspector" style="width: 500px;" placeholder="最多50个汉字" :maxlength=50></el-input>
 							  </el-form-item>
 		            <el-form-item>
 		              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
@@ -40,7 +45,7 @@
               <el-tab-pane label="重要通知" class="area">
                 <el-form ref="form" :model="form"  label-width="100px">
 		            <el-form-item label="通知内容：">
-							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.desc" style="width: 500px;" placeholder="暂无通知（最多60个汉字）" :maxlength=60></el-input>
+							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.notice" style="width: 500px;" placeholder="暂无通知（最多60个汉字）" :maxlength=60></el-input>
 							  </el-form-item>
 		            <el-form-item>
 		              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
@@ -56,18 +61,22 @@
 </template>
 <script type="text/javascript">
   import {panelTitle, charts} from 'components'
+  import {port_qiniu} from 'common/port_uri'
 
   export default{
     data(){
       return {
-         imageUrl: '',
-         form: {
-          name:'',
-          word:'',
-          desc: ''
+        postData: {token:''},
+      	fileList:[],
+        form: {
+          cover: [],
+          areaName: '',
+          welcome: '',
+          chiefInspector:'',
+          notice:'',
+          imageUrl: ''
         },
-        table_data:[],
-         route_id: this.$route.params.id,
+        route_id: this.$route.params.id,
         load_data: false,
         on_submit_loading: false,
         rules: {
@@ -76,31 +85,60 @@
       }
     },
     created(){
-      this.get_table_data()
-      console.log('1')
+      this.getToken()
+      this.get_form_data();
     },
     methods: {
     	//获取数据
-       get_table_data(){
-        this.load_data = false
-        this.$fetch.api_wechat.imageTextList({
-          current: this.currentPage,
-          pageSize: this.length
+      get_form_data(){
+        this.load_data = true
+        this.$fetch.api_wisdom.settings({
+          areaName: '昆明十二区'
         })
           .then(response => {	
-            this.table_data = response.data.records
-            console.log(this.table_data)
-	          this.currentPage = response.data.current
-	          this.total = response.data.total
-	          this.load_data = false
+            this.form = response.data
+            console.log(this.form)
+            var picArr = JSON.parse(this.form.cover);
+          	var arr =[];
+            $.each(picArr, function(index, value, array) {
+						  arr.push({
+			          url: value.pic,
+			          status: 'finished'
+			        });
+						});
+						this.fileList = arr;
+            this.load_data = false
           })
           .catch(() => {
             this.load_data = false
           })
       },
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+      getToken(){
+      	this.$fetch.api_qiniu.getToken({
+        })
+          .then(response => {	
+          	console.log(response)
+            this.postData = {token : response.data}
+            this.load_data = false
+          })
+          .catch(() => {
+            this.load_data = false
+          })
       },
+      handleAvatarSuccess(res, file,fileList) {
+      	this.fileList = fileList;
+      	//上传成功后在图片框显示图片
+      	var imageUrl ='http://resources.kangxun360.com/'+ res.key 
+      	console.log(imageUrl)
+
+      },
+      handleRemove(file,fileList){
+      	this.fileList = fileList;
+      },
+      handleError(res) { 
+      		//显示错误
+      		console.log(res)
+      }, 
       beforeAvatarUpload(file) {
         const isLt2M = file.size / 1024 / 1024 < 3;
 
@@ -111,13 +149,32 @@
       },
       //提交
       on_submit_form(){
+				console.info(123123121233123)
+      	var arr =[];
+      	console.log(this.fileList.length)
+        $.each(this.fileList, function(index, value, array) {
+        	console.log(value.url)
+        	 if(value.url.indexOf('resources.kangxun360.com') != -1){
+        	 		arr.push({
+			          pic:value.url
+			      	});
+        	 }else{
+	        	 	arr.push({
+			          pic: 'http://resources.kangxun360.com/'+ value.response.key
+			      	});
+        	 }
+					
+				});
+				console.info(arr[0].pic)
+      	this.form.cover = JSON.stringify(arr); 
+      	
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          this.$fetch.api_table.save(this.form)
+          this.$fetch.api_wisdom.updateSettings(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
-              setTimeout(this.$router.back(), 500)
+              setTimeout(this.$router(), 500)
             })
             .catch(() => {
               this.on_submit_loading = false
@@ -132,7 +189,7 @@
   }
 </script>
 <style scoped="scoped">
-	.area{width: 188px;line-height: 45px;}
+	.area{line-height: 45px;}
 	.avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
