@@ -3,8 +3,8 @@
     <div class="notification-menu">
       <el-dropdown trigger="click" class="notification-list">
         <div class="notification-btn">
-          <img src="../../../../assets/images/16893554.jpg" :alt="get_user_info.user.name"/>
-          <span v-text="get_user_info.user.name"></span>
+          <img src="../../../../assets/images/16893554.jpg" :alt="get_user_info.user.areaName"/>
+          <span v-text="get_user_info.user.areaName"></span>
           <span class="icon"></span>
         </div>
         <el-dropdown-menu slot="dropdown">
