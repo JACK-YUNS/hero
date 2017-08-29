@@ -3,85 +3,51 @@
     <div class="panel">
       <panel-title :title="$route.meta.title"></panel-title>
       <div class="panel-body">
-				
+
 				<!-- Form -->
-				<el-button type="success" @click="dialogFormVisible = true">新建相册</el-button>
-				
-				<el-dialog title="新建相册" :visible.sync="dialogFormVisible">
-				  <el-form :model="form">
-				    <el-form-item label="相册名称" :label-width="formLabelWidth">
-				      <el-input v-model="form.name" auto-complete="off" placeholder="给相册起个名字吧~（最多输入30个字）" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" maxlength=30></el-input>
+				<el-button type="success" @click="dialogFormVisible = true,title = '新建相册',form.name='',form.type=1,form.id=''">新建相册</el-button>
+
+				<el-dialog :title="title" :visible.sync="dialogFormVisible">
+            <el-form  :model="form" :rules="rules" ref="form">
+				    <el-form-item label="相册名称" prop="name" :label-width="formLabelWidth">
+				      <el-input v-model="form.name" auto-complete="off" placeholder="给相册起个名字吧~（最多输入30个字）" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" :maxlength=30></el-input>
 				    </el-form-item>
-				    <el-form-item label="相册类型" :label-width="formLabelWidth" v-model="form.region">
-				      
-				      <el-button v-for="(item,$index) in items" @click="selectStyle (item, $index) " :class="{'active':item.active,'unactive':!item.active}">{{item.label}}</el-button>
-              <!--<el-button>个人风采</el-button>
-              <el-button>培训表彰</el-button>
-              <el-button>展业活动</el-button>
-              <el-button>其他</el-button>-->
-				     
+				    <el-form-item label="相册类型"  :label-width="formLabelWidth" v-model="form.type">
+				      <el-button v-for="(item,$index) in items" @click="form.type=item.value " :class="{'active':item.value==form.type,'unactive':!item.value==form.type}">{{item.label}}</el-button>
 				    </el-form-item>
 				  </el-form>
 				  <div slot="footer" class="dialog-footer">
 				    <el-button @click="dialogFormVisible = false">取 消</el-button>
-				    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+				    <el-button type="primary" @click="saveAlbum()">确 定</el-button>
 				  </div>
 				</el-dialog>
-				
+
         <el-row>
+<<<<<<< HEAD
 				  <el-col :span="4" v-for="(item,$index) in tables" style='margin:10px;position: relative;' >
+=======
+				  <el-col :span="4" v-for="(item,$index) in table_data" style='margin:10px;position: relative;' >
+>>>>>>> 49dfc7099c7a98a89e6d83944872cad714391079
 				  	<div class="" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >
-				  		 <router-link :to="{name: 'imagesAdd'}" tag="span">
 				  		<el-card :body-style="{ padding: '0px' }" >
-					    	
-					    	<el-dialog title="编辑相册" :visible.sync="dialogFormVisiblecard">
-								  <el-form :model="formcard">
-								    <el-form-item label="相册名称" :label-width="formLabelWidth">
-								      <el-input v-model="formcard.name" auto-complete="off" placeholder="看电视的弗兰克" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" :maxlength=30></el-input>
-								    </el-form-item>
-								    <el-form-item label="相册类型" :label-width="formLabelWidth" v-model="formcard.region">
-								      
-								      <el-button v-for="(item,$index) in items" @click="selectStyle (item, $index) " :class="{'active':item.active,'unactive':!item.active}">{{item.label}}</el-button>
-				              <!--<el-button>个人风采</el-button>
-				              <el-button>培训表彰</el-button>
-				              <el-button>展业活动</el-button>
-				              <el-button>其他</el-button>-->
-								     
-								    </el-form-item>
-								  </el-form>
-								  <div slot="footer" class="dialog-footer">
-								    <el-button @click="dialogFormVisiblecard = false">取 消</el-button>
-								    <el-button type="primary" @click="dialogFormVisiblecard = false">确 定</el-button>
-								  </div>
-								</el-dialog>
-								<div style="width: 100%; background-color: rgba(0, 0, 0, 0.7);position: absolute;left: 0;right: 0;" v-show="isShow== $index">
-					    		<el-button type="text" icon="edit" @click="dialogFormVisiblecard = true" class='centerbtn'>编辑</el-button>
+								<div style="width: 100%; background-color: rgba(0, 0, 0, 0.7);position: absolute;left: 0;right: 0;" v-show="isShow==$index && isShow >1 ">
+					    		<el-button type="text" icon="edit" @click="dialogFormVisible = true,title = '编辑相册',form.name = item.name,form.type=item.type,form.id=item.id" class='centerbtn'>编辑</el-button>
 					    		<el-button type="text" icon="delete" class='centerbtn' @click="delete_data()">删除</el-button>
 					    	</div>
-					      <img src="../../../src/assets/images/16893554.jpg" class="image" >
+                <router-link :to="{name: 'imagesAdd'}" tag="span">
+					      <img :src="item.cover" class="image" >
 					      <div style="padding: 14px;">
-					        <span>好吃的汉堡{{ item.currentDate }}</span>
+					        <span>{{item.name}}</span>
 					        <div class="bottom clearfix">
-					          <el-button type="text" class="button">{{num}}</el-button>
+					          <el-button type="text" class="button">{{item.photoNum}}</el-button>
 					        </div>
 					      </div>
+                </router-link>
 					    </el-card>
-					     </router-link>
 				  	</div>
-					    
-				  
 				  </el-col>
 				</el-row>
 				  <bottom-tool-bar>
-        <!--<el-button
-          type="danger"
-          icon="delete"
-          size="small"
-          :disabled="batch_select.length === 0"
-          @click="on_batch_del"
-          slot="handler">
-          <span>批量删除</span>
-        </el-button>-->
         <div slot="page">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -105,62 +71,41 @@
        return {
        	 currentDate: new Date(),
         dialogFormVisible: false,
-        dialogFormVisiblecard: false,
         totalnum:10,
         num:22,
         isShow:-1,
+        title:"",
+        areaName:"宣威",
         tables:[{
         	show:false
         }],
-        tables:[{
-        	currentDate:'1'
-        },{
-        	currentDate:'2'
-        },{
-        	currentDate:'3'
-        },{
-        	currentDate:'4'
-        }],
+        tables:[],
         items:[{
-          value: '选项1',
+          value: '1',
           isActive:false,
           label: '团队建设'
         },{
-          value: '选项2',
+          value: '2',
           isActive:false,
           label: '个人风采'
         },{
-          value: '选项3',
+          value: '3',
           isActive:false,
           label: '培训表彰'
         },{
-          value: '选项4',
+          value: '4',
           isActive:false,
           label: '展业活动'
         },{
-          value: '选项5',
+          value: '5',
           isActive:false,
           label: '其他'
         }],
         form: {
           name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        formcard: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          type:1,
+          id:"",
+          areaName:"宣威"
         },
         formLabelWidth: '120px',
         table_data: [],
@@ -171,21 +116,21 @@
         //每页显示多少条数据
         length: 15,
         //请求时的loading效果
-        load_data: true
+        load_data: true,
+         on_submit_loading: false,
+        rules: {
+          name: [
+              {required: true, message: '相册名称不能为空', trigger: 'blur'},
+              {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+              ]
+        }
       };
     },
     created(){
       this.get_table_data()
     },
     methods: {
-      selectStyle (item, index) {
-　　　　　　this.$nextTick(function () {
-　　　　　　　　this.items.forEach(function (item) {
-　　　　　　　　　　Vue.set(item,'active',false);
-　　　　　　　　});
-　　　　　　　　Vue.set(item,'active',true);
-　　　　　　});
-　　　　},
+
 //刷新
       on_refresh(){
         this.get_table_data()
@@ -193,22 +138,35 @@
       //获取数据
       get_table_data(){
         this.load_data = false
-        this.$fetch.api_wechat.imageTextList({
+        this.$fetch.api_wisdom.albumList({
           current: this.currentPage,
-          pageSize: this.length
+          pageSize: this.length,
+          areaName:this.areaName
         })
-          .then(response => {	
+          .then(response => {
             this.table_data = response.data.records
-            console.log(this.table_data)
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
-	          this.load_data = false
+	          this.load_data = true
           })
           .catch(() => {
-            this.load_data = false
+            this.load_data = true
           })
       },
-  
+      saveAlbum(){
+        this.$refs.form.validate((valid) => {
+            if (!valid) return false
+          this.$fetch.api_wisdom.saveAlbum(this.form)
+            .then(response => {
+
+            })
+            .catch(() => {
+            });
+        })
+      },
+      reset_form(formName){
+        this.$refs.formName.resetFields()
+      },
       //单个删除
       delete_data(item){
         this.$confirm('此操作将会删除相册内的所有照片，及针对相册评论，且不可恢复哦～', '提示', {
@@ -292,7 +250,7 @@
     font-size: 13px;
     color: #999;
   }
-  
+
   .bottom {
     margin-top: 13px;
     line-height: 12px;
@@ -318,7 +276,7 @@
       display: table;
       content: "";
   }
-  
+
   .clearfix:after {
       clear: both
   }

@@ -256,7 +256,7 @@ const routes = [{
     }
   }, {
     path: '/charts/barline',
-    name: 'chartsBar',
+    name: 'chartsLine',
     component: barlineChartsComponent,
     meta: {
       title: "概况",
@@ -264,7 +264,7 @@ const routes = [{
     }
   }, {
     path: '/charts/city',
-    name: 'chartsBar',
+    name: 'chartsCity',
     component: CityComponent,
     meta: {
       title: "城市分布",
@@ -272,7 +272,7 @@ const routes = [{
     }
   }, {
     path: '/table/list',
-    name: 'chartsBar',
+    name: 'tableList',
     component: ListComponent,
     meta: {
       title: "排行榜",
@@ -280,7 +280,7 @@ const routes = [{
     }
   }, {
     path: '/table/word',
-    name: 'chartsBar',
+    name: 'tableWord',
     component: WordComponent,
     meta: {
       title: "金句",
@@ -288,7 +288,7 @@ const routes = [{
     }
   }, {
     path: '/table/example',
-    name: 'chartsBar',
+    name: 'tableExample',
     component: ExampleComponent,
     meta: {
       title: "模板",
@@ -296,7 +296,7 @@ const routes = [{
     }
   }, {
     path: '/table/post',
-    name: 'chartsBar',
+    name: 'tablePost',
     component: PostComponent,
     meta: {
       title: "海报",
@@ -304,7 +304,7 @@ const routes = [{
     }
   }, {
     path: '/table/article',
-    name: 'chartsBar',
+    name: 'tableArticle',
     component: ArticleComponent,
     meta: {
       title: "文章",
@@ -312,7 +312,7 @@ const routes = [{
     }
   }, {
     path: '/business/basic',
-    name: 'business',
+    name: 'businessBasic',
     component: basicComponent,
     meta: {
       title: "基本设置",
@@ -320,7 +320,7 @@ const routes = [{
     }
   }, {
     path: '/business/goodmorning',
-    name: 'business',
+    name: 'businessGoodmorning',
     component: goodmorningComponent,
      meta: {
       title: "早会流程",
@@ -328,7 +328,7 @@ const routes = [{
     }
   }, {
     path: '/business/team',
-    name: 'business',
+    name: 'businessTeam',
     component: teamComponent,
      meta: {
       title: "团队风采",
@@ -336,7 +336,7 @@ const routes = [{
     }
   }, {
     path: '/business/knowledge',
-    name: 'business',
+    name: 'businessKnowledge',
     component: knowledgeComponent,
      meta: {
       title: "长见识",
