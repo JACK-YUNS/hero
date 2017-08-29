@@ -9,15 +9,18 @@
               	<el-form ref="form" :model="form" :rules="rules">
                 <el-form-item label="跟换封面图片：">
 	               	<el-upload 
-						    	action="//up.qbox.me/" 
-						    	:on-success="handleAvatarSuccess" 
-						    	:on-error="handleError" 
-						    	:on-remove="handleRemove"
-						    	:before-upload="beforeAvatarUpload" 
-						    	:data="postData"
-						    	:file-list="fileList"
-						    	list-type="picture-card"> 
-						    	<i class="el-icon-plus"></i>
+	               		class="avatar-uploader"
+										:show-file-list="false"
+							    	action="//up.qbox.me/" 
+							    	:on-success="handleAvatarSuccess" 
+							    	:on-error="handleError" 
+							    	:on-remove="handleRemove"
+							    	:before-upload="beforeAvatarUpload" 
+							    	:data="postData"
+							    	:file-list="fileList"
+							    	> 
+						    	<img v-if="form.cover" :src="form.cover" class="avatar">
+  								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						    	<div class="el-upload__tip" slot="tip">上传封面图片大小不能超过 3MB!</div>
 						    </el-upload>
 						    <el-form-item>
@@ -69,12 +72,11 @@
         postData: {token:''},
       	fileList:[],
         form: {
-          cover: [],
+          cover: '',
           areaName: '',
           welcome: '',
           chiefInspector:'',
-          notice:'',
-          imageUrl: ''
+          notice:''
         },
         route_id: this.$route.params.id,
         load_data: false,
@@ -97,16 +99,6 @@
         })
           .then(response => {	
             this.form = response.data
-            console.log(this.form)
-            var picArr = JSON.parse(this.form.cover);
-          	var arr =[];
-            $.each(picArr, function(index, value, array) {
-						  arr.push({
-			          url: value.pic,
-			          status: 'finished'
-			        });
-						});
-						this.fileList = arr;
             this.load_data = false
           })
           .catch(() => {
@@ -128,9 +120,7 @@
       handleAvatarSuccess(res, file,fileList) {
       	this.fileList = fileList;
       	//上传成功后在图片框显示图片
-      	var imageUrl ='http://resources.kangxun360.com/'+ res.key 
-      	console.log(imageUrl)
-
+      	this.form.cover ='http://resources.kangxun360.com/'+ res.key 
       },
       handleRemove(file,fileList){
       	this.fileList = fileList;
@@ -149,25 +139,6 @@
       },
       //提交
       on_submit_form(){
-				console.info(123123121233123)
-      	var arr =[];
-      	console.log(this.fileList.length)
-        $.each(this.fileList, function(index, value, array) {
-        	console.log(value.url)
-        	 if(value.url.indexOf('resources.kangxun360.com') != -1){
-        	 		arr.push({
-			          pic:value.url
-			      	});
-        	 }else{
-	        	 	arr.push({
-			          pic: 'http://resources.kangxun360.com/'+ value.response.key
-			      	});
-        	 }
-					
-				});
-				console.info(arr[0].pic)
-      	this.form.cover = JSON.stringify(arr); 
-      	
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true

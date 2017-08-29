@@ -401,7 +401,8 @@
 //		      })
       this.$fetch.api_table.list({
         current: this.currentPage,
-        pageSize: this.length
+        pageSize: this.length,
+        areaName:'玉溪本部'
       })
         .then(response => {
           this.table_data = response.data.records
