@@ -36,8 +36,10 @@
           width="200"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit" @click="open4" prop="do">编辑</el-button>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index, props.row)">删除</el-button>
+          	<router-link :to="{name: 'meetingAdd',params: {id: props.row.id,index: props.row.index},}" tag="span">
+            	<el-button type="info" size="small" icon="edit">编辑</el-button>
+            </router-link>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -56,6 +58,9 @@
     	 
       return {
         table_data: [],
+        currentId:'',
+        currentFlow:[],
+        currentDate:'',
         length: 7,
         //请求时的loading效果
         load_data: true
@@ -83,7 +88,7 @@
           areaName: '宣威'
         })
           .then(response => {
-          	var list = response.data;
+          	var list = response.data.reverse();
           	$.each(list, function(index, value, array) {
 						 	list[index].flow = JSON.parse(list[index].flow)
 						});
@@ -98,19 +103,25 @@
   
       //单个删除
       delete_data(item){
+      	console.log(item)
+      	this.currentId = this.table_data[item].id;
+      	this.index = item;
+      	console.log(this.index)
+      	console.log(this.currentId)
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
-          .then((index, row) => {
+          .then((index) => {
             this.load_data = true;
+               
             try{
                         this.$message({
                             type: 'success',
                             message: '删除成功'
                         });
-                        this.table_data.splice(index, 1);
+                        this.table_data.splice(item, 1);
                     		this.load_data = false;
                 }catch(err){
                     this.$message({
@@ -119,13 +130,14 @@
                     });
                     console.log('删除失败')
                 }
-//          this.$fetch.api_table.del(item)
-//            .then(({msg}) => {
-//              this.get_table_data()
-//              this.$message.success(msg)
-//            })
-//            .catch(() => {
-//            })
+                var data = {"id":this.currentId,"flag":-1}
+            this.$fetch.api_wisdom.saveEarlyMetting(data)
+              .then(({msg}) => {
+                this.get_table_data()
+                this.$message.success(msg)
+              })
+              .catch(() => {
+              })
           })
           .catch(() => {
           })
@@ -134,37 +146,6 @@
       handleCurrentChange(val) {
         this.currentPage = val
         this.get_table_data()
-      },
-       open4() {
-        const h = this.$createElement;
-        this.$msgbox({
-          title: '消息',
-          message: h('p', null, [
-            h('span', null, '确定要取消模板吗？')
-          ]),
-          showCancelButton: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              instance.confirmButtonText = '执行中...';
-              setTimeout(() => {
-                done();
-                setTimeout(() => {
-                  instance.confirmButtonLoading = false;
-                }, 300);
-              }, 3000);
-            } else {
-              done();
-            }
-          }
-        }).then(action => {
-          this.$message({
-            type: 'info',
-            message: '更改成功'
-          });
-        });
       }
     },
     mounted() {

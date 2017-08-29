@@ -29,7 +29,7 @@
 				</el-dialog>
 				
         <el-row>
-				  <el-col :span="3" v-for="(item,$index) in tables" style='margin:10px;position: relative;' >
+				  <el-col :span="4" v-for="(item,$index) in tables" style='margin:10px;position: relative;' >
 				  	<div class="" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >
 				  		 <router-link :to="{name: 'imagesAdd'}" tag="span">
 				  		<el-card :body-style="{ padding: '0px' }" >

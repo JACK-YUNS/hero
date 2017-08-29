@@ -6,10 +6,10 @@
          element-loading-text="拼命加载中">
       <el-row>
         <el-col :span="18">
-          <el-form ref="form" >
+          <el-form>
             <el-form-item  >
             	<p>选择早会日期</p>
-            	<el-button v-for="(item,index) in form" :data-index="index.toString()"   @click="detail">{{item.meetingDate}} </el-button>
+            	<el-button v-for="(item,index) in form" :data-index="index.toString()" :data-id="item.id"  @click="detail" :class='{active:index==isA}'>{{item.meetingDate}} </el-button>
               <!--<el-button type="primary" :disabled="true">7月31日</el-button>
               <el-button type="primary" :disabled="true">8月1日</el-button>
               <el-button type="primary">8月2日</el-button>
@@ -22,23 +22,14 @@
             	<p>添加流程<span class="rull">每个环节名称不超过14个汉字</span></p>
               <el-form-item v-for="(item,index) in currentFlow"  :label="(parseInt(index.toString())+1)">
               	
-	              <el-input v-model="item.content" style="width: 300px;"  v-if="index < (currentFlow.length-1)"></el-input>
-	              <el-input v-model="item.content" style="width: 300px;"  v-if="index == (currentFlow.length-1)"></el-input>
-	              <el-button type="success" size="primary" @click="addItem">删除</el-button>
-	              <el-form-item v-if="index == (currentFlow.length-1)" style="position: absolute;bottom: 4px;left: 350px;">
+	              <el-input v-model="item.content" style="width: 300px;"  v-if="index < (currentFlow.length-1)" :maxlength=14></el-input>
+	              <el-input v-model="item.content" style="width: 300px;"  v-if="index == (currentFlow.length-1)" :maxlength=14></el-input>
+	              <el-button type="danger" size="primary" @click="delItem(index)" v-if="index < (currentFlow.length-1)">删除</el-button>
+	              <el-button type="danger" size="primary" @click="delItem(index)" v-if="index == (currentFlow.length-1)">删除</el-button>
+	              <el-form-item v-if="index == (currentFlow.length-1)" style="position: absolute;bottom: 4px;left: 390px;">
 							   <el-button type="success" icon="plus" size="primary" @click="addItem">添加流程节点</el-button>
 							  </el-form-item>
 	            </el-form-item>
-	          
-	          
-	            <!--<el-form :inline="true"  class="demo-form-inline">
-							  <el-form-item :label="currentFlow.length">
-							    <el-input v-model="currentFlow[currentFlow.length-1].content" placeholder="" style="width: 300px;" ></el-input>
-							  </el-form-item>
-							  <el-form-item>
-							   <el-button type="success" icon="plus" size="primary">添加流程节点</el-button>
-							  </el-form-item>
-							</el-form>-->
 	          </el-form-item>
 	           
             <el-form-item>
@@ -58,11 +49,14 @@
     data(){
       return {
         form:[],
+        currentId:'',
         currentFlow:[],
         currentDate:'',
         route_id: this.$route.params.id,
+        route_index: this.$route.params.index,
         load_data: false,
-        on_submit_loading: false
+        on_submit_loading: false,
+         isA: '0'
       }
     },
     created(){
@@ -73,7 +67,7 @@
       get_form_data(){
         this.load_data = true
         this.$fetch.api_wisdom.earlyMettingList({
-          areaName: '宣威'
+          areaName: '宣威' , id: this.route_id 
         })
           .then(response => {
           	var list = response.data.reverse();
@@ -83,7 +77,8 @@
 						});
           	
           	this.currentFlow = list[0].flow;
-
+						this.currentId=list[0].id;
+						this.currentDate=list[0].meetingDate;
             this.form = list;
 
 	          this.load_data = false
@@ -95,24 +90,48 @@
       addItem(){
       	this.currentFlow.push([{content:'',index:-1}]);
       },
+      delItem(item){
+      	console.log(item)
+      	 //单个删除
+        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then((index) => {
+            this.load_data = true;
+            try{
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功'
+                        });
+                        this.currentFlow.splice(item, 1);
+                    		this.load_data = false;
+                }catch(err){
+                    this.$message({
+                        type: 'error',
+                        message: err.message
+                    });
+                    console.log('删除失败')
+                }
+          })
+          .catch(() => {
+          })
+      },
       detail(e){
       	var index = $(e.target).attr('data-index');
+      	var id = $(e.target).attr('data-index');
+          console.log(index)
       	this.currentFlow = this.form[index].flow;
+      	this.currentId = this.form[index].id;
+      	this.currentDate = this.form[index].meetingDate;
+      	 this.isA = index;  
       },
-      //时间选择改变时
-      on_change_birthday(val){
-        this.$set(this.form, 'birthday', val)
-      },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
+     
       handleChange(value) {
         console.log(value);
       },
+      
       //提交
       on_submit_form(){
       	var currentDate = this.currentDate;
@@ -127,22 +146,23 @@
 							index = "0"+index;
 						}
 						var flowItem = {index:index,content:value.content};
-						flow.push(flowItem);
+						if(value.content=='' || value.content==null || value.content == undefined){
+							return ;
+						}else{
+							flow.push(flowItem);
+						}
+						
 				});
 				
-				var params = {meetingDate:currentDate,flow:JSON.stringify(flow)};
-//      this.$refs.form.validate((valid) => {
-//        if (!valid) return false
-//        this.on_submit_loading = true
-//        this.$fetch.api_wisdom.saveEarlyMetting(this.form)
-//          .then(({msg}) => {
-//            this.$message.success(msg)
-//            setTimeout(this.$router.back(), 500)
-//          })
-//          .catch(() => {
-//            this.on_submit_loading = false
-//          })
-//      })
+				var params = {id:this.currentId,meetingDate:this.currentDate,flow:JSON.stringify(flow)};
+				this.$fetch.api_wisdom.saveEarlyMetting(params)
+            .then(({msg}) => {
+              this.$message.success(msg)
+              setTimeout(this.$router.back(), 500)
+            })
+            .catch(() => {
+              this.on_submit_loading = false
+            })
       }
     },
     components: {
@@ -152,4 +172,6 @@
 </script>
 <style scoped="scoped">
 	.rull{font-size: 12px;color: #ccc;margin-left: 5px;}
+	.active {color: #fff;background-color: #20a0ff;border-color: #20a0ff;}
+	.unactive{background: #fff;border: 1px solid #c4c4c4;color: #1f2d3d;}
 </style>
