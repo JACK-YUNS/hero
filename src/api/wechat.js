@@ -68,10 +68,26 @@ export function findPosterById(data) {
     data
   })
 }
+//海报单个删除
+export function delPoster(data) {
+  return fetch({
+    url: port_wechat.delPoster,
+    method: 'post',
+    data
+  })
+}
 //文章详情
 export function findArticleById(data) {
   return fetch({
     url: port_wechat.findArticleById,
+    method: 'post',
+    data
+  })
+}
+//文章单个删除
+export function delArticle(data) {
+  return fetch({
+    url: port_wechat.delArticle,
     method: 'post',
     data
   })

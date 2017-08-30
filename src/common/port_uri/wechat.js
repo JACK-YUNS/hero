@@ -11,6 +11,10 @@ export const templateList = "/api/wechat/templateList"
 export const findImageById = "/api/wechat/findImageById"
 //金句删除
 export const delImage = "/api/wechat/delImage"
+//海报删除
+export const delPoster = "/api/wechat/delPoster"
+//文章删除
+export const delArticle = "/api/wechat/delArticle"
 //海报详情
 export const findPosterById = "/api/wechat/findPosterById"
 //文章详情

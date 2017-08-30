@@ -1,10 +1,10 @@
 <template>
   <div class="panel">
     <panel-title :title="$route.meta.title">
-      <el-button @click.stop="on_refresh" size="small">
+      <!--<el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
-      <!--<router-link :to="{name: 'tableAdd'}" tag="span">
+      <router-link :to="{name: 'tableAdd'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
       </router-link>-->
     </panel-title>
@@ -103,13 +103,13 @@
           width="200"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate">
+            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 0" @click="deltemplate">
 	            <span>取消模板</span>
 	          </el-button>
-	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type">
+	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id)">
 	            <span>设置模板</span>
 	          </el-button>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data('id'+'='+props.row.id)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -125,16 +125,15 @@
 			    </el-table-column>
 			  </el-table>
 			</el-dialog>
-       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+       <el-dialog title="编辑排序" :visible.sync="dialogFormVisible">
 	      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
 	        <el-form-item label="排序">
-	          <el-input ></el-input>
+	          <el-input v-model="sort" @change="inputsort"></el-input>
 	        </el-form-item>
 	      </el-form>
 	      <div slot="footer" class="dialog-footer">
 	        <el-button @click="dialogFormVisible = false">取 消</el-button>
-	        <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
-	        <el-button v-else type="primary" @click="update">确 定</el-button>
+	        <el-button type="primary" @click="create(temp.id)">确 定</el-button>
 	      </div>
 	    </el-dialog>
 				
@@ -181,14 +180,10 @@
         dialogTableVisible:false,
         template_type: [],
         dialogStatus: '',
-        textMap: {
-          update: '编辑',
-          create: '创建'
-        },
         dialogPvVisible: false,
        
       	temp: {
-          id: undefined,
+          id: '',
           importance: 0,
           remark: '',
           timestamp: 0,
@@ -213,7 +208,8 @@
         batch_select: [],
         //模板类型
         type:1,
-        currentId:[]
+        currentId:'',
+        sort:''
         
       }
     },
@@ -289,7 +285,6 @@
       //刷新
       on_refresh(){
         this.get_table_data()
-        this.get_template_type()
       },
       //获取数据
       get_table_data(){
@@ -301,10 +296,10 @@
           .then(response => {	
           	var list = response.data.records;
             $.each(list, function(index, value, array) {
-						 console.log(list[index].id)
-						});
-//						
+//						 console.log(list[index].id)
+						});				
 						 this.table_data =list
+						 this.currentId = list[index].id
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
 	          this.load_data = false
@@ -314,8 +309,9 @@
           })
       },
       //获取模板类型
-      get_template_type(){
+      get_template_type(id){
       	this.dialogTableVisible = true;
+      	this.currentId = id;
         this.$fetch.api_wechat.templateList({
 					current: this.currentPage,
           pageSize: this.length,
@@ -333,7 +329,8 @@
 
 	      },
       //单个删除
-      delete_data(item){
+      delete_data(item,id){
+      	this.currentId = this.table_data[item].id;
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -341,13 +338,12 @@
         })
           .then((id) => {
             this.load_data = true;
-            console.log(item)
             try{
                         this.$message({
                             type: 'success',
                             message: '删除成功'
                         });
-                        this.table_data.splice(index, 1);
+                        this.table_data.splice(item, 1);
                     		this.load_data = false;
                 }catch(err){
                     this.$message({
@@ -356,7 +352,8 @@
                     });
                     console.log('删除失败')
                 }
-            this.$fetch.api_wechat.delImage(item)
+            var data = {"id":this.currentId,"flag":-1}
+            this.$fetch.api_wechat.delImage(data)
               .then(({msg}) => {
                 this.get_table_data()
                 this.$message.success(msg)
@@ -396,11 +393,10 @@
         });
       },
 			//设置模板
-			addTemplate(item,e){
-				this.currentId = this.table_data[item].id;//当前点击的文章id
+			addTemplate(item){
+				//当前点击的文章id
 				this.templateId = this.template_type[item].id;//模板id
 				var type = this.type;
-				console.log(this.currentId)
 				this.dialogTableVisible = false;
 				this.load_data = false
         this.$fetch.api_wechat.setTemplate({
@@ -415,40 +411,46 @@
             this.load_data = false
           })
 			},
+			//跟换排序里面的值
+			inputsort(){
+				
+			},
+			
        handleUpdate(row) {
         this.temp = Object.assign({}, row);
         this.dialogStatus = 'update';
         this.dialogFormVisible = true;
+        var sort = this.temp.sort;
+        var myDate=new Date('2020-01-01 00:00:00')
+        var sortnum = sort - myDate.getTime()
+        console.log(sortnum)
+        this.sort =sortnum;
+        if (sort < myDate.getTime()) {
+          return 0;
+        }
+        else if(sort == null){
+        	return 0;
+        }
+        else{
+        	 return sort - myDate.getTime();
+        }
+        
       },
       create() {
-        this.temp.id = parseInt(Math.random() * 100) + 1024;
-        this.temp.timestamp = +new Date();
-        this.temp.author = '原创作者';
-        this.list.unshift(this.temp);
-        this.dialogFormVisible = false;
-        this.$notify({
-          title: '成功',
-          message: '创建成功',
-          type: 'success',
-          duration: 2000
-        });
-      },
-      update() {
-        this.temp.timestamp = +this.temp.timestamp;
-        for (const v of this.list) {
-          if (v.id === this.temp.id) {
-            const index = this.list.indexOf(v);
-            this.list.splice(index, 1, this.temp);
-            break;
-          }
-        }
-        this.dialogFormVisible = false;
-        this.$notify({
-          title: '成功',
-          message: '更新成功',
-          type: 'success',
-          duration: 2000
-        });
+      	this.dialogFormVisible = false
+      	this.currentId = id;
+      	console.log(this.currentId)
+      	 this.$fetch.api_wechat.saveImage({
+					sort:this.sort,
+					id:this.currentId
+        })
+          .then(response => {	
+            this.get_table_data()
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+      	
       }
     },
    

@@ -1,51 +1,47 @@
 <template>
   <div class="panel">
     <panel-title :title="$route.meta.title">
-      <el-button @click.stop="on_refresh" size="small">
+      <!--<el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
       <router-link :to="{name: 'tableAdd'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
-      </router-link>
+      </router-link>-->
     </panel-title>
     <div class="panel-body">
-    	<div id="example"> 
-		  <el-autocomplete
-				  v-model="state4"
-				  :fetch-suggestions="querySearchAsync"
-				  placeholder="请输入标题查询"
-				  @select="handleSelect"
-				></el-autocomplete>
-		    <el-select v-model="value" placeholder="首页：全部">
-		    <el-option
-		      v-for="item in options"
-		      :key="item.value"
-		      :label="item.label"
-		      :value="item.value">
-		    </el-option>
-		  </el-select>
-		  <el-select v-model="value1" placeholder="分类：全部">
-		    <el-option
-		      v-for="item in options1"
-		      :key="item.value1"
-		      :label="item.label1"
-		      :value="item.value1">
-		    </el-option>
-		  </el-select>
-		  <el-select v-model="value2" placeholder="模板：全部">
-		    <el-option
-		      v-for="item in options2"
-		      :key="item.value2"
-		      :label="item.label2"
-		      :value="item.value2">
-		    </el-option>
-		  </el-select>
-        <el-button type="success">搜索</el-button>
-				<router-link :to="{name: 'posterAdd',params: {id: ''}}" tag="span">
-	        <el-button type="success">新建</el-button>
-	      </router-link>
-		</div>
-    	
+    	<el-form :inline="true" :model="formInline" class="demo-form-inline">
+			  <el-form-item>
+			    <el-input v-model="formInline.user" placeholder="请输入标题查询"></el-input>
+			  </el-form-item>
+			  <el-form-item>
+			    <el-select v-model="formInline.region" placeholder="首页：">
+			    	<el-option label="全部" value="quanbu">全部</el-option>
+			      <el-option label="首页" value="shouye">首页</el-option>
+			      <el-option label="不是" value="bushi">不是</el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item>
+			    <el-select v-model="formInline.assortmentType" placeholder="分类">
+			    	<el-option label="全部" value="quanbu">全部</el-option>
+			      <el-option label="理念" value="baoxianlinian">理念</el-option>
+			      <el-option label="问候" value="lizhichengzhang">问候</el-option>
+			      <el-option label="励志" value="shenghuojinnang">励志</el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item>
+			    <el-select v-model="formInline.template" placeholder="模板">
+			      <el-option label="全部" value="quanbu">全部</el-option>
+			      <el-option label="是" value="shi">是</el-option>
+			      <el-option label="否" value="fou">否</el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item>
+			    <el-button type="success" @click="onSubmit" :loading="on_submit_loading">查询</el-button>
+			    <router-link :to="{name: 'posterAdd',params: {id: ''}}" tag="span">
+		        <el-button type="success">新建</el-button>
+		      </router-link>
+			  </el-form-item>
+			</el-form>
       <el-table
         :data="table_data"
         v-loading="load_data"
@@ -106,13 +102,28 @@
           width="200"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit" @click="open4" prop="do">
-	            <span v-text="props.row.do == 0 ? '取消模板' : '设置模板'"></span>
+            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 0" @click="deltemplate">
+	            <span>取消模板</span>
 	          </el-button>
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index, props.row)">删除</el-button>
+	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id)">
+	            <span>设置模板</span>
+	          </el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog title="" :visible.sync="dialogTableVisible">
+			  <el-table :data="template_type" border>
+			    <!--<el-table-column property="index" label="序号" width="150"></el-table-column>-->
+			    <el-table-column property="title" label="主标题" width="200"></el-table-column>
+			    <el-table-column property="type" label="类型"></el-table-column>
+			    <el-table-column label="操作">
+			    	<template scope="props">
+	            <el-button type="info" size="small" icon="edit"  :data-id="props.row.id" @click="addTemplate(props.$index)">设置</el-button>
+	          </template>
+			    </el-table-column>
+			  </el-table>
+			</el-dialog>
       <bottom-tool-bar>
         <!--<el-button
           type="danger"
@@ -145,9 +156,17 @@
     data(){
     	 
       return {
-        restaurants: [],
-        state4: '',
-        timeout:  null,
+        formInline: {
+          user: '',
+          region: '',
+          assortmentType: '',
+          template: ''
+       },
+       on_submit_loading: false,
+       dialogTableVisible:false,
+       type:2,
+       currentId:[],
+       template_type: [],
 //    	el: '#test',
         table_data: [],
         //当前页码
@@ -157,45 +176,8 @@
         //每页显示多少条数据
         length: 15,
         //请求时的loading效果
-        load_data: true,
-        //批量选择数组
-        batch_select: [],
-        options: [{
-          value: '选项1',
-          label: '全部'
-        }, {
-          value: '选项2',
-          label: '首页'
-        }, {
-          value: '选项3',
-          label: '不是'
-        }],
-        options1: [{
-          value1: '选项1',
-          label1: '全部'
-        }, {
-          value1: '选项2',
-          label1: '理念'
-        }, {
-          value1: '选项3',
-          label1: '问候'
-        }, {
-          value1: '选项4',
-          label1: '励志'
-        }],
-        options2: [{
-          value2: '选项1',
-          label2: '全部'
-        }, {
-          value2: '选项2',
-          label2: '是'
-        }, {
-          value2: '选项3',
-          label2: '否'
-        }],
-        value: '',
-        value1: '',
-        value2: ''
+        load_data: true
+   
       }
     },
     components: {
@@ -256,76 +238,6 @@
         }
        
       },
-    	
-            loadAll() {
-        return [
-          { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
-          { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
-          { "value": "新旺角茶餐厅", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
-          { "value": "泷千家(天山西路店)", "address": "天山西路438号" },
-          { "value": "胖仙女纸杯蛋糕（上海凌空店）", "address": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
-          { "value": "贡茶", "address": "上海市长宁区金钟路633号" },
-          { "value": "豪大大香鸡排超级奶爸", "address": "上海市嘉定区曹安公路曹安路1685号" },
-          { "value": "茶芝兰（奶茶，手抓饼）", "address": "上海市普陀区同普路1435号" },
-          { "value": "十二泷町", "address": "上海市北翟路1444弄81号B幢-107" },
-          { "value": "星移浓缩咖啡", "address": "上海市嘉定区新郁路817号" },
-          { "value": "阿姨奶茶/豪大大", "address": "嘉定区曹安路1611号" },
-          { "value": "新麦甜四季甜品炸鸡", "address": "嘉定区曹安公路2383弄55号" },
-          { "value": "Monica摩托主题咖啡店", "address": "嘉定区江桥镇曹安公路2409号1F，2383弄62号1F" },
-          { "value": "浮生若茶（凌空soho店）", "address": "上海长宁区金钟路968号9号楼地下一层" },
-          { "value": "NONO JUICE  鲜榨果汁", "address": "上海市长宁区天山西路119号" },
-          { "value": "CoCo都可(北新泾店）", "address": "上海市长宁区仙霞西路" },
-          { "value": "快乐柠檬（神州智慧店）", "address": "上海市长宁区天山西路567号1层R117号店铺" },
-          { "value": "Merci Paul cafe", "address": "上海市普陀区光复西路丹巴路28弄6号楼819" },
-          { "value": "猫山王（西郊百联店）", "address": "上海市长宁区仙霞西路88号第一层G05-F01-1-306" },
-          { "value": "枪会山", "address": "上海市普陀区棕榈路" },
-          { "value": "纵食", "address": "元丰天山花园(东门) 双流路267号" },
-          { "value": "钱记", "address": "上海市长宁区天山西路" },
-          { "value": "壹杯加", "address": "上海市长宁区通协路" },
-          { "value": "唦哇嘀咖", "address": "上海市长宁区新泾镇金钟路999号2幢（B幢）第01层第1-02A单元" },
-          { "value": "爱茜茜里(西郊百联)", "address": "长宁区仙霞西路88号1305室" },
-          { "value": "爱茜茜里(近铁广场)", "address": "上海市普陀区真北路818号近铁城市广场北区地下二楼N-B2-O2-C商铺" },
-          { "value": "鲜果榨汁（金沙江路和美广店）", "address": "普陀区金沙江路2239号金沙和美广场B1-10-6" },
-          { "value": "开心丽果（缤谷店）", "address": "上海市长宁区威宁路天山路341号" },
-          { "value": "超级鸡车（丰庄路店）", "address": "上海市嘉定区丰庄路240号" },
-          { "value": "妙生活果园（北新泾店）", "address": "长宁区新渔路144号" },
-          { "value": "香宜度麻辣香锅", "address": "长宁区淞虹路148号" },
-          { "value": "凡仔汉堡（老真北路店）", "address": "上海市普陀区老真北路160号" },
-          { "value": "港式小铺", "address": "上海市长宁区金钟路968号15楼15-105室" },
-          { "value": "蜀香源麻辣香锅（剑河路店）", "address": "剑河路443-1" },
-          { "value": "北京饺子馆", "address": "长宁区北新泾街道天山西路490-1号" },
-          { "value": "饭典*新简餐（凌空SOHO店）", "address": "上海市长宁区金钟路968号9号楼地下一层9-83室" },
-          { "value": "焦耳·川式快餐（金钟路店）", "address": "上海市金钟路633号地下一层甲部" },
-          { "value": "动力鸡车", "address": "长宁区仙霞西路299弄3号101B" },
-          { "value": "浏阳蒸菜", "address": "天山西路430号" },
-          { "value": "四海游龙（天山西路店）", "address": "上海市长宁区天山西路" },
-          { "value": "樱花食堂（凌空店）", "address": "上海市长宁区金钟路968号15楼15-105室" },
-          { "value": "壹分米客家传统调制米粉(天山店)", "address": "天山西路428号" },
-          { "value": "福荣祥烧腊（平溪路店）", "address": "上海市长宁区协和路福泉路255弄57-73号" },
-          { "value": "速记黄焖鸡米饭", "address": "上海市长宁区北新泾街道金钟路180号1层01号摊位" },
-          { "value": "红辣椒麻辣烫", "address": "上海市长宁区天山西路492号" },
-          { "value": "(小杨生煎)西郊百联餐厅", "address": "长宁区仙霞西路88号百联2楼" },
-          { "value": "阳阳麻辣烫", "address": "天山西路389号" },
-          { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }
-        ];
-      },
-      querySearchAsync(queryString, cb) {
-        var restaurants = this.restaurants;
-        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          cb(results);
-        }, 3000 * Math.random());
-      },
-      createStateFilter(queryString) {
-        return (state) => {
-          return (state.value.indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      handleSelect(item) {
-        console.log(item);
-      },
     
       //刷新
       on_refresh(){
@@ -339,7 +251,11 @@
           pageSize: this.length
         })
           .then(response => {
-	          this.table_data = response.data.records
+          	var list = response.data.records;
+            $.each(list, function(index, value, array) {
+//						 console.log(list[index].id)
+						});				
+						 this.table_data =list
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
 	          this.load_data = false
@@ -348,22 +264,39 @@
             this.load_data = false
           })
       },
-  
+   //获取模板类型
+      get_template_type(id){
+      	this.dialogTableVisible = true;
+      	this.currentId = id;
+          console.log(this.currentId)     
+        this.$fetch.api_wechat.templateList({
+					current: this.currentPage,
+          pageSize: this.length,
+          type:this.type
+        })
+          .then(response => {	
+            this.template_type = response.data.records
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+      },
       //单个删除
       delete_data(item){
+      	this.currentId = this.table_data[item].id;
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
-          .then((index, row) => {
+          .then((id) => {
             this.load_data = true;
             try{
                         this.$message({
                             type: 'success',
                             message: '删除成功'
                         });
-                        this.table_data.splice(index, 1);
+                        this.table_data.splice(item, 1);
                     		this.load_data = false;
                 }catch(err){
                     this.$message({
@@ -372,13 +305,14 @@
                     });
                     console.log('删除失败')
                 }
-//          this.$fetch.api_table.del(item)
-//            .then(({msg}) => {
-//              this.get_table_data()
-//              this.$message.success(msg)
-//            })
-//            .catch(() => {
-//            })
+          var data = {"id":this.currentId,"flag":-1}
+            this.$fetch.api_wechat.delPoster(data)
+              .then(({msg}) => {
+                this.get_table_data()
+                this.$message.success(msg)
+              })
+              .catch(() => {
+              })
           })
           .catch(() => {
           })
@@ -392,66 +326,50 @@
       on_batch_select(val){
         this.batch_select = val
       },
-      //批量删除
-      on_batch_del(){
-        this.$confirm('此操作将批量删除选择数据, 是否继续?', '提示', {
+      //查询
+      onSubmit(){
+      	
+      },
+      //删除模板
+       deltemplate() {
+         this.$confirm('请确定是否取消模板?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        })
-          .then((index) => {
-            this.load_data = true
-//          this.table_data=[];
-            if(this.batch_select){
-            	console.log(this.batch_select)
-            	this.load_data = false;
-            	this.table_data.splice(index, this.batch_select.length);
-            }
-//          this.$fetch.api_table.batch_del(this.batch_select)
-//            .then(({msg}) => {
-//              this.get_table_data()
-//              this.$message.success(msg)
-//            })
-//            .catch(() => {
-//            })
-          })
-          .catch(() => {
-          })
-      },
-       open4() {
-        const h = this.$createElement;
-        this.$msgbox({
-          title: '消息',
-          message: h('p', null, [
-            h('span', null, '确定要取消模板吗？')
-          ]),
-          showCancelButton: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              instance.confirmButtonText = '执行中...';
-              setTimeout(() => {
-                done();
-                setTimeout(() => {
-                  instance.confirmButtonLoading = false;
-                }, 300);
-              }, 3000);
-            } else {
-              done();
-            }
-          }
-        }).then(action => {
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '取消成功!'
+          });
+        }).catch(() => {
           this.$message({
             type: 'info',
-            message: '更改成功'
-          });
+            message: '已取消'
+          });          
         });
-      }
+      },
+			//设置模板
+			addTemplate(item){
+				//当前点击的文章id
+				this.templateId = this.template_type[item].id;//模板id
+				var type = this.type;
+				this.dialogTableVisible = false;
+				this.load_data = false
+        this.$fetch.api_wechat.setTemplate({
+        	id:this.currentId,
+        	templateId:this.templateId,
+          type:this.type
+        })
+          .then(response => {	
+            
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+			}
     },
     mounted() {
-      this.restaurants = this.loadAll();
+    	
     }
   }
 </script>
