@@ -106,14 +106,25 @@
             <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate">
 	            <span>取消模板</span>
 	          </el-button>
-	          <el-button type="info" size="small" icon="edit"  prop="template" v-else @click="addtemplate">
+	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type">
 	            <span>设置模板</span>
 	          </el-button>
             <el-button type="danger" size="small" icon="delete" @click="delete_data('id'+'='+props.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      
+      <el-dialog title="" :visible.sync="dialogTableVisible">
+			  <el-table :data="template_type" border>
+			    <!--<el-table-column property="index" label="序号" width="150"></el-table-column>-->
+			    <el-table-column property="title" label="主标题" width="200"></el-table-column>
+			    <el-table-column property="type" label="类型"></el-table-column>
+			    <el-table-column label="操作">
+			    	<template scope="props">
+	            <el-button type="info" size="small" icon="edit"  :data-id="props.row.id" @click="addTemplate(props.$index)">设置</el-button>
+	          </template>
+			    </el-table-column>
+			  </el-table>
+			</el-dialog>
        <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
 	      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
 	        <el-form-item label="排序">
@@ -165,8 +176,10 @@
           assortmentType: '',
           template: ''
        },
-       on_submit_loading: false,
-        dialogFormVisible: false,
+	      on_submit_loading: false,
+	      dialogFormVisible: false,
+        dialogTableVisible:false,
+        template_type: [],
         dialogStatus: '',
         textMap: {
           update: '编辑',
@@ -197,7 +210,10 @@
         //请求时的loading效果
         load_data: true,
         //批量选择数组
-        batch_select: []
+        batch_select: [],
+        //模板类型
+        type:1,
+        currentId:[]
         
       }
     },
@@ -273,6 +289,7 @@
       //刷新
       on_refresh(){
         this.get_table_data()
+        this.get_template_type()
       },
       //获取数据
       get_table_data(){
@@ -282,8 +299,12 @@
           pageSize: this.length
         })
           .then(response => {	
-            this.table_data = response.data.records
-            console.log(this.table_data)
+          	var list = response.data.records;
+            $.each(list, function(index, value, array) {
+						 console.log(list[index].id)
+						});
+//						
+						 this.table_data =list
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
 	          this.load_data = false
@@ -292,9 +313,24 @@
             this.load_data = false
           })
       },
+      //获取模板类型
+      get_template_type(){
+      	this.dialogTableVisible = true;
+        this.$fetch.api_wechat.templateList({
+					current: this.currentPage,
+          pageSize: this.length,
+          type:this.type
+        })
+          .then(response => {	
+            this.template_type = response.data.records
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+      },
       //提交
 	 			 onSubmit() {
-	        console.log('1')
+
 	      },
       //单个删除
       delete_data(item){
@@ -340,32 +376,7 @@
       on_batch_select(val){
         this.batch_select = val
       },
-      //批量删除
-      on_batch_del(){
-        this.$confirm('此操作将批量删除选择数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then((index) => {
-            this.load_data = true
-            this.table_data=[];
-            if(this.batch_select){
-//          	console.log(this.batch_select)
-            	this.load_data = false;
-            	this.table_data.splice(index, this.batch_select.length);
-            }
-//          this.$fetch.api_table.batch_del(this.batch_select)
-//            .then(({msg}) => {
-//              this.get_table_data()
-//              this.$message.success(msg)
-//            })
-//            .catch(() => {
-//            })
-          })
-          .catch(() => {
-          })
-      },
+      
 			//删除模板
        deltemplate() {
          this.$confirm('请确定是否取消模板?', '提示', {
@@ -375,18 +386,34 @@
         }).then(() => {
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '取消成功!'
           });
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消'
           });          
         });
       },
 			//设置模板
-			addtemplate(){
-				
+			addTemplate(item,e){
+				this.currentId = this.table_data[item].id;//当前点击的文章id
+				this.templateId = this.template_type[item].id;//模板id
+				var type = this.type;
+				console.log(this.currentId)
+				this.dialogTableVisible = false;
+				this.load_data = false
+        this.$fetch.api_wechat.setTemplate({
+        	id:this.currentId,
+        	templateId:this.templateId,
+          type:this.type
+        })
+          .then(response => {	
+            
+          })
+          .catch(() => {
+            this.load_data = false
+          })
 			},
        handleUpdate(row) {
         this.temp = Object.assign({}, row);

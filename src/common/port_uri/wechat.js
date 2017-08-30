@@ -21,3 +21,5 @@ export const saveImage = "/api/wechat/saveImage"
 export const savePoster = "/api/wechat/savePoster"
 //模板详情
 export const findTemplateById = "/api/wechat/findTemplateById"
+//设置模板
+export const setTemplate = "/api/wechat/setTemplate"

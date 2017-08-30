@@ -14,32 +14,9 @@
 			    <el-input v-model="formInline.user" placeholder="请输入标题查询"></el-input>
 			  </el-form-item>
 			  <el-form-item>
-			    <el-select v-model="formInline.region" placeholder="首页：">
-			    	<el-option label="全部" value="quanbu">全部</el-option>
-			      <el-option label="首页" value="shouye">首页</el-option>
-			      <el-option label="不是" value="bushi">不是</el-option>
-			    </el-select>
-			  </el-form-item>
-			  <el-form-item>
-			    <el-select v-model="formInline.assortmentType" placeholder="分类">
-			    	<el-option label="全部" value="quanbu">全部</el-option>
-			      <el-option label="保险理念" value="baoxianlinian">保险理念</el-option>
-			      <el-option label="励志成长" value="lizhichengzhang">励志成长</el-option>
-			      <el-option label="生活锦囊" value="shenghuojinnang">生活锦囊</el-option>
-			      <el-option label="轻松一刻" value="qingsongyike">轻松一刻</el-option>
-			    </el-select>
-			  </el-form-item>
-			  <el-form-item>
-			    <el-select v-model="formInline.template" placeholder="模板">
-			      <el-option label="全部" value="quanbu">全部</el-option>
-			      <el-option label="是" value="shi">是</el-option>
-			      <el-option label="否" value="fou">否</el-option>
-			    </el-select>
-			  </el-form-item>
-			  <el-form-item>
 			    <el-button type="success" @click="onSubmit" :loading="on_submit_loading">查询</el-button>
-			    <router-link :to="{name: 'wordAdd',params: {id: ''}}" tag="span">
-		        <el-button type="success">新建</el-button>
+			    <router-link :to="{name: 'knowledgeAdd',params: {id: ''}}" tag="span">
+		        <el-button type="success">发布新见识</el-button>
 		      </router-link>
 			  </el-form-item>
 			</el-form>
@@ -66,7 +43,7 @@
           label="主标题"
           >
            <template scope="props">
-           	<router-link :to="{name: 'wordAdd',params: {id: props.row.id}}" tag="span">
+           	<router-link :to="{name: 'knowledgeAdd',params: {id: props.row.id}}" tag="span">
 			        <span class="link-type">{{props.row.title}}</span>
 			      </router-link>
 	        </template>
@@ -100,15 +77,11 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="200"
+          width="300"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate">
-	            <span>取消模板</span>
-	          </el-button>
-	          <el-button type="info" size="small" icon="edit"  prop="template" v-else @click="addtemplate">
-	            <span>设置模板</span>
-	          </el-button>
+          	<el-button type="primary" size="small" >查看评论</el-button>
+            <el-button type="primary" size="small" >编辑</el-button>
             <el-button type="danger" size="small" icon="delete" @click="delete_data('id'+'='+props.row.id)">删除</el-button>
           </template>
         </el-table-column>

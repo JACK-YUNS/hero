@@ -100,3 +100,11 @@ export function findTemplateById(data) {
     data
   })
 }
+//设置模板
+export function setTemplate(data) {
+  return fetch({
+    url: port_wechat.setTemplate,
+    method: 'post',
+    data
+  })
+}
