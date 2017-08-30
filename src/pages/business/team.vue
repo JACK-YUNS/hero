@@ -23,11 +23,7 @@
 				</el-dialog>
 
         <el-row>
-<<<<<<< HEAD
-				  <el-col :span="4" v-for="(item,$index) in tables" style='margin:10px;position: relative;' >
-=======
 				  <el-col :span="4" v-for="(item,$index) in table_data" style='margin:10px;position: relative;' >
->>>>>>> 49dfc7099c7a98a89e6d83944872cad714391079
 				  	<div class="" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >
 				  		<el-card :body-style="{ padding: '0px' }" >
 								<div style="width: 100%; background-color: rgba(0, 0, 0, 0.7);position: absolute;left: 0;right: 0;" v-show="isShow==$index && isShow >1 ">
