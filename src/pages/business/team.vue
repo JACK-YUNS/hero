@@ -5,7 +5,7 @@
       <div class="panel-body">
 
 				<!-- Form -->
-				<el-button type="success" @click="dialogFormVisible = true,title = '新建相册',form.name='',form.type=1,form.id=''">新建相册</el-button>
+				<el-button type="success" @click="newAblum(),indexNum = -1">新建相册</el-button>
 
 				<el-dialog :title="title" :visible.sync="dialogFormVisible">
             <el-form  :model="form" :rules="rules" ref="form">
@@ -23,15 +23,15 @@
 				</el-dialog>
 
         <el-row>
-				  <el-col :span="4" v-for="(item,$index) in table_data" style='margin:10px;position: relative;' >
-				  	<div class="" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >
-				  		<el-card :body-style="{ padding: '0px' }" >
+				  <el-col :span="4" v-for="(item,$index) in table_data" style='margin:10px;position: relative;width: 200px;height: 300px;' >
+				  	<div class="" style="height: 100%;width: 100%;" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >
+				  		<el-card :body-style="{ padding: '0px' ,height:'73%' }" style="height: 100%;width: 100%;" >
 								<div style="width: 100%; background-color: rgba(0, 0, 0, 0.7);position: absolute;left: 0;right: 0;" v-show="isShow==$index && isShow >1 ">
-					    		<el-button type="text" icon="edit" @click="dialogFormVisible = true,title = '编辑相册',form.name = item.name,form.type=item.type,form.id=item.id" class='centerbtn'>编辑</el-button>
-					    		<el-button type="text" icon="delete" class='centerbtn' @click="delete_data()">删除</el-button>
+					    		<el-button type="text" icon="edit" @click="editAlbum(item),indexNum =$index" class='centerbtn'>编辑</el-button>
+					    		<el-button type="text" icon="delete" class='centerbtn' @click="delete_data(item.id)">删除</el-button>
 					    	</div>
-                <router-link :to="{name: 'imagesAdd'}" tag="span">
-					      <img :src="item.cover" class="image" >
+                <router-link :to="{name: 'imagesAdd',params:{albumId:item.id}}" tag="span">
+					      <img :src="item.cover" class="image" style="height: 100%;width: 100%;" >
 					      <div style="padding: 14px;">
 					        <span>{{item.name}}</span>
 					        <div class="bottom clearfix">
@@ -65,17 +65,11 @@
   export default{
     data(){
        return {
-       	 currentDate: new Date(),
         dialogFormVisible: false,
         totalnum:10,
-        num:22,
         isShow:-1,
         title:"",
-        areaName:"宣威",
-        tables:[{
-        	show:false
-        }],
-        tables:[],
+        indexNum:-1,
         items:[{
           value: '1',
           isActive:false,
@@ -101,7 +95,11 @@
           name: '',
           type:1,
           id:"",
-          areaName:"宣威"
+          isSys:1,
+          photoNum:0,
+          cover:'https://resources.kangxun360.com/nophoto.png',
+          height:"",
+          width:""
         },
         formLabelWidth: '120px',
         table_data: [],
@@ -116,7 +114,7 @@
          on_submit_loading: false,
         rules: {
           name: [
-              {required: true, message: '相册名称不能为空', trigger: 'blur'},
+              {required: true, message: '相册名称不能为空', trigger: 'change'},
               {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
               ]
         }
@@ -149,19 +147,46 @@
             this.load_data = true
           })
       },
+      newAblum(){
+        this.dialogFormVisible = true;
+        this.title = "新建相册";
+        this.form.name="";
+        this.form.photoNum = 0;
+        this.form.type = 1;
+        this.form.isSys = 1;
+        this.form.id = "";
+        this.form.width = 570;
+        this.form.height = 570;
+        this.form.cover = "https://resources.kangxun360.com/nophoto.png";
+      },
+      editAlbum(item){
+          this.dialogFormVisible = true;
+          this.title = "编辑相册";
+          this.form.name=item.name;
+          this.form.photoNum = item.photoNum;
+          this.form.type = item.type;
+          this.form.isSys = item.isSys;
+          this.form.id = item.id;
+          this.form.cover = item.cover;
+      },
       saveAlbum(){
         this.$refs.form.validate((valid) => {
-            if (!valid) return false
+            if (!valid) return false;
           this.$fetch.api_wisdom.saveAlbum(this.form)
             .then(response => {
-
+              this.dialogFormVisible = false;
+              if(this.indexNum == -1){
+                this.$message.success("添加成功");
+                this.get_table_data();
+              }else{
+                this.$message.success("修改成功");
+                this.table_data[this.indexNum].name = this.form.name;
+                this.table_data[this.indexNum].type = this.form.type;
+              }
             })
             .catch(() => {
             });
         })
-      },
-      reset_form(formName){
-        this.$refs.formName.resetFields()
       },
       //单个删除
       delete_data(item){
@@ -170,67 +195,39 @@
           cancelButtonText: '取消',
           type: 'warning'
         })
-          .then((index, row) => {
+          .then(() => {
             this.load_data = true;
-            try{
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功'
-                        });
-                        this.tables.splice(index, 1);
-                    		this.load_data = false;
+            var delData = {"id":item};
+            this.$fetch.api_wisdom.delAlbum(delData)
+              .then(response => {
+                try{
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功'
+                  });
+                  this.load_data = false;
+                  this.get_table_data();
                 }catch(err){
-                    this.$message({
-                        type: 'error',
-                        message: err.message
-                    });
-                    console.log('删除失败')
+                  this.$message({
+                    type: 'error',
+                    message: err.message
+                  });
                 }
-//          this.$fetch.api_table.del(item)
-//            .then(({msg}) => {
-//              this.get_table_data()
-//              this.$message.success(msg)
-//            })
-//            .catch(() => {
-//            })
+              })
+              .catch(() => {
+              });
           })
           .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
           })
       },
       //页码选择
       handleCurrentChange(val) {
         this.currentPage = val
         this.get_table_data()
-      },
-      //批量选择
-      on_batch_select(val){
-        this.batch_select = val
-      },
-      //批量删除
-      on_batch_del(){
-        this.$confirm('此操作将批量删除选择数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then((index) => {
-            this.load_data = true
-//          this.table_data=[];
-            if(this.batch_select){
-            	console.log(this.batch_select)
-            	this.load_data = false;
-            	this.table_data.splice(index, this.batch_select.length);
-            }
-//          this.$fetch.api_table.batch_del(this.batch_select)
-//            .then(({msg}) => {
-//              this.get_table_data()
-//              this.$message.success(msg)
-//            })
-//            .catch(() => {
-//            })
-          })
-          .catch(() => {
-          })
       }
     },
     components: {
