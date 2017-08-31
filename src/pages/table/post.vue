@@ -88,7 +88,7 @@
           width="120"
           sortable>
           <template scope="props">
-	            <span class="link-type">{{props.row.sort | sortFormat}}</span>
+	            <span class="link-type" @click="handleUpdate(props.row)">{{props.row.sort | sortFormat}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -102,10 +102,10 @@
           width="200"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 0" @click="deltemplate">
+            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate(props.row.id,props.$index)">
 	            <span>取消模板</span>
 	          </el-button>
-	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id)">
+	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id,props.$index)">
 	            <span>设置模板</span>
 	          </el-button>
             <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
@@ -124,6 +124,17 @@
 			    </el-table-column>
 			  </el-table>
 			</el-dialog>
+			<el-dialog title="编辑排序" :visible.sync="dialogFormVisible">
+	      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
+	        <el-form-item label="排序">
+	          <el-input v-model="sort" @change="inputsort"></el-input>
+	        </el-form-item>
+	      </el-form>
+	      <div slot="footer" class="dialog-footer">
+	        <el-button @click="dialogFormVisible = false">取 消</el-button>
+	        <el-button type="primary" @click="create(temp.id)">确 定</el-button>
+	      </div>
+	    </el-dialog>
       <bottom-tool-bar>
         <!--<el-button
           type="danger"
@@ -162,10 +173,13 @@
           assortmentType: '',
           template: ''
        },
+       temp:[],
        on_submit_loading: false,
        dialogTableVisible:false,
+       dialogFormVisible: false,
        type:2,
-       currentId:[],
+       sort:'',
+       currentId:'',
        template_type: [],
 //    	el: '#test',
         table_data: [],
@@ -331,27 +345,48 @@
       	
       },
       //删除模板
-       deltemplate() {
+       deltemplate(id) {
+       	var type = this.type;
+       	this.currentId = id;
+       	this.templateId=-1;
+       	this.load_data = false
          this.$confirm('请确定是否取消模板?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '取消成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });          
-        });
+        })
+         .then(() => {
+         	try{
+                        this.$message({
+                            type: 'success',
+                            message: '取消成功'
+                        });
+                        
+                }catch(err){
+                    this.$message({
+                        type: 'error',
+                        message: '已取消'
+                    });
+                    console.log('删除失败')
+                }
+             this.$fetch.api_wechat.setTemplate({
+			        	id:this.currentId,
+			        	templateId:this.templateId,
+			          type:this.type
+			        })
+			          .then(response => {	
+			           this.get_table_data()
+			          })
+			          .catch(() => {
+			            this.load_data = false
+			          })
+			          })
+			          .catch(() => {
+			          })
       },
 			//设置模板
-			addTemplate(item){
-				//当前点击的文章id
-				this.templateId = this.template_type[item].id;//模板id
+			addTemplate(id){
+				this.templateId=1;
 				var type = this.type;
 				this.dialogTableVisible = false;
 				this.load_data = false
@@ -361,12 +396,52 @@
           type:this.type
         })
           .then(response => {	
-            
+           this.get_table_data()
           })
           .catch(() => {
             this.load_data = false
           })
-			}
+			},
+			//跟换排序里面的值
+			inputsort(){
+				
+			},
+			
+       handleUpdate(row) {
+        this.temp = Object.assign({}, row);
+        this.dialogStatus = 'update';
+        this.dialogFormVisible = true;
+        var sort = this.temp.sort;
+        var myDate=new Date('2020-01-01 00:00:00')
+        var sortnum = sort - myDate.getTime()
+        console.log(sortnum)
+        this.sort =sortnum;
+        if (sort < myDate.getTime()) {
+          return 0;
+        }
+        else if(sort == null){
+        	return 0;
+        }
+        else{
+        	 return sort - myDate.getTime();
+        }
+        
+      },
+      create() {
+      	this.dialogFormVisible = false
+      	console.log(this.temp.id)
+      	 this.$fetch.api_wechat.savePoster({
+					sort:this.sort,
+					id:this.temp.id
+        })
+          .then(response => {	
+            this.get_table_data()
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+      	
+      }
     },
     mounted() {
     	

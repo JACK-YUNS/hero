@@ -79,7 +79,7 @@
           width="120"
           sortable>
           <template scope="props">
-	            <span class="link-type" >{{props.row.sort | sortFormat}}</span>
+	            <span>{{props.row.sort | sortFormat}}</span>
           </template>
         </el-table-column>
         

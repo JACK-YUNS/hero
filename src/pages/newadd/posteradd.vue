@@ -38,8 +38,8 @@
 					  </el-form-item>
 					  <el-form-item label="是否首页展示：">
 					    <el-radio-group v-model="form.isRecommend">
-					      <el-radio label="1">不推荐</el-radio>
-					      <el-radio label="2">推荐</el-radio>
+					      <el-radio label="0">不推荐</el-radio>
+					      <el-radio label="1">推荐</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
             <el-form-item>
