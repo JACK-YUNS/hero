@@ -1,12 +1,12 @@
 <template>
   <div class="panel">
     <panel-title :title="$route.meta.title">
-      <el-button @click.stop="on_refresh" size="small">
+      <!--<el-button @click.stop="on_refresh" size="small">
         <i class="fa fa-refresh"></i>
       </el-button>
       <router-link :to="{name: 'tableAdd'}" tag="span">
         <el-button type="primary" icon="plus" size="small">添加数据</el-button>
-      </router-link>
+      </router-link>-->
     </panel-title>
     <div class="panel-body">
     	<div id="example"> 
