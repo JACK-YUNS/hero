@@ -100,7 +100,7 @@ const routes = [{
   component: loginComponent
 }, {
   path: '/',
-  redirect: '/home',
+  redirect: '/business/basic',
   component: viewPageComponent,
   children: [{
     path: '/home',
