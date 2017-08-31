@@ -82,3 +82,11 @@ export function cleanPhotoName(data) {
     data
   })
 }
+//设置封面
+export function setCover(data) {
+  return fetch({
+    url:port_wisdom.setCover,
+    method: 'post',
+    data
+  })
+}

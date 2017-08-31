@@ -19,3 +19,5 @@ export const photoList = "/api/wisdom/photoList"
 export const savePhoto = "/api/wisdom/savePhoto"
 //一键清除所有的相片名称
 export const cleanPhotoName = "/api/wisdom/cleanPhotoName"
+//设置封面
+export const setCover = "/api/wisdom/setCover"
