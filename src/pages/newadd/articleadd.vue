@@ -24,7 +24,9 @@
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item >
-					    <div id="summernote" v-model="form.contents"></div>
+					    <div>
+					        <quill-editor ref="myTextEditor" v-model="form.contents" :config="editorOption"></quill-editor>
+					    </div>
 					  </el-form-item>
 					  
             <el-form-item label="类型：">
@@ -77,10 +79,12 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
-
+	import {quillEditor} from 'vue-quill-editor';
   export default{
     data(){
       return {
+      	content: '',
+        editorOption: {},
       	postData: {token:''},
       	fileList:[],
         form: {
@@ -205,7 +209,8 @@
       }
     },
     components: {
-      panelTitle
+      panelTitle,
+      quillEditor
     },
     mounted(){
     	$('#summernote').summernote({
