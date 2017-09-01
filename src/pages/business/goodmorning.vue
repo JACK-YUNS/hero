@@ -17,7 +17,7 @@
         v-loading="load_data"
         element-loading-text="拼命加载中"
         style="width: 100%;">
-        
+
         <el-table-column type="expand">
 		      <template scope="props">
 		        <el-form label-position="left" inline class="demo-table-expand">
@@ -36,14 +36,14 @@
           width="200"
           >
           <template scope="props">
-          	<router-link :to="{name: 'meetingAdd',params: {id: props.row.id,index: props.row.index},}" tag="span">
+          	<router-link :to="{name: 'meetingAdd',params: {meetingDate: props.row.meetingDate},}" tag="span">
             	<el-button type="info" size="small" icon="edit">编辑</el-button>
             </router-link>
             <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      
+
     </div>
   </div>
 </template>
@@ -55,7 +55,7 @@
 
   export default{
     data(){
-    	 
+
       return {
         table_data: [],
         currentId:'',
@@ -71,7 +71,7 @@
       bottomToolBar
     },
      computed: {
-   
+
   },
     created(){
       this.get_table_data()
@@ -92,7 +92,7 @@
           	$.each(list, function(index, value, array) {
 						 	list[index].flow = JSON.parse(list[index].flow)
 						});
-          	
+
             this.table_data = list;
 	          this.load_data = false
           })
@@ -100,7 +100,7 @@
             this.load_data = false
           })
       },
-  
+
       //单个删除
       delete_data(item){
       	console.log(item)
@@ -115,7 +115,7 @@
         })
           .then((index) => {
             this.load_data = true;
-               
+
             try{
                         this.$message({
                             type: 'success',
@@ -149,7 +149,7 @@
       }
     },
     mounted() {
-     
+
     }
   }
 </script>

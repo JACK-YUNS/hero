@@ -9,7 +9,7 @@
           <el-form>
             <el-form-item  >
             	<p>选择早会日期</p>
-            	<el-button v-for="(item,index) in form" :data-index="index.toString()" :data-id="item.id"  @click="detail" :class='{active:index==isA}'>{{item.meetingDate}} </el-button>
+            	<el-button v-for="(item,index) in form"   @click="detail(index)" :class='{active:index==isA}'>{{item.meetingDate}} </el-button>
               <!--<el-button type="primary" :disabled="true">7月31日</el-button>
               <el-button type="primary" :disabled="true">8月1日</el-button>
               <el-button type="primary">8月2日</el-button>
@@ -20,8 +20,8 @@
             </el-form-item>
            <el-form-item>
             	<p>添加流程<span class="rull">每个环节名称不超过14个汉字</span></p>
-              <el-form-item v-for="(item,index) in currentFlow"  :label="(parseInt(index.toString())+1)">
-              	
+              <el-form-item v-for="(item,index) in currentFlow"  :label="(index+1).toString()">
+
 	              <el-input v-model="item.content" style="width: 300px;"  v-if="index < (currentFlow.length-1)" :maxlength=14></el-input>
 	              <el-input v-model="item.content" style="width: 300px;"  v-if="index == (currentFlow.length-1)" :maxlength=14></el-input>
 	              <el-button type="danger" size="primary" @click="delItem(index)" v-if="index < (currentFlow.length-1)">删除</el-button>
@@ -31,7 +31,7 @@
 							  </el-form-item>
 	            </el-form-item>
 	          </el-form-item>
-	           
+
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
               <el-button @click="$router.back()">取消</el-button>
@@ -48,50 +48,66 @@
   export default{
     data(){
       return {
+        days:[],//日期
         form:[],
         currentId:'',
         currentFlow:[],
         currentDate:'',
-        route_id: this.$route.params.id,
-        route_index: this.$route.params.index,
         load_data: false,
         on_submit_loading: false,
          isA: '0'
       }
     },
     created(){
-      this.get_form_data()
+      var _self = this;
+      _self.get_form_data();
+
+
     },
     methods: {
+      add_date(day){
+        var date1 = new Date(),
+          time1=date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
+        var date2 = new Date(date1);
+        date2.setDate(date1.getDate()+day);
+        var time2 = date2.getFullYear()+"-"+(date2.getMonth()+1)+"-"+date2.getDate();
+      },
       //获取数据
       get_form_data(){
-        this.load_data = true
-        this.$fetch.api_wisdom.earlyMettingList({
-          areaName: '宣威' , id: this.route_id 
+        var _self = this;
+        _self.load_data = true
+        _self.$fetch.api_wisdom.earlyMettingList({
+          add:'add'
         })
           .then(response => {
-          	var list = response.data.reverse();
-
+          	var list = response.data;
           	$.each(list, function(index, value, array) {
 						 	list[index].flow = JSON.parse(list[index].flow)
-						});
-          	
-          	this.currentFlow = list[0].flow;
-						this.currentId=list[0].id;
-						this.currentDate=list[0].meetingDate;
-            this.form = list;
 
-	          this.load_data = false
+              if(list[index].meetingDate == _self.$route.params.meetingDate ){
+                _self.currentFlow = list[index].flow;
+                _self.currentId=list[index].id;
+                _self.currentDate=list[index].meetingDate;
+                _self.isA = index;
+              }
+						});
+            if(!_self.$route.params.meetingDate){
+              _self.currentFlow = list[0].flow;
+              _self.currentId=list[0].id;
+              _self.currentDate=list[0].meetingDate;
+            }
+
+            _self.form = list;
+            _self.load_data = false
           })
           .catch(() => {
-            this.load_data = false
+            _self.load_data = false
           })
       },
       addItem(){
       	this.currentFlow.push([{content:'',index:-1}]);
       },
       delItem(item){
-      	console.log(item)
       	 //单个删除
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -118,20 +134,21 @@
           .catch(() => {
           })
       },
-      detail(e){
-      	var index = $(e.target).attr('data-index');
-      	var id = $(e.target).attr('data-index');
-          console.log(index)
-      	this.currentFlow = this.form[index].flow;
-      	this.currentId = this.form[index].id;
-      	this.currentDate = this.form[index].meetingDate;
-      	 this.isA = index;  
+      detail(index){
+        var _self = this;
+        _self.currentFlow = _self.form[index].flow;
+      	if(_self.currentFlow.length == 0){
+          _self.addItem()
+        }
+        _self.currentId = _self.form[index].id;
+        _self.currentDate = _self.form[index].meetingDate;
+        _self.isA = index;
       },
-     
+
       handleChange(value) {
         console.log(value);
       },
-      
+
       //提交
       on_submit_form(){
       	var currentDate = this.currentDate;
@@ -151,9 +168,9 @@
 						}else{
 							flow.push(flowItem);
 						}
-						
+
 				});
-				
+
 				var params = {id:this.currentId,meetingDate:this.currentDate,flow:JSON.stringify(flow)};
 				this.$fetch.api_wisdom.saveEarlyMetting(params)
             .then(({msg}) => {
