@@ -150,7 +150,7 @@
       	console.log(this.fileList.length)
         $.each(this.fileList, function(index, value, array) {
         	console.log(value.url)
-        	 if(value.url.indexOf('resources.kangxun360.com') != -1){
+        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
         	 		arr.push({
 			          pic:value.url
 			      	});

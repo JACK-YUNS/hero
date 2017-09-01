@@ -9,7 +9,7 @@
       </router-link>-->
     </panel-title>
     <div class="panel-body">
-    	<div id="example">
+    	<!--<div id="example">
 		    <el-select v-model="prov">
 		        <el-option v-for="option in arr" :value="option.name">
 		            {{ option.name }}
@@ -88,7 +88,7 @@
 				  @select="handleSelect"
 				></el-autocomplete>
 				<el-button type="success">确定</el-button>
-		</div>
+		</div>-->
 
       <el-table
         :data="table_data"

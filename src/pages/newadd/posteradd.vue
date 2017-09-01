@@ -141,8 +141,7 @@
       },
       //提交
       on_submit_form(){
-
-      	if(this.fileList[0].url.indexOf('resources.kangxun360.com') != -1){
+      	if(this.fileList[0].url.indexOf('resources.kangxun360.com') != -1 || this.fileList[0].url.indexOf('7mnn49.com2.z0.glb.clouddn.com') != -1){
       		this.form.pics = this.fileList[0].url; 
       	}else{
       		this.form.pics = 'http://resources.kangxun360.com/' + this.fileList[0].response.key; 

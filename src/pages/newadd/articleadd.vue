@@ -25,7 +25,17 @@
 					  </el-form-item>
 					  <el-form-item >
 					    <div>
-					        <quill-editor ref="myTextEditor" v-model="form.contents" :config="editorOption"></quill-editor>
+					        <quill-editor ref="newEditor" v-model="form.contents" :options="editorOption"></quill-editor>
+	                <el-upload
+	                  ref="upload"
+	                  action="//up.qbox.me/"
+	                  :on-success="handleAvatarSuccess"
+	                  :on-error="handleError"
+	                  :before-upload="beforeAvatarUpload"
+	                  :data="postData"
+	                  style="display:none">
+	                  <el-button id="imgInput" type="primary">点击上传</el-button>
+	                </el-upload>
 					    </div>
 					  </el-form-item>
 					  
@@ -44,18 +54,18 @@
 					  </el-form-item>
 					  <el-form-item label="封面：">
 					    <el-radio-group v-model="form.showType">
-					      <el-radio label="1">单图</el-radio>
-					      <el-radio label="0">三图</el-radio>
+					      <el-radio label="0">单图</el-radio>
+					      <el-radio label="1">三图</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					   <el-form-item label="上传图片：">
 					    <el-upload 
 					    	action="//up.qbox.me/" 
-					    	:on-success="handleAvatarSuccess" 
+					    	:on-success="handleAvatarSuccessPic" 
 					    	:on-error="handleError" 
 					    	:on-remove="handleRemove"
 					    	:before-upload="beforeAvatarUpload" 
-					    	:data="postData"
+					    	:data="postDatapic"
 					    	:file-list="fileList"
 					    	list-type="picture-card"> 
 					    	<i class="el-icon-plus"></i>
@@ -80,11 +90,38 @@
 <script type="text/javascript">
   import {panelTitle} from 'components'
 	import {quillEditor} from 'vue-quill-editor';
+	import Quill from 'quill'
+	import ElCol from "element-ui/packages/col/src/col";
+	var toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    ['blockquote', 'code-block'],
+
+    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+    [{ 'direction': 'rtl' }],                         // text direction
+
+    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+    [{ 'font': [] }],
+    [{ 'align': [] }],
+
+    ['clean'],                                         // remove formatting button
+    ['image']
+  ];
   export default{
     data(){
       return {
       	content: '',
-        editorOption: {},
+      	editorOption: {
+          modules: {
+            toolbar: toolbarOptions
+          }
+
+       },
       	postData: {token:''},
       	fileList:[],
         form: {
@@ -116,6 +153,17 @@
 //    	console.log(this.route_id)
       }
     },
+     mounted() {
+      var _self =this
+      var imgHandler = async function(image) {
+        _self.addImgRange = _self.$refs.newEditor.quill.getSelection()
+        if (image) {
+          var fileInput = document.getElementById("imgInput") //隐藏的file文本ID
+          fileInput.click() //加一个触发事件
+        }
+      }
+      _self.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
+    },
     methods: {
       //获取数据
       get_form_data(){
@@ -129,7 +177,14 @@
           	var sort = this.form.sort
           	var myDate=new Date('2020-01-01 00:00:00')
         		var sortnum = sort - myDate.getTime()
-        		this.sort = sortnum
+        		if(sort < myDate.getTime()){
+        			this.sort=0
+        		}else if(sort == null){
+        			this.sort=0
+        		}else{
+        			this.sort = sortnum
+        		}
+        		
             var picArr = JSON.parse(this.form.pics);
           	var arr =[];
             $.each(picArr, function(index, value, array) {
@@ -147,23 +202,42 @@
           })
       },
 
-      getToken(){
-      	this.$fetch.api_qiniu.getToken({
+       getToken(){
+        var _self = this;
+        _self.$fetch.api_qiniu.getToken({
         })
-          .then(response => {	
-          	console.log(response)
-            this.postData = {token : response.data}
-            this.load_data = false
+          .then(response => {
+            _self.postData = {token : response.data}
+            _self.load_data = false
           })
           .catch(() => {
-            this.load_data = false
+            _self.load_data = false
           })
       },
-      handleAvatarSuccess(res, file,fileList) {
+      handleAvatarSuccessPic(res, file,fileList) {
       	this.fileList = fileList;
       	//上传成功后在图片框显示图片
       	var imageUrl ='http://resources.kangxun360.com/'+ res.key 
       	console.log(imageUrl)
+
+      },
+      handleAvatarSuccess(res, file,fileList) {
+        var _self = this
+        var url = ''
+        if(file.url.indexOf('resources.kangxun360.com') != -1){
+          url = file.url;
+        }else{
+          url = 'https://resources.kangxun360.com/'+ file.response.key;
+        }
+        if (url != null && url.length > 0) {  // 将文件上传后的URL地址插入到编辑器文本中
+          var value = url
+          _self.addRange = _self.$refs.newEditor.quill.getSelection()
+          value = value.indexOf('http') !== -1 ? value : 'http:' + value
+          _self.$refs.newEditor.quill.insertEmbed(_self.addRange !== null ? _self.addRange.index : 0, 'image', value, Quill.sources.USER)   // 调用编辑器的 insertEmbed 方法，插入URL
+        } else {
+          _self.$message.warning("图片增加失败")
+        }
+        this.$refs['upload'].clearFiles()    // 插入成功后清除input的内容
 
       },
       handleRemove(file,fileList){
@@ -179,24 +253,60 @@
       //提交
       on_submit_form(){
       	var arr = []
-        $.each(this.fileList, function(index, value, array) {
-        	console.log(value.url)
-        	 if(value.url.indexOf('resources.kangxun360.com') != -1){
-        	 		arr.push({
-			          pic:value.url
-			      	});
-        	 }else{
-	        	 	arr.push({
-			          pic: 'http://resources.kangxun360.com/'+ value.response.key
-			      	});
-        	 }
+      	var isnum = this.form.showType;
+        var picArr = JSON.parse(this.form.pics)
+				var arrlength = arr.length+picArr.length;
+					console.log(arrlength)
+					console.log('qqq')
+      	if(isnum==0){
+      		if(arrlength<=1){
+      			$.each(this.fileList, function(index, value, array) {
+					        	console.log(value.url)
+					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
+					        	 		arr.push({
+								          pic:value.url
+								      	});
+					        	 }else{
+						        	 	arr.push({
+								          pic: 'http://resources.kangxun360.com/'+ value.response.key
+								      	});
+					        	 }
+										
+									});
+      		}else{
+      			return
+      		}
+      	} 
+      	if(isnum==1){
+      		if(arrlength<3){
+      			$.each(this.fileList, function(index, value, array) {
+					        	console.log(value.url)
+					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
+					        	 		arr.push({
+								          pic:value.url
+								      	});
+					        	 }else{
+						        	 	arr.push({
+								          pic: 'http://resources.kangxun360.com/'+ value.response.key
+								      	});
+					        	 }
+										
+									});
+      		}
+      		else{
+      			return
+      		}
+      	}
 					
-				});
+			
 //				console.info(arr[0].pic)
       	this.form.pics = JSON.stringify(arr); 
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
+          var myDate=new Date('2020-01-01 00:00:00')
+          this.form.sort = parseInt(this.sort)+myDate.getTime();
+          console.log(this.form.sort)
           this.$fetch.api_wechat.saveArticle(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
@@ -211,51 +321,8 @@
     components: {
       panelTitle,
       quillEditor
-    },
-    mounted(){
-    	$('#summernote').summernote({
-    		lang: 'zh-CN',
-    		placeholder: '请输入内容...',
-    		height: 300,
-    		minHeight: null,
-    		maxHeight: null,
-    		focus: true,
-//  		toolbar: [
-//  		  ['style',['bold','italic','clear']],
-//  		  ['fontsize',['fontsize']],
-//  		  ['para',['ul','ol','paragraph']],
-//  		  ['insert',['picture','link']]
-//  		],
-    		callback: {
-    			onImageUpload : function(files){
-                QiniuUploadUtil.uploadFile(files[0], uptoken, function(data){
-                    // 插入到summernote
-                    $this.summernote('insertImage', qiniuDomain + data['key'], function($image) {
-                        // todo，后续可以对image对象增加新的css式样等等，这里默认
-                        $image.css({
-                            display: '',
-                            width: '100%'
-                        });
-                    });
-                }, function(){
-                    alert("上传失败");
-                });                 
-            }
-    		}
-    	}),
-    	function sendFile(file){
-    	API.getImageToken().then(response => {
-    		console.log('富文本编辑器--getImageToken==Success>>>token='+response.token)
-    		var data = new FormData()
-    		data.append('file',file)
-    		data.append('token',response.token)
-    		API.unloadImage(data).then(response => {
-    			var imageQiNiuUrl = API.QiNiu_HOST + response.key
-    			$('#summernote').summernote('editor.insertImage',imageQiNiuUrl)
-    		})
-    	})
     }
-    }
+  
     
   }
 </script>

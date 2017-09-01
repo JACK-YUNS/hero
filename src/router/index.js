@@ -155,7 +155,7 @@ const routes = [{
     name: 'tableBase',
     component: baseTableComponent,
     meta: {
-      title: "基本表格",
+      title: "人员列表",
       auth: true
     }
   }, {

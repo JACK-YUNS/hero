@@ -128,7 +128,7 @@
        <el-dialog title="编辑排序" :visible.sync="dialogFormVisible">
 	      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
 	        <el-form-item label="排序">
-	          <el-input v-model="sort" @change="inputsort"></el-input>
+	          <el-input v-model="sort" @blur="inputsort"></el-input>
 	        </el-form-item>
 	      </el-form>
 	      <div slot="footer" class="dialog-footer">
@@ -439,7 +439,20 @@
 			},
 			//跟换排序里面的值
 			inputsort(){
-				
+				console.log(this.sort)
+				 var myDate=new Date('2020-01-01 00:00:00')
+         this.table_data.sort = parseInt(this.sort)+myDate.getTime();
+         console.log(this.table_data.sort )
+          this.$fetch.api_wechat.saveImage({
+					sort:this.table_data.sort,
+					id:this.temp.id
+        })
+          .then(response => {	
+            this.get_table_data()
+          })
+          .catch(() => {
+            this.load_data = false
+          })
 			},
 			
        handleUpdate(row) {
@@ -452,13 +465,13 @@
 //      console.log(sortnum)
         this.sort =sortnum;
         if (sort < myDate.getTime()) {
-          return 0;
+         this.sort=0;
         }
         else if(sort == null){
-        	return 0;
+        	this.sort=0;
         }
         else{
-        	 return sort - myDate.getTime();
+        	this.sort =sortnum;
         }
         
       },
