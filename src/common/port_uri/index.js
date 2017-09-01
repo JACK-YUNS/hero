@@ -16,6 +16,7 @@ import * as port_file from './file'
 import * as port_wechat from './wechat'
 import * as port_qiniu from './qiniu'
 import * as port_wisdom from './wisdom'
+import * as port_knowledge from './knowledge'
 
 export {
   port_code,
@@ -24,5 +25,6 @@ export {
   port_file,
   port_wechat,
   port_qiniu,
-  port_wisdom
+  port_wisdom,
+  port_knowledge
 }

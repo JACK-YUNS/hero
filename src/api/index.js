@@ -15,6 +15,7 @@ import * as api_user from './user'
 import * as api_wechat from './wechat'
 import * as api_qiniu from './qiniu'
 import * as api_wisdom from './wisdom'
+import * as api_knowledge from './knowledge'
 
 const apiObj = {
   api_file,
@@ -22,7 +23,8 @@ const apiObj = {
   api_user,
   api_wechat,
   api_qiniu,
-  api_wisdom
+  api_wisdom,
+  api_knowledge
 }
 
 const install = function (Vue) {
