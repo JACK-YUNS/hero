@@ -92,7 +92,7 @@ export function delArticle(data) {
     data
   })
 }
-//更新、新增数据
+//金句更新、新增数据
 export function saveImage(data) {
   return fetch({
     url: port_wechat.saveImage,
@@ -104,6 +104,14 @@ export function saveImage(data) {
 export function savePoster(data) {
   return fetch({
     url: port_wechat.savePoster,
+    method: 'post',
+    data
+  })
+}
+//文章更新、新增数据
+export function saveArticle(data) {
+  return fetch({
+    url: port_wechat.saveArticle,
     method: 'post',
     data
   })

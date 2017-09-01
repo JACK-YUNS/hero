@@ -103,10 +103,10 @@
           width="200"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 0" @click="deltemplate">
+            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate(props.row.id,props.$index)">
 	            <span>取消模板</span>
 	          </el-button>
-	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id)">
+	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id,props.$index)">
 	            <span>设置模板</span>
 	          </el-button>
             <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
@@ -120,7 +120,7 @@
 			    <el-table-column property="type" label="类型"></el-table-column>
 			    <el-table-column label="操作">
 			    	<template scope="props">
-	            <el-button type="info" size="small" icon="edit"  :data-id="props.row.id" @click="addTemplate(props.$index)">设置</el-button>
+	            <el-button type="info" size="small" icon="edit"  @click="addTemplate(props.$index,props.row.id)">设置</el-button>
 	          </template>
 			    </el-table-column>
 			  </el-table>
@@ -175,6 +175,7 @@
           assortmentType: '',
           template: ''
        },
+       addtemplate:'设置模板',
 	      on_submit_loading: false,
 	      dialogFormVisible: false,
         dialogTableVisible:false,
@@ -299,7 +300,6 @@
 //						 console.log(list[index].id)
 						});				
 						 this.table_data =list
-						 this.currentId = list[index].id
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
 	          this.load_data = false
@@ -309,9 +309,12 @@
           })
       },
       //获取模板类型
-      get_template_type(id){
+      get_template_type(id,item){
       	this.dialogTableVisible = true;
       	this.currentId = id;
+      	//模板id
+      	this.templateId = this.table_data[item].templateId;
+      	console.log(this.templateId)
         this.$fetch.api_wechat.templateList({
 					current: this.currentPage,
           pageSize: this.length,
@@ -330,7 +333,9 @@
 	      },
       //单个删除
       delete_data(item,id){
+      	//当前点击的文章id
       	this.currentId = this.table_data[item].id;
+      	
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -375,27 +380,48 @@
       },
       
 			//删除模板
-       deltemplate() {
+       deltemplate(id) {
+       	var type = this.type;
+       	this.currentId = id;
+       	this.templateId=-1;
+       	this.load_data = false
          this.$confirm('请确定是否取消模板?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '取消成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });          
-        });
+        })
+         .then(() => {
+         	try{
+                        this.$message({
+                            type: 'success',
+                            message: '取消成功'
+                        });
+                        
+                }catch(err){
+                    this.$message({
+                        type: 'error',
+                        message: '已取消'
+                    });
+                    console.log('删除失败')
+                }
+             this.$fetch.api_wechat.setTemplate({
+			        	id:this.currentId,
+			        	templateId:this.templateId,
+			          type:this.type
+			        })
+			          .then(response => {	
+			           this.get_table_data()
+			          })
+			          .catch(() => {
+			            this.load_data = false
+			          })
+			          })
+			          .catch(() => {
+			          })
       },
 			//设置模板
-			addTemplate(item){
-				//当前点击的文章id
-				this.templateId = this.template_type[item].id;//模板id
+			addTemplate(id){
+				this.templateId=1;
 				var type = this.type;
 				this.dialogTableVisible = false;
 				this.load_data = false
@@ -405,7 +431,7 @@
           type:this.type
         })
           .then(response => {	
-            
+           this.get_table_data()
           })
           .catch(() => {
             this.load_data = false
@@ -423,7 +449,7 @@
         var sort = this.temp.sort;
         var myDate=new Date('2020-01-01 00:00:00')
         var sortnum = sort - myDate.getTime()
-        console.log(sortnum)
+//      console.log(sortnum)
         this.sort =sortnum;
         if (sort < myDate.getTime()) {
           return 0;
@@ -438,11 +464,10 @@
       },
       create() {
       	this.dialogFormVisible = false
-      	this.currentId = id;
-      	console.log(this.currentId)
+//    	console.log(this.temp.id)
       	 this.$fetch.api_wechat.saveImage({
 					sort:this.sort,
-					id:this.currentId
+					id:this.temp.id
         })
           .then(response => {	
             this.get_table_data()

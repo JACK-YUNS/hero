@@ -23,15 +23,17 @@
 					      <el-radio label="6">趣味</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
-					  <el-form-item v-model="form.contents">
-					    <div id="summernote"></div>
+					  <el-form-item >
+					    <div>
+					        <quill-editor ref="myTextEditor" v-model="form.contents" :config="editorOption"></quill-editor>
+					    </div>
 					  </el-form-item>
 					  
             <el-form-item label="类型：">
 					    <el-radio-group v-model="form.specialType">
-					      <el-radio label="1">无</el-radio>
-					      <el-radio label="2">最新</el-radio>
-					      <el-radio label="3">必转</el-radio>
+					      <el-radio label="0">无</el-radio>
+					      <el-radio label="1">最新</el-radio>
+					      <el-radio label="2">必转</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="首页：">
@@ -43,7 +45,7 @@
 					  <el-form-item label="封面：">
 					    <el-radio-group v-model="form.showType">
 					      <el-radio label="1">单图</el-radio>
-					      <el-radio label="2">三图</el-radio>
+					      <el-radio label="0">三图</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					   <el-form-item label="上传图片：">
@@ -63,7 +65,7 @@
 					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.articleCopy"></el-input>
 					  </el-form-item>
 					  <el-form-item label="排序：">
-					    <el-input-number v-model="form.sort" @change="handleChange" :min="1" :max="10"></el-input-number>
+					    <el-input v-model="sort" style="width: 200px;"></el-input>
 					  </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
@@ -77,10 +79,12 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
-
+	import {quillEditor} from 'vue-quill-editor';
   export default{
     data(){
       return {
+      	content: '',
+        editorOption: {},
       	postData: {token:''},
       	fileList:[],
         form: {
@@ -93,8 +97,10 @@
           articleCopy:'',
           imageUrl: '',
           pics: [],
-          contents:''
+          contents:'',
+          sort:''
         },
+        sort:'',
         route_id: this.$route.params.id,
         load_data: false,
         on_submit_loading: false,
@@ -107,7 +113,7 @@
      this.getToken()
       if(this.route_id>0){
       	this.get_form_data();
-      	console.log(this.route_id)
+//    	console.log(this.route_id)
       }
     },
     methods: {
@@ -119,6 +125,11 @@
         })
           .then(response => {	
           	this.form = response.data
+          	
+          	var sort = this.form.sort
+          	var myDate=new Date('2020-01-01 00:00:00')
+        		var sortnum = sort - myDate.getTime()
+        		this.sort = sortnum
             var picArr = JSON.parse(this.form.pics);
           	var arr =[];
             $.each(picArr, function(index, value, array) {
@@ -129,12 +140,13 @@
 						});
 						this.fileList = arr;
             this.load_data = false
-            console.log(this.fileList)
+//          console.log(this.fileList)
           })
           .catch(() => {
             this.load_data = false
           })
       },
+
       getToken(){
       	this.$fetch.api_qiniu.getToken({
         })
@@ -166,9 +178,7 @@
       },
       //提交
       on_submit_form(){
-      	console.info(123123121233123)
-      	var arr =[];
-      	console.log(this.fileList.length)
+      	var arr = []
         $.each(this.fileList, function(index, value, array) {
         	console.log(value.url)
         	 if(value.url.indexOf('resources.kangxun360.com') != -1){
@@ -182,12 +192,12 @@
         	 }
 					
 				});
-				console.info(arr[0].pic)
+//				console.info(arr[0].pic)
       	this.form.pics = JSON.stringify(arr); 
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          this.$fetch.api_table.save(this.form)
+          this.$fetch.api_wechat.saveArticle(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
               setTimeout(this.$router.back(), 500)
@@ -199,7 +209,8 @@
       }
     },
     components: {
-      panelTitle
+      panelTitle,
+      quillEditor
     },
     mounted(){
     	$('#summernote').summernote({

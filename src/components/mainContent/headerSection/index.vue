@@ -1,8 +1,8 @@
 <template>
   <div class="header-section">
-    <div class="search">
+    <!--<div class="search">
       <search @search="submit_search"></search>
-    </div>
+    </div>-->
     <menu-right></menu-right>
   </div>
 </template>

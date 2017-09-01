@@ -19,10 +19,12 @@ export const delArticle = "/api/wechat/delArticle"
 export const findPosterById = "/api/wechat/findPosterById"
 //文章详情
 export const findArticleById = "/api/wechat/findArticleById"
-//更新、新增数据
+//金句更新、新增数据
 export const saveImage = "/api/wechat/saveImage"
-//更新、新增数据
+//海报更新、新增数据
 export const savePoster = "/api/wechat/savePoster"
+//文章更新、新增数据
+export const saveArticle = "/api/wechat/saveArticle"
 //模板详情
 export const findTemplateById = "/api/wechat/findTemplateById"
 //设置模板
