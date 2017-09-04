@@ -17,6 +17,7 @@ import * as port_wechat from './wechat'
 import * as port_qiniu from './qiniu'
 import * as port_wisdom from './wisdom'
 import * as port_knowledge from './knowledge'
+import * as port_journal from './journal'
 
 export {
   port_code,

@@ -456,8 +456,11 @@
       create() {
       	this.dialogFormVisible = false
       	console.log(this.temp.id)
+      	var myDate=new Date('2020-01-01 00:00:00')
+         this.table_data.sort = parseInt(this.sort)+myDate.getTime();
+         console.log(this.table_data.sort )
       	 this.$fetch.api_wechat.savePoster({
-					sort:this.sort,
+					sort:this.table_data.sort,
 					id:this.temp.id
         })
           .then(response => {
