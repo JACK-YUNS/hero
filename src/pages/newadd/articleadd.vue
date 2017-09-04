@@ -66,7 +66,7 @@
 					    	:on-remove="handleRemove"
 					    	:before-upload="beforeAvatarUpload" 
 					    	:data="postDatapic"
-					    	:file-list="fileList"
+					    	:file-list="fileListpic"
 					    	list-type="picture-card"> 
 					    	<i class="el-icon-plus"></i>
 					    </el-upload>
@@ -123,7 +123,9 @@
 
        },
       	postData: {token:''},
+      	postDatapic: {token:''},
       	fileList:[],
+      	fileListpic:[],
         form: {
           title: null,
           subtitle: '',
@@ -148,6 +150,7 @@
     },
     created(){
      this.getToken()
+     this.getTokenpic()
       if(this.route_id>0){
       	this.get_form_data();
 //    	console.log(this.route_id)
@@ -187,13 +190,21 @@
         		
             var picArr = JSON.parse(this.form.pics);
           	var arr =[];
+          	var arrpic = [];
             $.each(picArr, function(index, value, array) {
 						  arr.push({
 			          url: value.pic,
 			          status: 'finished'
 			        });
 						});
+						$.each(picArr, function(index, value, array) {
+						  arrpic.push({
+			          url: value.pic,
+			          status: 'finished'
+			        });
+						});
 						this.fileList = arr;
+						this.fileListpic = arrpic;
             this.load_data = false
 //          console.log(this.fileList)
           })
@@ -214,12 +225,72 @@
             _self.load_data = false
           })
       },
-      handleAvatarSuccessPic(res, file,fileList) {
-      	this.fileList = fileList;
+      getTokenpic(){
+        var _self = this;
+        _self.$fetch.api_qiniu.getToken({
+        })
+          .then(response => {
+            _self.postDatapic = {token : response.data}
+            _self.load_data = false
+          })
+          .catch(() => {
+            _self.load_data = false
+          })
+      },
+      handleAvatarSuccessPic(res, file,fileListpic) {
+      	this.fileListpic = fileListpic;
       	//上传成功后在图片框显示图片
       	var imageUrl ='http://resources.kangxun360.com/'+ res.key 
       	console.log(imageUrl)
-
+				var arr = []
+      	var isnum = this.form.showType;
+        var picArr = JSON.parse(this.form.pics)
+				var arrlength = arr.length+picArr.length;
+					console.log(arrlength)
+					console.log('qqq')
+      	if(isnum==0){
+      		if(arrlength<=1){
+      			$.each(this.fileListpic, function(index, value, array) {
+					        	console.log(value.url)
+					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
+					        	 		arr.push({
+								          pic:value.url
+								      	});
+					        	 }else{
+						        	 	arr.push({
+								          pic: 'http://resources.kangxun360.com/'+ value.response.key
+								      	});
+					        	 }
+										
+									});
+      		}else{
+      			return
+      		}
+      	} 
+      	if(isnum==1){
+      		if(arrlength<3){
+      			$.each(this.fileListpic, function(index, value, array) {
+					        	console.log(value.url)
+					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
+					        	 		arr.push({
+								          pic:value.url
+								      	});
+					        	 }else{
+						        	 	arr.push({
+								          pic: 'http://resources.kangxun360.com/'+ value.response.key
+								      	});
+					        	 }
+										
+									});
+      		}
+      		else{
+      			return
+      		}
+      	}
+					
+			
+//				console.info(arr[0].pic)
+      	this.form.pics = JSON.stringify(arr);
       },
       handleAvatarSuccess(res, file,fileList) {
         var _self = this
@@ -252,55 +323,7 @@
       },
       //提交
       on_submit_form(){
-      	var arr = []
-      	var isnum = this.form.showType;
-        var picArr = JSON.parse(this.form.pics)
-				var arrlength = arr.length+picArr.length;
-					console.log(arrlength)
-					console.log('qqq')
-      	if(isnum==0){
-      		if(arrlength<=1){
-      			$.each(this.fileList, function(index, value, array) {
-					        	console.log(value.url)
-					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
-					        	 		arr.push({
-								          pic:value.url
-								      	});
-					        	 }else{
-						        	 	arr.push({
-								          pic: 'http://resources.kangxun360.com/'+ value.response.key
-								      	});
-					        	 }
-										
-									});
-      		}else{
-      			return
-      		}
-      	} 
-      	if(isnum==1){
-      		if(arrlength<3){
-      			$.each(this.fileList, function(index, value, array) {
-					        	console.log(value.url)
-					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
-					        	 		arr.push({
-								          pic:value.url
-								      	});
-					        	 }else{
-						        	 	arr.push({
-								          pic: 'http://resources.kangxun360.com/'+ value.response.key
-								      	});
-					        	 }
-										
-									});
-      		}
-      		else{
-      			return
-      		}
-      	}
-					
-			
-//				console.info(arr[0].pic)
-      	this.form.pics = JSON.stringify(arr); 
+      	 
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
