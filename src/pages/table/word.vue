@@ -440,19 +440,19 @@
 			//跟换排序里面的值
 			inputsort(){
 				console.log(this.sort)
-				 var myDate=new Date('2020-01-01 00:00:00')
-         this.table_data.sort = parseInt(this.sort)+myDate.getTime();
-         console.log(this.table_data.sort )
-          this.$fetch.api_wechat.saveImage({
-					sort:this.table_data.sort,
-					id:this.temp.id
-        })
-          .then(response => {	
-            this.get_table_data()
-          })
-          .catch(() => {
-            this.load_data = false
-          })
+//				 var myDate=new Date('2020-01-01 00:00:00')
+//       this.table_data.sort = parseInt(this.sort)+myDate.getTime();
+//       console.log(this.table_data.sort )
+//        this.$fetch.api_wechat.saveImage({
+//					sort:this.table_data.sort,
+//					id:this.temp.id
+//      })
+//        .then(response => {	
+//          this.get_table_data()
+//        })
+//        .catch(() => {
+//          this.load_data = false
+//        })
 			},
 			
        handleUpdate(row) {
@@ -478,8 +478,11 @@
       create() {
       	this.dialogFormVisible = false
 //    	console.log(this.temp.id)
+				var myDate=new Date('2020-01-01 00:00:00')
+         this.table_data.sort = parseInt(this.sort)+myDate.getTime();
+         console.log(this.table_data.sort )
       	 this.$fetch.api_wechat.saveImage({
-					sort:this.sort,
+					sort:this.table_data.sort,
 					id:this.temp.id
         })
           .then(response => {	
