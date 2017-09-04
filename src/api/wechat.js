@@ -132,3 +132,19 @@ export function setTemplate(data) {
     data
   })
 }
+//保存模板
+export function saveTemplate(data) {
+  return fetch({
+    url: port_wechat.saveTemplate,
+    method: 'post',
+    data
+  })
+}
+//删除模板
+export function delTemplate(data) {
+  return fetch({
+    url: port_wechat.delTemplate,
+    method: 'post',
+    data
+  })
+}

@@ -11,17 +11,17 @@
               <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="副标题:" prop="subtitle">
-              <el-input v-model="form.subtitle" placeholder="请输入内容" style="width: 500px;"></el-input>
+              <el-input v-model="form.subTitle" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="类型：">
-					    <el-radio-group v-model="form.assortmentType">
-					      <el-radio label="图文"></el-radio>
-					      <el-radio label="海报"></el-radio>
-					      <el-radio label="文章"></el-radio>
+					    <el-radio-group v-model="form.type">
+					      <el-radio :label="1">金句</el-radio>
+					      <el-radio :label="2">海报</el-radio>
+					      <el-radio :label="3">文章</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="排序：">
-					    <el-input-number v-model="form.sort" @change="handleChange" :min="1" :max="10"></el-input-number>
+					    <el-input-number v-model="form.sort" :min="1" :max="10"></el-input-number>
 					  </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
@@ -95,7 +95,7 @@
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          this.$fetch.api_table.save(this.form)
+          this.$fetch.api_wechat.saveTemplate(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
               setTimeout(this.$router.back(), 500)

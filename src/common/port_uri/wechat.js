@@ -29,3 +29,7 @@ export const saveArticle = "/api/wechat/saveArticle"
 export const findTemplateById = "/api/wechat/findTemplateById"
 //设置模板
 export const setTemplate = "/api/wechat/setTemplate"
+//保存模板
+export const saveTemplate = "/api/wechat/saveTemplate"
+//删除模板
+export const delTemplate = "/api/wechat/delTemplate"

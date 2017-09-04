@@ -11,29 +11,24 @@
     <div class="panel-body">
     	<el-form :inline="true" :model="formInline" class="demo-form-inline">
 			  <el-form-item>
-			    <el-input v-model="formInline.user" placeholder="请输入标题查询"></el-input>
+			    <el-input v-model="formInline.title" placeholder="请输入标题查询"></el-input>
 			  </el-form-item>
 			  <el-form-item>
-			    <el-select v-model="formInline.region" placeholder="首页：">
-			    	<el-option label="全部" value="quanbu">全部</el-option>
-			      <el-option label="首页" value="shouye">首页</el-option>
-			      <el-option label="不是" value="bushi">不是</el-option>
+			    <el-select v-model="formInline.isTop" placeholder="首页">
+			    	<el-option label="全部" value=""></el-option>
+			      <el-option label="是" value="0"></el-option>
+			      <el-option label="否" value="1"></el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item>
-			    <el-select v-model="formInline.assortmentType" placeholder="分类">
-			    	<el-option label="全部" value="quanbu">全部</el-option>
-			      <el-option label="保险理念" value="baoxianlinian">保险理念</el-option>
-			      <el-option label="励志成长" value="lizhichengzhang">励志成长</el-option>
-			      <el-option label="生活锦囊" value="shenghuojinnang">生活锦囊</el-option>
-			      <el-option label="轻松一刻" value="qingsongyike">轻松一刻</el-option>
+			    <el-select v-model="formInline.assortmentType" placeholder="是否分类">
+            <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item>
-			    <el-select v-model="formInline.template" placeholder="模板">
-			      <el-option label="全部" value="quanbu">全部</el-option>
-			      <el-option label="是" value="shi">是</el-option>
-			      <el-option label="否" value="fou">否</el-option>
+			    <el-select v-model="formInline.templateId" placeholder="模板">
+			      <el-option label="全部" value="">选择模版</el-option>
+            <el-option v-for="item in template_type" :label="item.title" :value="item.id"></el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item>
@@ -44,7 +39,7 @@
 			  </el-form-item>
 			</el-form>
 		</div>
-    	
+
       <el-table
         :data="table_data"
         v-loading="load_data"
@@ -83,6 +78,14 @@
           width="100">
         </el-table-column>
         <el-table-column
+          label="是否首页"
+          width="100">
+          <template scope="props">
+            <span v-text="props.row.isTop == 0 ? '是' : '否'"></span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
           aTime="aTime"
           :formatter="sortFormat"
           label="排序"
@@ -120,7 +123,7 @@
 			    <el-table-column property="type" label="类型"></el-table-column>
 			    <el-table-column label="操作">
 			    	<template scope="props">
-	            <el-button type="info" size="small" icon="edit"  @click="addTemplate(props.$index,props.row.id)">设置</el-button>
+	            <el-button type="info" size="small" icon="edit"  @click="addTemplate(props.row.id)">设置</el-button>
 	          </template>
 			    </el-table-column>
 			  </el-table>
@@ -136,7 +139,7 @@
 	        <el-button type="primary" @click="create(temp.id)">确 定</el-button>
 	      </div>
 	    </el-dialog>
-				
+
       <bottom-tool-bar>
         <!--<el-button
           type="danger"
@@ -158,7 +161,6 @@
         </div>
       </bottom-tool-bar>
     </div>
-  </div>
 </template>
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'
@@ -167,22 +169,40 @@
 
   export default{
     data(){
-    	 
+
       return {
-      	formInline: {
-          user: '',
-          region: '',
+        formInline: {
+          title: '',
+          isTop: '',
           assortmentType: '',
-          template: ''
-       },
-       addtemplate:'设置模板',
+          templateId: ''
+        },
+        options:[
+          {
+            value: '',
+            label: '全部'
+          }, {
+            value: '1',
+            label: '保险理念'
+          }, {
+            value: '2',
+            label: '励志成长'
+          }, {
+            value: '3',
+            label: '生活锦囊'
+          }, {
+            value: '4',
+            label: '轻松一刻'
+          }
+        ],
+        addtemplate:'设置模板',
 	      on_submit_loading: false,
 	      dialogFormVisible: false,
         dialogTableVisible:false,
         template_type: [],
         dialogStatus: '',
         dialogPvVisible: false,
-       
+
       	temp: {
           id: '',
           importance: 0,
@@ -211,7 +231,7 @@
         type:1,
         currentId:'',
         sort:''
-        
+
       }
     },
     components: {
@@ -219,10 +239,12 @@
       bottomToolBar
     },
      computed: {
-   
+
   },
     created(){
-      this.get_table_data()
+      var _self = this;
+      _self.get_table_data();
+      _self.get_template_list();
     },
      filters: {
       statusFilter(status) {
@@ -237,7 +259,7 @@
         return calendarTypeKeyValue[type]
       },
       sortFormat:function(sort) {
-        
+
         var myDate=new Date('2020-01-01 00:00:00')
         if (sort < myDate.getTime()) {
           return 0;
@@ -248,7 +270,7 @@
         else{
         	 return sort - myDate.getTime();
         }
-       
+
       }
     },
     methods: {
@@ -262,11 +284,14 @@
       },
       typeFormat:function(row, column) {
         var aType = row[column.property];
-        if (aType == undefined) {
+        if (!aType) {
           return "";
         }
-        var arr = ['','保险理念 ','励志成长 ','生活锦囊 ','增员攻略'];
-        return arr[aType];
+        return this.options[aType].label;
+      },
+      topFormat:function(row, column) {
+        var isTop = row[column.property];
+        return isTop == 0 ? '是':'否';
       },
     	sortFormat:function(row, column,cellValue) {
         var aSort = row[column.property];
@@ -281,7 +306,7 @@
         else{
         	 return aSort - myDate.getTime();
         }
-       
+
      },
       //刷新
       on_refresh(){
@@ -289,16 +314,21 @@
       },
       //获取数据
       get_table_data(){
-        this.load_data = false
-        this.$fetch.api_wechat.imageTextList({
-          current: this.currentPage,
-          pageSize: this.length
+          var _self = this;
+          _self.load_data = false
+          _self.$fetch.api_wechat.imageTextList({
+            current: _self.currentPage,
+            pageSize: _self.length,
+            title:_self.formInline.title,
+            assortmentType:_self.formInline.assortmentType,
+            templateId:_self.formInline.templateId,
+            isTop:_self.formInline.isTop
         })
-          .then(response => {	
+          .then(response => {
           	var list = response.data.records;
             $.each(list, function(index, value, array) {
 //						 console.log(list[index].id)
-						});				
+						});
 						 this.table_data =list
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
@@ -309,18 +339,20 @@
           })
       },
       //获取模板类型
-      get_template_type(id,item){
-      	this.dialogTableVisible = true;
-      	this.currentId = id;
-      	//模板id
-      	this.templateId = this.table_data[item].templateId;
-      	console.log(this.templateId)
+      get_template_type(id){
+        var _self = this;
+        _self.dialogTableVisible = true;
+        _self.currentId = id;
+        _self.get_template_list();
+
+      },
+      get_template_list(){
         this.$fetch.api_wechat.templateList({
-					current: this.currentPage,
+          current: this.currentPage,
           pageSize: this.length,
           type:this.type
         })
-          .then(response => {	
+          .then(response => {
             this.template_type = response.data.records
           })
           .catch(() => {
@@ -329,13 +361,13 @@
       },
       //提交
 	 			 onSubmit() {
-
+           this.get_table_data();
 	      },
       //单个删除
       delete_data(item,id){
       	//当前点击的文章id
       	this.currentId = this.table_data[item].id;
-      	
+
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -378,7 +410,7 @@
       on_batch_select(val){
         this.batch_select = val
       },
-      
+
 			//删除模板
        deltemplate(id) {
        	var type = this.type;
@@ -396,7 +428,7 @@
                             type: 'success',
                             message: '取消成功'
                         });
-                        
+
                 }catch(err){
                     this.$message({
                         type: 'error',
@@ -409,7 +441,7 @@
 			        	templateId:this.templateId,
 			          type:this.type
 			        })
-			          .then(response => {	
+			          .then(response => {
 			           this.get_table_data()
 			          })
 			          .catch(() => {
@@ -421,20 +453,21 @@
       },
 			//设置模板
 			addTemplate(id){
-				this.templateId=1;
-				var type = this.type;
-				this.dialogTableVisible = false;
-				this.load_data = false
-        this.$fetch.api_wechat.setTemplate({
-        	id:this.currentId,
-        	templateId:this.templateId,
-          type:this.type
+        var _self = this;
+        _self.templateId=id;
+				var type = _self.type;
+        _self.dialogTableVisible = false;
+        _self.load_data = false
+        _self.$fetch.api_wechat.setTemplate({
+        	id:_self.currentId,
+        	templateId:_self.templateId,
+          type:_self.type
         })
-          .then(response => {	
-           this.get_table_data()
+          .then(response => {
+            _self.get_table_data()
           })
           .catch(() => {
-            this.load_data = false
+            _self.load_data = false
           })
 			},
 			//跟换排序里面的值
@@ -447,14 +480,14 @@
 					sort:this.table_data.sort,
 					id:this.temp.id
         })
-          .then(response => {	
+          .then(response => {
             this.get_table_data()
           })
           .catch(() => {
             this.load_data = false
           })
 			},
-			
+
        handleUpdate(row) {
         this.temp = Object.assign({}, row);
         this.dialogStatus = 'update';
@@ -473,7 +506,7 @@
         else{
         	this.sort =sortnum;
         }
-        
+
       },
       create() {
       	this.dialogFormVisible = false
@@ -482,18 +515,18 @@
 					sort:this.sort,
 					id:this.temp.id
         })
-          .then(response => {	
+          .then(response => {
             this.get_table_data()
           })
           .catch(() => {
             this.load_data = false
           })
-      	
+
       }
     },
-   
+
     mounted() {
-     
+
     }
   }
 </script>
