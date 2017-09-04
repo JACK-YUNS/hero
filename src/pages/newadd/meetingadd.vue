@@ -62,7 +62,6 @@
       var _self = this;
       _self.get_form_data();
 
-
     },
     methods: {
       add_date(day){
@@ -96,7 +95,9 @@
               _self.currentId=list[0].id;
               _self.currentDate=list[0].meetingDate;
             }
-
+            if(_self.currentFlow.length == 0){
+              _self.addItem();
+            }
             _self.form = list;
             _self.load_data = false
           })
@@ -105,7 +106,8 @@
           })
       },
       addItem(){
-      	this.currentFlow.push([{content:'',index:-1}]);
+          var _self = this;
+          _self.currentFlow.push([{content:'',index:-1}]);
       },
       delItem(item){
       	 //单个删除
