@@ -175,7 +175,6 @@
           assortmentType: '',
           template: ''
        },
-       addtemplate:'设置模板',
 	      on_submit_loading: false,
 	      dialogFormVisible: false,
         dialogTableVisible:false,
@@ -329,7 +328,7 @@
       },
       //提交
 	 			 onSubmit() {
-
+						console.log(this.formInline.user)
 	      },
       //单个删除
       delete_data(item,id){
