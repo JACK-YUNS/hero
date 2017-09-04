@@ -43,7 +43,8 @@
           title: null,
           subtitle: '',
           contents: '',
-          assortmentType:'',
+          type:1,
+          assortmentType:1,
           isTop:'',
           imageUrl: '',
           pics: [],
@@ -92,16 +93,17 @@
       },
       //提交
       on_submit_form(){
-        this.$refs.form.validate((valid) => {
+        var _self = this;
+        _self.$refs.form.validate((valid) => {
           if (!valid) return false
-          this.on_submit_loading = true
-          this.$fetch.api_wechat.saveTemplate(this.form)
+          _self.on_submit_loading = true
+          _self.$fetch.api_wechat.saveTemplate(_self.form)
             .then(({msg}) => {
-              this.$message.success(msg)
-              setTimeout(this.$router.back(), 500)
+              _self.$message.success(msg)
+              setTimeout(_self.$router.back(), 500)
             })
             .catch(() => {
-              this.on_submit_loading = false
+              _self.on_submit_loading = false
             })
         })
       }

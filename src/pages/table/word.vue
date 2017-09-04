@@ -106,7 +106,7 @@
           width="200"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate(props.row.id,props.$index)">
+            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate(props.row.id)">
 	            <span>取消模板</span>
 	          </el-button>
 	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id,props.$index)">
@@ -376,19 +376,19 @@
           .then((id) => {
             this.load_data = true;
             try{
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功'
-                        });
-                        this.table_data.splice(item, 1);
-                    		this.load_data = false;
-                }catch(err){
-                    this.$message({
-                        type: 'error',
-                        message: err.message
-                    });
-                    console.log('删除失败')
-                }
+                this.$message({
+                    type: 'success',
+                    message: '删除成功'
+                });
+                this.table_data.splice(item, 1);
+                this.load_data = false;
+            }catch(err){
+                this.$message({
+                    type: 'error',
+                    message: err.message
+                });
+                console.log('删除失败')
+            }
             var data = {"id":this.currentId,"flag":-1}
             this.$fetch.api_wechat.delImage(data)
               .then(({msg}) => {

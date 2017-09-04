@@ -84,7 +84,7 @@
           width="100"
           >
           <template scope="props">
-            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index, props.row)">删除</el-button>
+            <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -136,6 +136,7 @@
         load_data: true,
         //批量选择数组
         batch_select: [],
+        currentId:'',
         options: [{
           value: '',
           label: '全部'
@@ -257,21 +258,30 @@
       },
 
       //单个删除
-      delete_data(item){
-        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then((index, row) => {
-            this.load_data = true;
+      delete_data(item,id){
+          var _self = this;
+          _self.currentId = id;
+          _self.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+          .then((id) => {
+            _self.load_data = true;
+
             try{
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功'
-                        });
-                        this.table_data.splice(index, 1);
-                    		this.load_data = false;
+                  _self.$fetch.api_wechat
+                    .delTemplate({id: _self.currentId})
+                    .then(response => {
+                    if(response.code == 200){
+                      _self.$message({
+                        type: 'success',
+                        message: '删除成功'
+                      });
+                      _self.table_data.splice(item, 1);
+                      _self.load_data = false;
+                    }
+                  })
                 }catch(err){
                     this.$message({
                         type: 'error',
