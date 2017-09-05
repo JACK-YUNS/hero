@@ -16,9 +16,11 @@
 								    </el-col>
 								    <el-button type="primary" @click="onSubmit" style="margin-left: 5px">立即创建</el-button>
 								  </el-form-item>
+                  <div>{{this.route_name}}- <span v-text="this.route_level == 01 ? '降级试用业务员代表' : this.route_level == 02 ?'试用业务员':this.route_level == 03 ?'正式业务员':this.route_level == 04 ?'业务主任':this.route_level == 05 ?'业务经理一级':this.route_level == 06 ?'业务经理二级':this.route_level == 07 ?'高级经理一级':'区域总监'"></span>-{{this.route_agentCode}}</div>
 								  <el-table
 							      :data="tableData"
 							      style="width: 100%">
+
 							      <el-table-column
                       type="index"
 							        label="我发出的日志"
@@ -41,7 +43,7 @@
                       width="300"
                     >
                       <template scope="props">
-                        <router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">
+                        <router-link :to="{name: '',params: {id: props.row.id}}" tag="span">
                           <span class="link-type">点击查看日志详情</span>
                         </router-link>
                       </template>
@@ -72,7 +74,8 @@
 								    </el-col>
 								     <el-button type="success" @click="on_submit_form" :loading="on_submit_loading" style="margin-left: 5px">保存</el-button>
 								  </el-form-item>
-								  <el-table
+                  <div>{{this.route_name}}- <span v-text="this.route_level == 01 ? '降级试用业务员代表' : this.route_level == 02 ?'试用业务员':this.route_level == 03 ?'正式业务员':this.route_level == 04 ?'业务主任':this.route_level == 05 ?'业务经理一级':this.route_level == 06 ?'业务经理二级':this.route_level == 07 ?'高级经理一级':'区域总监'"></span>-{{this.route_agentCode}}</div>
+                  <el-table
 							      :data="table_data"
 							      style="width: 100%">
 							      <el-table-column
@@ -107,7 +110,7 @@
 						            :current-page="currentPage"
 						            :page-size=length
 						            layout="total, prev, pager, next"
-						            :total="total">
+						            :total="totalt">
 						          </el-pagination>
 						        </div>
      							 </bottom-tool-bar>
@@ -115,7 +118,8 @@
               </el-tab-pane>
               <el-tab-pane label="拜访记录" class="area">
                  <el-form ref="form" :model="form">
-								  <el-table
+                   <div>{{this.route_name}}- <span v-text="this.route_level == 01 ? '降级试用业务员代表' : this.route_level == 02 ?'试用业务员':this.route_level == 03 ?'正式业务员':this.route_level == 04 ?'业务主任':this.route_level == 05 ?'业务经理一级':this.route_level == 06 ?'业务经理二级':this.route_level == 07 ?'高级经理一级':'区域总监'"></span>-{{this.route_agentCode}}</div>
+                   <el-table
 							      :data="tabledata"
 							      style="width: 100%">
 							      <el-table-column
@@ -146,16 +150,11 @@
                       label="内容和目标">
                     </el-table-column>
                     <el-table-column
-                      prop="address"
-                      label="拜访结果">
-                    </el-table-column>
-                    <el-table-column
-                      prop="address"
-                      label="险种及风险">
-                    </el-table-column>
-                    <el-table-column
                       prop="insuranceDemand"
                       label="产险需求">
+                      <template scope="props">
+                        <span v-text="props.row.insuranceDemand == 1 ? '有' :'无'"></span>
+                      </template>
                     </el-table-column>
 							    </el-table>
 							    <bottom-tool-bar>
@@ -165,7 +164,7 @@
 						            :current-page="currentPage"
 						            :page-size=length
 						            layout="total, prev, pager, next"
-						            :total="total">
+						            :total="totals">
 						          </el-pagination>
 						        </div>
      							 </bottom-tool-bar>
@@ -189,6 +188,8 @@
         currentPage: 1,
         //数据总条目
         total: 0,
+        totalt: 0,
+        totals: 0,
         //每页显示多少条数据
         length: 7,
          tableData: [],
@@ -206,7 +207,10 @@
             tabledata:[],
 		         //请求时的loading效果
 		        load_data: true,
-		         route_id: this.$route.params.id,
+            route_id: this.$route.params.id,
+            route_name: this.$route.params.userName,
+            route_agentCode: this.$route.params.agentCode,
+            route_level: this.$route.params.gradeLevel,
 		        load_data: false,
 		        on_submit_loading: false,
 		        rules: {
@@ -231,7 +235,7 @@
       	var _self = this;
          _self.load_data = false
          _self.$fetch.api_journal.journalpage({
-          userId: '13175',
+          userId:this.route_id,
           current: _self.currentPage,
           pageSize: _self.length,
         })
@@ -246,14 +250,14 @@
           })
 
         _self.$fetch.api_journal.logReceived({
-          userId:'4398' ,
+          userId:this.route_id ,
           current: _self.currentPage,
           pageSize: _self.length,
         })
           .then(response => {
             this.table_data = response.data.records
             this.currentPage = response.data.current
-            this.total = response.data.total
+            this.totalt = response.data.total
             this.load_data = false
           })
           .catch(() => {
@@ -261,14 +265,14 @@
           })
 
         _self.$fetch.api_record.planRecord({
-          userId:'4398' ,
+          userId:this.route_id ,
           current: _self.currentPage,
           pageSize: _self.length,
         })
           .then(response => {
             this.tabledata = response.data.records
             this.currentPage = response.data.current
-            this.total = response.data.total
+            this.totals = response.data.total
             this.load_data = false
           })
           .catch(() => {

@@ -81,7 +81,7 @@
           width="100"
           >
           <template scope="props">
-           	<router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">
+           	<router-link :to="{name: 'personlist',params: {id: props.row.id,userName:props.row.userName,agentCode:props.row.agentCode,gradeLevel:props.row.gradeLevel}}" tag="span">
 			        <span class="link-type">{{props.row.userName}}</span>
 			      </router-link>
 	        </template>
@@ -114,6 +114,9 @@
         <el-table-column
           prop="gradeLevel"
           label="职级">
+          <template scope="props">
+            <span v-text="props.row.gradeLevel == 01 ? '降级试用业务员代表' : props.row.gradeLevel == 02 ?'试用业务员':props.row.gradeLevel == 03 ?'正式业务员':props.row.gradeLevel == 04 ?'业务主任':props.row.gradeLevel == 05 ?'业务经理一级':props.row.gradeLevel == 06 ?'业务经理二级':props.row.gradeLevel == 07 ?'高级经理一级':'区域总监'"></span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="companyDate"
