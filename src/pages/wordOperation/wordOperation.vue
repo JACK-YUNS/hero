@@ -231,7 +231,7 @@
       get_table_data(){
         var _self = this;
         _self.load_data = false
-        _self.$fetch.api_wechat.imageTextList({
+        _self.$fetch.api_verbal.Verbalpge({
           current: _self.currentPage,
           pageSize: _self.length,
           title:_self.formInline.title
