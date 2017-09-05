@@ -19,6 +19,7 @@ import * as port_wisdom from './wisdom'
 import * as port_knowledge from './knowledge'
 import * as port_journal from './journal'
 import * as port_record from './record'
+import * as port_verbal from './verbal'
 
 export {
   port_code,
@@ -30,5 +31,6 @@ export {
   port_wisdom,
   port_knowledge,
   port_journal,
-  port_record
+  port_record,
+  port_verbal
 }

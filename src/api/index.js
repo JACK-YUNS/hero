@@ -18,6 +18,7 @@ import * as api_wisdom from './wisdom'
 import * as api_knowledge from './knowledge'
 import * as api_journal from './journal'
 import * as api_record from './record'
+import * as port_verbal from './verbal'
 
 const apiObj = {
   api_file,
@@ -28,7 +29,8 @@ const apiObj = {
   api_wisdom,
   api_knowledge,
   api_journal,
-  api_record
+  api_record,
+  port_verbal
 }
 
 const install = function (Vue) {

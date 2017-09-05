@@ -124,6 +124,14 @@
             title: "模板",
             path: "/table/example"
           }]
+        },{
+          title: "话术",
+          path: "/wordOperation",
+          icon: "el-icon-message ",
+          child: [{
+            title: "话术",
+            path: "/wordOperation/wordOperation"
+          }]
         }]
       }
     }

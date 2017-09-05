@@ -83,6 +83,11 @@ import knowledgeComponent from 'pages/business/knowledge'
 import personlistComponent from 'pages/newadd/personlist'
 //knowledge newadd
 import knowledgeAddComponent from 'pages/newadd/knowledgeadd'
+//wordOperation wordOperation
+import wordOperationComponent from 'pages/wordOperation/wordOperation'
+//wordOperationadd newadd
+import wordOperationAddComponent from 'pages/newadd/wordOperationadd'
+
 Vue.use(VueRouter)
 
 //使用AMD方式加载
@@ -340,6 +345,22 @@ const routes = [{
     component: knowledgeComponent,
      meta: {
       title: "长见识",
+      auth: true
+    }
+  }, {
+    path: '/wordOperation/wordOperation',
+    name: 'wordOperation',
+    component: wordOperationComponent,
+    meta: {
+      title: "话术",
+      auth: true
+    }
+  },{
+    path: '/newadd/add',
+    name: 'wordOperationAdd',
+    component: wordOperationAddComponent,
+    meta: {
+      title: "话术",
       auth: true
     }
   }]
