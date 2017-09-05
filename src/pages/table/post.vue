@@ -98,7 +98,7 @@
           width="200"
           >
           <template scope="props">
-            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId == 1" @click="deltemplate(props.row.id)">
+            <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId" @click="deltemplate(props.row.id)">
 	            <span>取消模板</span>
 	          </el-button>
 	          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id,props.$index)">
