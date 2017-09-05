@@ -38,7 +38,7 @@
 	                </el-upload>
 					    </div>
 					  </el-form-item>
-					  
+
             <el-form-item label="类型：">
 					    <el-radio-group v-model="form.specialType">
 					      <el-radio label="0">无</el-radio>
@@ -59,15 +59,15 @@
 					    </el-radio-group>
 					  </el-form-item>
 					   <el-form-item label="上传图片：">
-					    <el-upload 
-					    	action="//up.qbox.me/" 
-					    	:on-success="handleAvatarSuccessPic" 
-					    	:on-error="handleError" 
+					    <el-upload
+					    	action="//up.qbox.me/"
+					    	:on-success="handleAvatarSuccessPic"
+					    	:on-error="handleError"
 					    	:on-remove="handleRemove"
-					    	:before-upload="beforeAvatarUpload" 
+					    	:before-upload="beforeAvatarUpload"
 					    	:data="postDatapic"
 					    	:file-list="fileListpic"
-					    	list-type="picture-card"> 
+					    	list-type="picture-card">
 					    	<i class="el-icon-plus"></i>
 					    </el-upload>
 					  </el-form-item>
@@ -174,20 +174,20 @@
         this.$fetch.api_wechat.findArticleById({
           id: this.route_id
         })
-          .then(response => {	
+          .then(response => {
           	this.form = response.data
-          	
+
           	var sort = this.form.sort
           	var myDate=new Date('2020-01-01 00:00:00')
         		var sortnum = sort - myDate.getTime()
-        		if(sort < myDate.getTime()){
-        			this.sort=0
-        		}else if(sort == null){
-        			this.sort=0
-        		}else{
-        			this.sort = sortnum
-        		}
-        		
+            if(sort < myDate.getTime()){
+              this.sort=0
+            }else if(sort == null){
+              this.sort=0
+            }else{
+              this.sort = sortnum
+            }
+
             var picArr = JSON.parse(this.form.pics);
           	var arr =[];
           	var arrpic = [];
@@ -240,7 +240,7 @@
       handleAvatarSuccessPic(res, file,fileListpic) {
       	this.fileListpic = fileListpic;
       	//上传成功后在图片框显示图片
-      	var imageUrl ='http://resources.kangxun360.com/'+ res.key 
+      	var imageUrl ='http://resources.kangxun360.com/'+ res.key
       	console.log(imageUrl)
 				var arr = []
       	var isnum = this.form.showType;
@@ -261,12 +261,12 @@
 								          pic: 'http://resources.kangxun360.com/'+ value.response.key
 								      	});
 					        	 }
-										
+
 									});
       		}else{
       			return
       		}
-      	} 
+      	}
       	if(isnum==1){
       		if(arrlength<3){
       			$.each(this.fileListpic, function(index, value, array) {
@@ -280,15 +280,15 @@
 								          pic: 'http://resources.kangxun360.com/'+ value.response.key
 								      	});
 					        	 }
-										
+
 									});
       		}
       		else{
       			return
       		}
       	}
-					
-			
+
+
 //				console.info(arr[0].pic)
       	this.form.pics = JSON.stringify(arr);
       },
@@ -314,22 +314,21 @@
       handleRemove(file,fileList){
       	this.fileList = fileList;
       },
-      handleError(res) { 
+      handleError(res) {
       		//显示错误
       		console.log(res)
-      }, 
-      beforeAvatarUpload(file) { 
+      },
+      beforeAvatarUpload(file) {
 
       },
       //提交
       on_submit_form(){
-      	 
+
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
           var myDate=new Date('2020-01-01 00:00:00')
           this.form.sort = parseInt(this.sort)+myDate.getTime();
-          console.log(this.form.sort)
           this.$fetch.api_wechat.saveArticle(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
@@ -345,12 +344,12 @@
       panelTitle,
       quillEditor
     }
-  
-    
+
+
   }
 </script>
 <style scoped="scoped">
 	.note-image-input ,.form-control {
-     display: block; 
+     display: block;
 }
 </style>

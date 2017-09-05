@@ -18,18 +18,21 @@
 					    </el-radio-group>
 					  </el-form-item>
 					   <el-form-item label="上传图片：">
-					    <el-upload 
-					    	action="//up.qbox.me/" 
-					    	:on-success="handleAvatarSuccess" 
-					    	:on-error="handleError" 
+					    <el-upload
+					    	action="//up.qbox.me/"
+					    	:on-success="handleAvatarSuccess"
+					    	:on-error="handleError"
 					    	:on-remove="handleRemove"
-					    	:before-upload="beforeAvatarUpload" 
+					    	:before-upload="beforeAvatarUpload"
 					    	:data="postData"
 					    	:file-list="fileList"
-					    	list-type="picture-card"> 
+					    	list-type="picture-card">
 					    	<i class="el-icon-plus"></i>
 					    </el-upload>
 					  </el-form-item>
+            <el-form-item label="排序：">
+              <el-input v-model="sort" style="width: 200px;"></el-input>
+            </el-form-item>
             <el-form-item label="是否首页展示：">
 					    <el-radio-group v-model="form.isTop">
 					      <el-radio label="1">是</el-radio>
@@ -68,8 +71,10 @@
           isTop:'',
           imageUrl: '',
           pics: [],
-        	dialogVisible:true, 
+        	dialogVisible:true,
+          sort:''
         },
+        sort:'',
         route_id: this.$route.params.id,
         load_data: false,
         on_submit_loading: false,
@@ -92,10 +97,21 @@
         this.$fetch.api_wechat.findPosterById({
           id: this.route_id
         })
-          .then(response => {	
+          .then(response => {
             this.form = response.data
             this.load_data = false
-            
+
+            var sort = this.form.sort
+            var myDate=new Date('2020-01-01 00:00:00')
+            var sortnum = sort - myDate.getTime()
+            if(sort < myDate.getTime()){
+              this.sort=0
+            }else if(sort == null){
+              this.sort=0
+            }else{
+              this.sort = sortnum
+            }
+
           	var arr =[];
 					  arr.push({
 		          url: this.form.pics,
@@ -113,7 +129,7 @@
      getToken(){
       	this.$fetch.api_qiniu.getToken({
         })
-          .then(response => {	
+          .then(response => {
           	console.log(response)
             this.postData = {token : response.data}
             this.load_data = false
@@ -125,31 +141,34 @@
       handleAvatarSuccess(res, file,fileList) {
       	this.fileList = fileList;
       	//上传成功后在图片框显示图片
-      	var imageUrl ='http://resources.kangxun360.com/'+ res.key 
+      	var imageUrl ='http://resources.kangxun360.com/'+ res.key
       	console.log(imageUrl)
 
       },
       handleRemove(file,fileList){
       	this.fileList = fileList;
       },
-      handleError(res) { 
+      handleError(res) {
       		//显示错误
       		console.log(res)
-      }, 
-      beforeAvatarUpload(file) { 
+      },
+      beforeAvatarUpload(file) {
 
       },
       //提交
       on_submit_form(){
       	if(this.fileList[0].url.indexOf('resources.kangxun360.com') != -1 || this.fileList[0].url.indexOf('7mnn49.com2.z0.glb.clouddn.com') != -1){
-      		this.form.pics = this.fileList[0].url; 
+      		this.form.pics = this.fileList[0].url;
       	}else{
-      		this.form.pics = 'http://resources.kangxun360.com/' + this.fileList[0].response.key; 
+      		this.form.pics = 'http://resources.kangxun360.com/' + this.fileList[0].response.key;
       	}
-      	
+
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
+          var myDate=new Date('2020-01-01 00:00:00')
+          this.form.sort = parseInt(this.sort)+myDate.getTime();
+          console.info(this.form.sort);
           this.$fetch.api_wechat.savePoster(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
