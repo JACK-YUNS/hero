@@ -11,10 +11,10 @@
     <div class="panel-body">
     	<el-form :inline="true" :model="formInline" class="demo-form-inline">
 			  <el-form-item>
-			    <el-input v-model="formInline.user" placeholder="请输入标题查询"></el-input>
+			    <el-input v-model="formInline.title" @change="onSubmit" placeholder="请输入标题查询"></el-input>
 			  </el-form-item>
 			  <el-form-item>
-			    <el-button type="success" @click="onSubmit" :loading="on_submit_loading">查询</el-button>
+			    <!--<el-button type="success" @click="onSubmit" :loading="on_submit_loading">查询</el-button>-->
 			    <router-link :to="{name: 'knowledgeAdd',params: {id: ''}}" tag="span">
 		        <el-button type="success">发布新见识</el-button>
 		      </router-link>
@@ -42,13 +42,11 @@
           label="主标题"
           >
            <template scope="props">
-           	<router-link :to="{name: 'knowledgeAdd',params: {id: props.row.id}}" tag="span">
 			        <span class="link-type">{{props.row.title}}</span>
-			      </router-link>
 	        </template>
         </el-table-column>
         <el-table-column
-        	 prop="assortmentType"
+        	 prop="type"
           label="类型"
           :formatter="typeFormat"
           width="100">
@@ -65,8 +63,10 @@
           >
           <template scope="props">
           	<el-button type="primary" size="small" >查看评论</el-button>
-            <el-button type="primary" size="small" >编辑</el-button>
-            <el-button type="danger" size="small" icon="delete" >删除</el-button>
+            <router-link :to="{name: 'knowledgeAdd',params: {id: props.row.id}}" tag="span">
+              <el-button type="primary" size="small" >编辑</el-button>
+            </router-link>
+            <el-button type="danger" size="small" @click="delete_data(props.row.id)" icon="delete" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -105,10 +105,10 @@
 
       return {
       	formInline: {
-          user: '',
-          region: '',
-          assortmentType: '',
-          template: ''
+          current:1,
+          pageSize:15,
+          title: '',
+          type: ''
        },
        on_submit_loading: false,
         dialogFormVisible: false,
@@ -171,7 +171,7 @@
         if (aType == undefined) {
           return "";
         }
-        var arr = ['','保险理念 ','励志成长 ','生活锦囊 ','增员攻略'];
+        var arr = ['','案例分享 ','话题讨论 ','名家访谈 '];
         return arr[aType];
       },
       //刷新
@@ -180,59 +180,54 @@
       },
       //获取数据
       get_table_data(){
-        this.load_data = false
-        this.$fetch.api_knowledge.topicList({
-          current: this.currentPage,
-          pageSize: this.length
-        })
+          var _self = this;
+        _self.load_data = true;
+        _self.$fetch.api_knowledge.topicList(_self.formInline)
           .then(response => {
-            this.table_data = response.data.records
-	          this.currentPage = response.data.current
-	          this.total = response.data.total
-            console.log(response)
-	          this.load_data = false
+            _self.table_data = response.data.records
+            _self.currentPage = response.data.current
+            _self.total = response.data.total
+            _self.load_data = false
           })
           .catch(() => {
-            this.load_data = false
+            _self.load_data = false
           })
       },
       //提交
 	 			 onSubmit() {
-	        console.log('1')
+	        var _self = this;
+	        _self.get_table_data();
 	      },
       //单个删除
-      delete_data(item){
-        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+      delete_data(id){
+          var _self = this;
+        this.$confirm('此操作将删除文章及其被赞与评论记录，且不可恢复 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
-          .then((id) => {
-            this.load_data = true;
-            console.log(item)
-            try{
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功'
-                        });
-                        this.table_data.splice(index, 1);
-                    		this.load_data = false;
+          .then(() => {
+            _self.load_date = true;
+            var entity = {id:id,flag:-1};
+            _self.$fetch.api_knowledge.saveTopic(entity)
+              .then(response =>{
+                try{
+                  _self.$message({
+                    type: 'success',
+                    message: '删除成功'
+                  });
+                  _self.load_data = false;
+                  _self.get_table_data();
                 }catch(err){
-                    this.$message({
-                        type: 'error',
-                        message: err.message
-                    });
-                    console.log('删除失败')
+                  _self.$message({
+                    type: 'error',
+                    message: err.message
+                  });
                 }
-            this.$fetch.api_wechat.delImage(item)
-              .then(({msg}) => {
-                this.get_table_data()
-                this.$message.success(msg)
-              })
-              .catch(() => {
               })
           })
           .catch(() => {
+
           })
       },
       //页码选择

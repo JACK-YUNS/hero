@@ -17,12 +17,12 @@
 					      <el-radio :label="3" >名家访谈</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
-					  <el-form-item label="定时发布" prop="isPuhlish">
-              <el-col :span="4"> <el-switch on-text="" off-text="" v-model="ruleForm.isPuhlish" @change="change" ></el-switch></el-col>
+					  <el-form-item label="定时发布" prop="isPublish">
+              <el-col :span="4"> <el-switch on-text="" off-text="" v-model="ruleForm.isPublish" @change="change" ></el-switch></el-col>
               <div v-if="isPublish">
               <el-col :span="10">
                 <el-form-item  prop="publishDate">
-                  <el-date-picker type="datetime" placeholder="选择日期时间" v-model="ruleForm.publishDate" style="width: 100%;"></el-date-picker>
+                  <el-date-picker v-model="ruleForm.publishDate" type="datetime" :picker-options="options" placeholder="选择日期时间"  style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-col>
               </div>
@@ -96,13 +96,19 @@
           }
 
         },
+        options:{
+          disabledDate(date) {
+            return date.getTime() < Date.now() - 8.64e7;
+          }
+        },
         ruleForm: {
           title: '',
           type: 1,
           publishDate: '',
           content: '',
-          isPuhlish:false,
-          id:this.$route.params.id
+          isPublish:false,
+          id:this.$route.params.id,
+          flag:0
 
         },
         rules: {
@@ -111,7 +117,7 @@
             {min: 3, max: 32, message: '长度在 3 到 32 个字符', trigger: 'change'}
           ],
           publishDate: [
-            {type: 'datetime', required: true, message: '请选择日期', trigger: 'change'}
+            {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
           ],
           type: [
             { required: true, message: '请至少选择一个活动性质', trigger: 'change'}
@@ -174,8 +180,13 @@
           })
       },
       change(status){
-          this.isPublish = status;
-            console.log(status);
+          var _self = this;
+        _self.isPublish = status;
+          if(status){
+            _self.flag=1;
+          }else{
+              _self.flag = 0;
+          }
       },
       handleAvatarSuccess(res, file,fileList) {
         var _self = this
