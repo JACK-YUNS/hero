@@ -17,6 +17,7 @@ import * as api_qiniu from './qiniu'
 import * as api_wisdom from './wisdom'
 import * as api_knowledge from './knowledge'
 import * as api_journal from './journal'
+import * as api_record from './record'
 
 const apiObj = {
   api_file,
@@ -26,7 +27,8 @@ const apiObj = {
   api_qiniu,
   api_wisdom,
   api_knowledge,
-  api_journal
+  api_journal,
+  api_record
 }
 
 const install = function (Vue) {

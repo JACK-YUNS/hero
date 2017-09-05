@@ -74,7 +74,7 @@
         <el-table-column
           type="index"
           label="序号"
-          width="50">
+          width="80">
         </el-table-column>
         <el-table-column
           label="姓名"
@@ -241,12 +241,12 @@
 	        isTop:_self.formInline.isTop
 	      })
 	        .then(response => {
-	        	
+
 	          this.table_data = response.data.records
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
 	          this.load_data = false
-	         
+
 	        })
 	        .catch(() => {
 	          this.load_data = false
@@ -296,7 +296,7 @@
         this.get_table_data()
       }
     },
-    
+
     mounted() {
     }
   }
