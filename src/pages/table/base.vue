@@ -18,37 +18,37 @@
           </el-select>
         </el-form-item>-->
         <el-form-item>
-          <el-select v-model="formInline.assortmentType" placeholder="筛选 — 区">
+          <el-select v-model="formInline.areaName" placeholder="筛选 — 区">
             <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.assortmentType" placeholder="筛选 — 部">
+          <el-select v-model="formInline.deptName" placeholder="筛选 — 部">
             <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.assortmentType" placeholder="筛选 — 组">
+          <el-select v-model="formInline.groupName" placeholder="筛选 — 组">
             <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.assortmentType" placeholder="筛选 — 职级">
+          <el-select v-model="formInline.gradeLevel" placeholder="筛选 — 职级">
             <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="formInline.title" placeholder="请输入姓名查询"></el-input>
+          <el-input v-model="formInline.userName" placeholder="请输入姓名查询"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="formInline.title" placeholder="请输入手机号查询"></el-input>
+          <el-input v-model="formInline.mobile" placeholder="请输入手机号查询"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="formInline.title" placeholder="请输入工号查询"></el-input>
+          <el-input v-model="formInline.agentCode" placeholder="请输入工号查询"></el-input>
         </el-form-item>
         <el-form-item>
 					<el-col>
-						<el-date-picker type="date" placeholder="入职开始时间" v-model="formInline.date1" style="width: 100%;"></el-date-picker>
+						<el-date-picker type="date" placeholder="入职开始时间" v-model="formInline.companyDate" style="width: 100%;"></el-date-picker>
 					</el-col>
 				</el-form-item>
 				<el-form-item>
@@ -155,11 +155,14 @@
 
       return {
       	formInline: {
-          title: '',
-          isTop: '',
-          assortmentType: '',
-          templateId: '',
-          date1:'',
+          areaName: '',
+          deptName: '',
+          groupName: '',
+          gradeLevel: '',
+          userName:'',
+          mobile:'',
+          agentCode:'',
+          companyDate:'',
           date2:''
         },
         options:[
@@ -227,23 +230,27 @@
       },
       //获取数据
       get_table_data(){
-      	var _self = this;
+      	 var _self = this;
         _self.load_data = false
-      _self.$fetch.api_table.list({
-        current: _self.currentPage,
-        pageSize: _self.length
-      })
-        .then(response => {
-        	
-          this.table_data = response.data.records
-          this.currentPage = response.data.current
-          this.total = response.data.total
-          this.load_data = false
-         
-        })
-        .catch(() => {
-          this.load_data = false
-        })
+     	  _self.$fetch.api_table.list({
+	        current: _self.currentPage,
+	        pageSize: _self.length,
+	        title:_self.formInline.title,
+	        assortmentType:_self.formInline.assortmentType,
+	        templateId:_self.formInline.templateId,
+	        isTop:_self.formInline.isTop
+	      })
+	        .then(response => {
+	        	
+	          this.table_data = response.data.records
+	          this.currentPage = response.data.current
+	          this.total = response.data.total
+	          this.load_data = false
+	         
+	        })
+	        .catch(() => {
+	          this.load_data = false
+	        })
       },
 
       //单个删除
@@ -281,7 +288,7 @@
           })
       },
       onSubmit(){
-      	
+      	this.get_table_data();
       },
       //页码选择
       handleCurrentChange(val) {
