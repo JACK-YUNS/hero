@@ -6,7 +6,7 @@
          element-loading-text="拼命加载中">
       <el-row>
         <el-col :span="16">
-          <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+          <el-form ref="form" :model="form" label-width="120px">
             <el-form-item label="主标题:" prop="title">
               <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
@@ -56,9 +56,8 @@
       //获取数据
       get_form_data(){
         this.load_data = true
-        this.$fetch.api_verbal.newly({
-          id: this.route_id,
-          flag: 0
+        this.$fetch.api_verbal.details({
+          id: this.route_id
         })
           .then(response => {
           this.form = response.data
