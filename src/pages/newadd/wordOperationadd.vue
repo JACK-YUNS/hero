@@ -12,8 +12,8 @@
             </el-form-item>
 
             <el-form-item label="内容：">
-					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.contents"></el-input>
-					  </el-form-item>
+              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.content"></el-input>
+            </el-form-item>
 
             <el-form-item label="排序：">
               <el-input v-model="form.sort" style="width: 200px;"></el-input>
@@ -30,14 +30,14 @@
   </div>
 </template>
 <script type="text/javascript">
- import {panelTitle} from 'components'
- import {port_qiniu} from 'common/port_uri'
+  import {panelTitle} from 'components'
+  import {port_qiniu} from 'common/port_uri'
   export default{
     data(){
       return {
         form: {
-          contents: '',
-        	dialogVisible:true,
+          content: '',
+          dialogVisible:true,
           sort:'',
           flag:''
         },
@@ -48,8 +48,8 @@
     },
     created(){
       if(this.route_id>0){
-      	this.get_form_data();
-      	console.log(this.route_id)
+        this.get_form_data();
+        console.log(this.route_id)
       }
     },
     methods: {
@@ -61,12 +61,12 @@
           flag: 0
         })
           .then(response => {
-            this.form = response.data
-            this.load_data = false
-          })
-          .catch(() => {
-            this.load_data = false
-          })
+          this.form = response.data
+        this.load_data = false
+      })
+      .catch(() => {
+          this.load_data = false
+      })
       },
 
       //提交
@@ -74,17 +74,17 @@
 
         this.$refs.form.validate((valid) => {
           if (!valid) return false
-          this.on_submit_loading = true
+        this.on_submit_loading = true
         this.form.flag=0
-          this.$fetch.api_verbal.newly(this.form)
-            .then(({msg}) => {
-              this.$message.success(msg)
-              setTimeout(this.$router.back(), 500)
-            })
-            .catch(() => {
-              this.on_submit_loading = false
-            })
-        })
+        this.$fetch.api_verbal.newly(this.form)
+          .then(({msg}) => {
+          this.$message.success(msg)
+        setTimeout(this.$router.back(), 500)
+      })
+      .catch(() => {
+          this.on_submit_loading = false
+      })
+      })
       }
     },
     components: {
@@ -93,8 +93,8 @@
   }
 </script>
 <style scoped="scoped">
-	.el-upload__input {
+  .el-upload__input {
     display: none!important;
-}
+  }
 
 </style>

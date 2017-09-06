@@ -42,7 +42,7 @@
         label="主标题"
       >
         <template scope="props">
-          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id}}" tag="span">
+          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id,title:props.row.id,content:props.row.content,sort:props.row.sort}}" tag="span">
             <span class="link-type">{{props.row.title}}</span>
           </router-link>
         </template>
@@ -283,10 +283,9 @@
       create() {
         this.dialogFormVisible = false
 //    	console.log(this.temp.id)
-        this.$fetch.api_verbal.verbalpage({
+        this.$fetch.api_verbal.newly({
           sort:this.sort,
-          id:this.temp.id,
-          flag:0
+          id:this.temp.id
         })
           .then(response => {
             this.get_table_data()
