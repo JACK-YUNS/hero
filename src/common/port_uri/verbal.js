@@ -1,3 +1,3 @@
 
 //话术
-export const Verbalpge = "/api/verbal/Verbalpge"
+export const verbalpage = "/api/verbal/verbalpage"

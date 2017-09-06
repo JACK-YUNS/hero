@@ -3,9 +3,9 @@ import fetch from 'common/fetch'
 import {port_verbal} from 'common/port_uri'
 
 //话术
-export function Verbalpge(data) {
+export function verbalpage(data) {
   return fetch({
-    url: port_verbal.Verbalpge,
+    url: port_verbal.verbalpage,
     method: 'post',
     data
   })

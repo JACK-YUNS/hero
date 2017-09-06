@@ -8,17 +8,17 @@
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="主标题:" prop="title">
-              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
+              <el-input v-model="this.route_title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
 
             <el-form-item label="内容：">
-					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.contents"></el-input>
+					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="this.route_content"></el-input>
 					  </el-form-item>
 
 
 					  </el-form-item>
             <el-form-item label="排序：">
-              <el-input v-model="sort" style="width: 200px;"></el-input>
+              <el-input v-model="this.route_sort" style="width: 200px;"></el-input>
             </el-form-item>
 
             <el-form-item>
@@ -43,8 +43,10 @@
         	dialogVisible:true,
           sort:''
         },
-        sort:'',
         route_id: this.$route.params.id,
+        route_title: this.$route.params.title,
+        route_content: this.$route.params.content,
+        route_sort: this.$route.params.sort,
         load_data: false,
         on_submit_loading: false,
         rules: {
@@ -68,28 +70,7 @@
         })
           .then(response => {
             this.form = response.data
-
-            var sort = this.form.sort
-            var myDate=new Date('2020-01-01 00:00:00')
-            var sortnum = sort - myDate.getTime()
-            if(sort < myDate.getTime()){
-              this.sort=0
-            }else if(sort == null){
-              this.sort=0
-            }else{
-              this.sort = sortnum
-            }
-            var picArr = JSON.parse(this.form.pics);
-          	var arr =[];
-            $.each(picArr, function(index, value, array) {
-						  arr.push({
-			          url: value.pic,
-			          status: 'finished'
-			        });
-						});
-						this.fileList = arr;
             this.load_data = false
-            console.log(this.fileList)
           })
           .catch(() => {
             this.load_data = false
@@ -102,8 +83,10 @@
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          var myDate=new Date('2020-01-01 00:00:00')
-          this.form.sort = parseInt(this.sort)+myDate.getTime();
+          if(this.sort == ''){
+            this.sort==0
+          }
+          this.form.sort = parseInt(this.sort)
           this.$fetch.api_wechat.saveImage(this.form)
             .then(({msg}) => {
               this.$message.success(msg)

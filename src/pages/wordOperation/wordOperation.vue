@@ -42,18 +42,16 @@
         label="主标题"
       >
         <template scope="props">
-          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id}}" tag="span">
+          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id,title: props.row.title,content:props.row.content,sort:props.row.sort}}" tag="span">
             <span class="link-type">{{props.row.title}}</span>
           </router-link>
         </template>
       </el-table-column>
 
       <el-table-column
-        aTime="aTime"
-        :formatter="sortFormat"
         label="排序">
         <template scope="props">
-          <span class="link-type" @click="handleUpdate(props.row)">{{props.row.sort | sortFormat}}</span>
+          <span class="link-type" @click="handleUpdate(props.row)">{{props.row.sort}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -178,20 +176,6 @@
       },
       typeFilter(type) {
         return calendarTypeKeyValue[type]
-      },
-      sortFormat:function(sort) {
-
-        var myDate=new Date('2020-01-01 00:00:00')
-        if (sort < myDate.getTime()) {
-          return 0;
-        }
-        else if(sort == null){
-          return 0;
-        }
-        else{
-          return sort - myDate.getTime();
-        }
-
       }
     },
     methods: {
@@ -208,21 +192,6 @@
         var isTop = row[column.property];
         return isTop == 0 ? '是':'否';
       },
-      sortFormat:function(row, column,cellValue) {
-        var aSort = row[column.property];
-        var aTime = row['aTime'];
-        var myDate=new Date('2020-01-01 00:00:00')
-        if (aSort == aTime) {
-          return 0;
-        }
-        else if(aSort == null){
-          return 0;
-        }
-        else{
-          return aSort - myDate.getTime();
-        }
-
-      },
       //刷新
       on_refresh(){
         this.get_table_data()
@@ -231,7 +200,7 @@
       get_table_data(){
         var _self = this;
         _self.load_data = false
-        _self.$fetch.api_verbal.Verbalpge({
+        _self.$fetch.api_verbal.verbalpage({
           current: _self.currentPage,
           pageSize: _self.length,
           title:_self.formInline.title
@@ -301,19 +270,6 @@
       //跟换排序里面的值
       inputsort(){
         console.log(this.sort)
-//        var myDate=new Date('2020-01-01 00:00:00')
-//        this.table_data.sort = parseInt(this.sort)+myDate.getTime();
-//        console.log(this.table_data.sort )
-//        this.$fetch.api_wechat.saveImage({
-//          sort:this.table_data.sort,
-//          id:this.temp.id
-//        })
-//          .then(response => {
-//            this.get_table_data()
-//          })
-//          .catch(() => {
-//            this.load_data = false
-//          })
       },
 
       handleUpdate(row) {
@@ -321,25 +277,14 @@
         this.dialogStatus = 'update';
         this.dialogFormVisible = true;
         var sort = this.temp.sort;
-        var myDate=new Date('2020-01-01 00:00:00')
-        var sortnum = sort - myDate.getTime()
-//      console.log(sortnum)
-        this.sort =sortnum;
-        if (sort < myDate.getTime()) {
-          this.sort=0;
-        }
-        else if(sort == null){
-          this.sort=0;
-        }
-        else{
-          this.sort =sortnum;
-        }
+
+        this.sort =this.temp.sort;
 
       },
       create() {
         this.dialogFormVisible = false
 //    	console.log(this.temp.id)
-        this.$fetch.api_wechat.saveImage({
+        this.$fetch.api_verbal.verbalpage({
           sort:this.sort,
           id:this.temp.id
         })
