@@ -53,4 +53,11 @@ export function batch_del(data) {
     data
   })
 }
-
+//获得区部组
+export function get_area(data) {
+  return fetch({
+    url: port_table.get_area,
+    method: 'post',
+    data
+  })
+}
