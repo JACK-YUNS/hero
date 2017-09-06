@@ -30,25 +30,31 @@
 					  </el-form-item>
 
 
-					  <el-form-item prop="content" >
-              <div>
-                <quill-editor ref="newEditor" v-model="ruleForm.content" :options="editorOption">
+					  <!--<el-form-item prop="content" >-->
+              <!--<div>-->
+                <!--<quill-editor ref="newEditor" v-model="ruleForm.content" :options="editorOption">-->
 
-                </quill-editor>
-                <el-upload
-                  ref="upload"
-                  action="//up.qbox.me/"
-                  :on-success="handleAvatarSuccess"
-                  :on-error="handleError"
-                  :before-upload="beforeAvatarUpload"
-                  :data="postData"
-                  style="display:none">
-                  <el-button id="imgInput" type="primary">点击上传</el-button>
-                </el-upload>
+                <!--</quill-editor>-->
+                <!--<el-upload-->
+                  <!--ref="upload"-->
+                  <!--action="//up.qbox.me/"-->
+                  <!--:on-success="handleAvatarSuccess"-->
+                  <!--:on-error="handleError"-->
+                  <!--:before-upload="beforeAvatarUpload"-->
+                  <!--:data="postData"-->
+                  <!--style="display:none">-->
+                  <!--<el-button id="imgInput" type="primary">点击上传</el-button>-->
+                <!--</el-upload>-->
+              <!--</div>-->
+					  <!--</el-form-item>-->
+
+            <template>
+              <div class="components-container">
+                <div class="editor-container">
+                  <UE :defaultMsg="ruleForm.content" :config=config ref="ue"></UE>
+                </div>
               </div>
-					  </el-form-item>
-
-
+            </template>
               <el-form-item label="封面图片：">
                 <el-upload
                   class="avatar-uploader"
@@ -78,11 +84,12 @@
   </div>
 </template>
 <script type="text/javascript">
-  import Quill from 'quill'
+//  import Quill from 'quill'
+//  import { quillEditor } from 'vue-quill-editor';
   import {panelTitle} from 'components'
   import ElRadio from "../../../node_modules/element-ui/packages/radio/src/radio";
-  import { quillEditor } from 'vue-quill-editor';
   import ElCol from "element-ui/packages/col/src/col";
+  import UE from '../../components/editor/ueditor.vue';
 
   var toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -116,6 +123,17 @@
             toolbar: toolbarOptions
           }
 
+        },
+        defaultMsg: '',
+        editorOption: {
+          modules: {
+            toolbar: toolbarOptions
+          }
+
+        },
+        config: {
+          initialFrameWidth: '',
+          initialFrameHeight: 350
         },
         options:{
           disabledDate(date) {
@@ -164,14 +182,14 @@
     },
     mounted() {
       var _self =this
-      var imgHandler = async function(image) {
-        _self.addImgRange = _self.$refs.newEditor.quill.getSelection()
-        if (image) {
-          var fileInput = document.getElementById("imgInput") //隐藏的file文本ID
-          fileInput.click() //加一个触发事件
-        }
-      }
-      _self.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
+//      var imgHandler = async function(image) {
+//        _self.addImgRange = _self.$refs.newEditor.quill.getSelection()
+//        if (image) {
+//          var fileInput = document.getElementById("imgInput") //隐藏的file文本ID
+//          fileInput.click() //加一个触发事件
+//        }
+//      }
+//      _self.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
     },
     methods: {
       //获取数据
@@ -183,6 +201,7 @@
         })
           .then(response => {
             _self.ruleForm = response.data
+            _self.defaultMsg = response.data.topic.content;
             _self.load_data = false
           })
           .catch(() => {
@@ -210,25 +229,25 @@
               _self.flag = 0;
           }
       },
-      handleAvatarSuccess(res, file,fileList) {
-        var _self = this
-        var url = ''
-        if(file.url.indexOf('resources.kangxun360.com') != -1){
-          url = file.url;
-        }else{
-          url = 'https://resources.kangxun360.com/'+ file.response.key;
-        }
-        if (url != null && url.length > 0) {  // 将文件上传后的URL地址插入到编辑器文本中
-          var value = url
-          _self.addRange = _self.$refs.newEditor.quill.getSelection()
-          value = value.indexOf('http') !== -1 ? value : 'http:' + value
-          _self.$refs.newEditor.quill.insertEmbed(_self.addRange !== null ? _self.addRange.index : 0, 'image', value, Quill.sources.USER)   // 调用编辑器的 insertEmbed 方法，插入URL
-        } else {
-          _self.$message.warning("图片增加失败")
-        }
-        this.$refs['upload'].clearFiles()    // 插入成功后清除input的内容
-
-      },
+//      handleAvatarSuccess(res, file,fileList) {
+//        var _self = this
+//        var url = ''
+//        if(file.url.indexOf('resources.kangxun360.com') != -1){
+//          url = file.url;
+//        }else{
+//          url = 'https://resources.kangxun360.com/'+ file.response.key;
+//        }
+//        if (url != null && url.length > 0) {  // 将文件上传后的URL地址插入到编辑器文本中
+//          var value = url
+//          _self.addRange = _self.$refs.newEditor.quill.getSelection()
+//          value = value.indexOf('http') !== -1 ? value : 'http:' + value
+//          _self.$refs.newEditor.quill.insertEmbed(_self.addRange !== null ? _self.addRange.index : 0, 'image', value, Quill.sources.USER)   // 调用编辑器的 insertEmbed 方法，插入URL
+//        } else {
+//          _self.$message.warning("图片增加失败")
+//        }
+//        this.$refs['upload'].clearFiles()    // 插入成功后清除input的内容
+//
+//      },
       handleError(res) {
         //显示错误
 
@@ -265,6 +284,8 @@
       },
       submitForm() {
           var _self = this;
+          var content = _self.$refs.ue.getUEContent(); // 调用子组件方法
+          _self.ruleForm.content = content;
         _self.$refs.ruleForm.validate((valid) => {
           if (valid) {
             _self.$fetch.api_knowledge.saveTopic(_self.ruleForm)
@@ -285,7 +306,8 @@
       ElCol,
       ElRadio,
       panelTitle,
-      quillEditor
+      //quillEditor,
+      UE,
     },
 
   }

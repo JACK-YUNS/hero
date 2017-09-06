@@ -125,7 +125,7 @@
           }
 
         },
-        defaultMsg: '这里是UE测试',
+        defaultMsg: '',
         config: {
           initialFrameWidth: '',
           initialFrameHeight: 350
