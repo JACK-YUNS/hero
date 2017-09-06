@@ -15,12 +15,7 @@
             </el-form-item>
             <el-form-item label="分类：">
 					    <el-radio-group v-model="form.assortmentType">
-					      <el-radio label="1">咨询-理财</el-radio>
-					      <el-radio label="2">咨询-生活</el-radio>
-					      <el-radio label="3">咨询-教育</el-radio>
-					      <el-radio label="4">咨询-房产</el-radio>
-					      <el-radio label="5">保险意识</el-radio>
-					      <el-radio label="6">趣味</el-radio>
+					      <el-radio :label="item.value"  v-for="item in options">{{item.label}}</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <!--<el-form-item >-->
@@ -135,6 +130,31 @@
           initialFrameWidth: '',
           initialFrameHeight: 350
         },
+        options:[{
+          value: "1",
+          label: '资讯'
+        }, {
+          value: "2",
+          label: '保险意识'
+        }, {
+          value: "3",
+          label: '趣闻'
+        }, {
+          value: "4",
+          label: '推荐'
+        }, {
+          value: "5",
+          label: '理财'
+        },{
+          value: "6",
+          label: '生活'
+        }, {
+          value: "7",
+          label: '教育'
+        }, {
+          value: "8",
+          label: '房产'
+        }],
       	postData: {token:''},
       	postDatapic: {token:''},
       	fileList:[],
@@ -142,7 +162,7 @@
         form: {
           title: null,
           subtitle: '',
-          assortmentType: '',
+          assortmentType: 1,
           specialType:'',
           isTop:'',
           showType:'',

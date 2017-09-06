@@ -18,46 +18,49 @@
           </el-select>
         </el-form-item>-->
         <el-form-item>
-          <el-select v-model="formInline.areaName" placeholder="筛选 — 区">
-            <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="f.p" placeholder="请选择区" clearable @clear="clearArea"  @change="selArea">
+            <el-option v-for="(v,i) in area"  :value="i" :label="v.name"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.deptName" placeholder="筛选 — 部">
-            <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="f.c" placeholder="请选择部门" clearable @change="selDept" @clear="clearDept">
+            <el-option v-for="(v,i) in dept"  :value="i" :label="v.name"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.groupName" placeholder="筛选 — 组">
-            <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="f.cc" placeholder="请选择组" clearable  @change="result" @clear="clearGroup">
+            <el-option v-for="(v,i) in group"  :value="i" :label="v.name"></el-option>
+          </el-select>
+        </el-form-item>
+
+
+
+        <el-form-item>
+          <el-select v-model="formInline.gradeLevel"  @change="get_table_data" placeholder="筛选 — 职级">
+            <el-option v-for="item in levelArr" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.gradeLevel" placeholder="筛选 — 职级">
-            <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          <el-input v-model="formInline.userName" @change="get_table_data" placeholder="请输入姓名查询"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="formInline.userName" placeholder="请输入姓名查询"></el-input>
+          <el-input v-model="formInline.mobile" @change="get_table_data" placeholder="请输入手机号查询"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="formInline.mobile" placeholder="请输入手机号查询"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="formInline.agentCode" placeholder="请输入工号查询"></el-input>
+          <el-input v-model="formInline.agentCode" @change="get_table_data" placeholder="请输入工号查询"></el-input>
         </el-form-item>
         <el-form-item>
 					<el-col>
-						<el-date-picker type="date" placeholder="入职开始时间" v-model="formInline.companyDate" style="width: 100%;"></el-date-picker>
+						<el-date-picker type="date"  placeholder="入职开始时间" v-model="formInline.startDate" style="width: 100%;"></el-date-picker>
 					</el-col>
 				</el-form-item>
 				<el-form-item>
 					<el-col>
-						<el-date-picker type="date" placeholder="入职结束时间" v-model="formInline.date2" style="width: 100%;"></el-date-picker>
+						<el-date-picker type="date" placeholder="入职结束时间" v-model="formInline.endDate" style="width: 100%;"></el-date-picker>
 					</el-col>
 				</el-form-item>
         <el-form-item>
-          <el-button type="success" @click="onSubmit" :loading="on_submit_loading">确定</el-button>
+          <el-button type="success" @click="get_table_data" :loading="on_submit_loading">确定</el-button>
         </el-form-item>
       </el-form>
 
@@ -113,10 +116,8 @@
         </el-table-column>
         <el-table-column
           prop="gradeLevel"
+          :formatter="levelFormat"
           label="职级">
-          <template scope="props">
-            <span v-text="props.row.gradeLevel == 01 ? '降级试用业务员代表' : props.row.gradeLevel == 02 ?'试用业务员':props.row.gradeLevel == 03 ?'正式业务员':props.row.gradeLevel == 04 ?'业务主任':props.row.gradeLevel == 05 ?'业务经理一级':props.row.gradeLevel == 06 ?'业务经理二级':props.row.gradeLevel == 07 ?'高级经理一级':'区域总监'"></span>
-          </template>
         </el-table-column>
         <el-table-column
           prop="companyDate"
@@ -151,6 +152,7 @@
   import axios from 'axios';
   import {port_user, port_code} from 'common/port_uri'
   import moment from "moment"
+  import ElFormItem from "../../../node_modules/element-ui/packages/form/src/form-item";
 
 
   export default{
@@ -165,8 +167,8 @@
           userName:'',
           mobile:'',
           agentCode:'',
-          companyDate:'',
-          date2:''
+          startDate:'',
+          endDate:''
         },
         options:[
           {
@@ -186,6 +188,42 @@
             label: '轻松一刻'
           }
         ],
+        levelArr:[
+          {
+            value: '01',
+            label: '降级试用业务代表'
+          }, {
+            value: '02',
+            label: '试用业务员'
+          }, {
+            value: '03',
+            label: '正式业务员'
+          }, {
+            value: '04',
+            label: '业务主任'
+          }, {
+            value: '05',
+            label: '业务经理一级'
+          }, {
+            value: '06',
+            label: '业务经理二级'
+          }, {
+            value: '07',
+            label: '高级经理一级'
+          }, {
+            value: '08',
+            label: '高级经理二级'
+          }, {
+            value: '09',
+            label: '区域总监'
+          }, {
+            value: '10',
+            label: '区域总经理'
+          }, {
+            value: '11',
+            label: '高管'
+          }
+        ],
         timeout:  null,
 //    	el: '#test',
         table_data: [],
@@ -200,10 +238,20 @@
         on_submit_loading:false,
         //批量选择数组
         batch_select: [],
-        value: ''
+        value: '',
+        area:"",
+        dept:"",
+        group:"",
+        f:{
+          p:'',
+          c:'',
+          cc:'',
+        }
+
       }
     },
     components: {
+      ElFormItem,
       panelTitle,
       bottomToolBar
     },
@@ -213,6 +261,9 @@
     created(){
     	var _self = this;
       _self.get_table_data()
+      _self.get_area_data();
+
+
     },
     methods: {
       //时间格式化
@@ -223,13 +274,26 @@
         }
         return moment(date).format("YYYY-MM-DD");
       },
-      handleSelect(item) {
-        console.log(item);
+      levelFormat:function (row,column) {
+          var _self = this;
+        var level = row[column.property];
+        return _self.levelArr[Number.parseInt(level)-1]['label'];
       },
+      handleSelect(item) {
 
+      },
       //刷新
       on_refresh(){
         this.get_table_data()
+      },
+      get_area_data(){
+          var _self = this;
+          _self.$fetch.api_table.get_area({})
+            .then(response => {
+                _self.area = response.data;
+              _self.dept=_self.area[0]['child'];
+              _self.group=_self.dept[0]['child'];
+            })
       },
       //获取数据
       get_table_data(){
@@ -238,10 +302,16 @@
      	  _self.$fetch.api_table.list({
 	        current: _self.currentPage,
 	        pageSize: _self.length,
-	        title:_self.formInline.title,
-	        assortmentType:_self.formInline.assortmentType,
-	        templateId:_self.formInline.templateId,
-	        isTop:_self.formInline.isTop
+          areaName:_self.formInline.areaName,
+          deptName:_self.formInline.deptName,
+          groupName:_self.formInline.groupName,
+          gradeLevel: _self.formInline.gradeLevel,
+          userName:_self.formInline.userName,
+          mobile:_self.formInline.mobile,
+          agentCode:_self.formInline.agentCode,
+          startDate:_self.formInline.startDate,
+          endDate:_self.formInline.endDate
+
 	      })
 	        .then(response => {
 
@@ -277,15 +347,7 @@
                         type: 'error',
                         message: err.message
                     });
-                    console.log('删除失败')
                 }
-//          this.$fetch.api_table.del(item)
-//            .then(({msg}) => {
-//              this.get_table_data()
-//              this.$message.success(msg)
-//            })
-//            .catch(() => {
-//            })
           })
           .catch(() => {
           })
@@ -297,7 +359,56 @@
       handleCurrentChange(val) {
         this.currentPage = val
         this.get_table_data()
+      },
+      selArea:function(){
+        var _self = this;
+        if(_self.f.p !== ""){
+          _self.dept = _self.area[_self.f.p]['child'];
+        }
+        _self.group = "";
+        _self.f.c="";
+        _self.f.cc="";
+        _self.result();
+      },
+      selDept:function(){
+        var _self = this;
+        if(_self.f.c !== ""){
+          _self.group=this.dept[this.f.c]['child'];
+        }
+        this.f.cc="";
+        this.result();
+      },
+      result:function(){
+          var _self = this;
+        if(_self.f.p !== ""){
+          _self.formInline.areaName = _self.area[_self.f.p].name;
+        }
+        if(_self.f.c !== ""){
+          _self.formInline.deptName = _self.dept[_self.f.c].name;
+        }
+        if(_self.f.cc !== ""){
+          _self.formInline.groupName = _self.group[_self.f.cc].name;
+        }
+        _self.get_table_data();
+      },
+      clearArea:function () {
+        var _self = this;
+        _self.dept = "";
+        _self.f.p="";
+        _self.f.c="";
+        _self.f.cc="";
+      },
+      clearDept:function () {
+        var _self = this;
+        _self.group = "";
+        _self.f.c="";
+        _self.f.cc="";
+      },
+      clearGroup:function () {
+        var _self = this;
+        _self.f.cc="";
       }
+
     },
 
     mounted() {

@@ -19,3 +19,5 @@ export const del = "/api/post/table/del"
 export const save = "/api/post/table/save"
 //批量删除
 export const batch_del = "/api/post/table/batch/del"
+//获得区部组
+export const get_area = "/api/user/selectArea"
