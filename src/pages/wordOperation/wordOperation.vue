@@ -42,7 +42,7 @@
         label="主标题"
       >
         <template scope="props">
-          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id,title: props.row.title,content:props.row.content,sort:props.row.sort}}" tag="span">
+          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id}}" tag="span">
             <span class="link-type">{{props.row.title}}</span>
           </router-link>
         </template>
@@ -199,11 +199,11 @@
       //获取数据
       get_table_data(){
         var _self = this;
-        _self.load_data = false
+        _self.load_data = true
         _self.$fetch.api_verbal.verbalpage({
           current: _self.currentPage,
           pageSize: _self.length,
-          title:_self.formInline.title
+          Title:_self.formInline.title
         })
           .then(response => {
             var list = response.data.records;
@@ -221,6 +221,7 @@
       },
       //提交
       onSubmit() {
+        this.load_data = true
         this.get_table_data();
       },
       //单个删除
@@ -250,7 +251,7 @@
               console.log('删除失败')
             }
             var data = {"id":this.currentId,"flag":-1}
-            this.$fetch.api_wechat.delImage(data)
+            this.$fetch.api_verbal.newly(data)
               .then(({msg}) => {
                 this.get_table_data()
                 this.$message.success(msg)
@@ -276,8 +277,6 @@
         this.temp = Object.assign({}, row);
         this.dialogStatus = 'update';
         this.dialogFormVisible = true;
-        var sort = this.temp.sort;
-
         this.sort =this.temp.sort;
 
       },
@@ -286,7 +285,8 @@
 //    	console.log(this.temp.id)
         this.$fetch.api_verbal.verbalpage({
           sort:this.sort,
-          id:this.temp.id
+          id:this.temp.id,
+          flag:0
         })
           .then(response => {
             this.get_table_data()

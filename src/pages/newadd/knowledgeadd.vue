@@ -261,12 +261,7 @@
         console.log(res)
       },
       beforeAvatarUploadpic(file) {
-        const isLt2M = file.size / 1024 / 1024 < 3;
 
-        if (!isLt2M) {
-          this.$message.error('上传封面图片大小不能超过 3MB!');
-        }
-        return isLt2M;
       },
       submitForm() {
           var _self = this;

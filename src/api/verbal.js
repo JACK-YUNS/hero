@@ -10,3 +10,12 @@ export function verbalpage(data) {
     data
   })
 }
+
+//话术更新、新建、删除
+export function newly(data) {
+  return fetch({
+    url: port_verbal.newly,
+    method: 'post',
+    data
+  })
+}

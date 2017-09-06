@@ -8,17 +8,15 @@
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="主标题:" prop="title">
-              <el-input v-model="this.route_title" placeholder="请输入内容" style="width: 500px;"></el-input>
+              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
 
             <el-form-item label="内容：">
-					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="this.route_content"></el-input>
+					    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.contents"></el-input>
 					  </el-form-item>
 
-
-					  </el-form-item>
             <el-form-item label="排序：">
-              <el-input v-model="this.route_sort" style="width: 200px;"></el-input>
+              <el-input v-model="form.sort" style="width: 200px;"></el-input>
             </el-form-item>
 
             <el-form-item>
@@ -38,20 +36,14 @@
     data(){
       return {
         form: {
-          titile: '',
           contents: '',
         	dialogVisible:true,
-          sort:''
+          sort:'',
+          flag:''
         },
         route_id: this.$route.params.id,
-        route_title: this.$route.params.title,
-        route_content: this.$route.params.content,
-        route_sort: this.$route.params.sort,
         load_data: false,
-        on_submit_loading: false,
-        rules: {
-          name: [{required: true, message: '主标题不能为空', trigger: 'blur'}]
-        }
+        on_submit_loading: false
       }
     },
     created(){
@@ -64,9 +56,9 @@
       //获取数据
       get_form_data(){
         this.load_data = true
-
-        this.$fetch.api_wechat.findImageById({
-          id: this.route_id
+        this.$fetch.api_verbal.newly({
+          id: this.route_id,
+          flag: 0
         })
           .then(response => {
             this.form = response.data
@@ -83,11 +75,8 @@
         this.$refs.form.validate((valid) => {
           if (!valid) return false
           this.on_submit_loading = true
-          if(this.sort == ''){
-            this.sort==0
-          }
-          this.form.sort = parseInt(this.sort)
-          this.$fetch.api_wechat.saveImage(this.form)
+        this.form.flag=0
+          this.$fetch.api_verbal.newly(this.form)
             .then(({msg}) => {
               this.$message.success(msg)
               setTimeout(this.$router.back(), 500)
