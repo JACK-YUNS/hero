@@ -12,3 +12,12 @@ export function getToken(data) {
     data
   })
 }
+
+//上传图片
+export function exec(data) {
+  return fetch({
+    url: port_qiniu.exec,
+    method: 'post',
+    data
+  })
+}

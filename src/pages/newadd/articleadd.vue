@@ -23,21 +23,28 @@
 					      <el-radio label="6">趣味</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
-					  <el-form-item >
-					    <div>
-					        <quill-editor ref="newEditor" v-model="form.contents" :options="editorOption"></quill-editor>
-	                <el-upload
-	                  ref="upload"
-	                  action="//up.qbox.me/"
-	                  :on-success="handleAvatarSuccess"
-	                  :on-error="handleError"
-	                  :before-upload="beforeAvatarUpload"
-	                  :data="postData"
-	                  style="display:none">
-	                  <el-button id="imgInput" type="primary">点击上传</el-button>
-	                </el-upload>
-					    </div>
-					  </el-form-item>
+					  <!--<el-form-item >-->
+					    <!--<div>-->
+					        <!--<quill-editor ref="newEditor" v-model="form.contents" :options="editorOption"></quill-editor>-->
+	                <!--<el-upload-->
+	                  <!--ref="upload"-->
+	                  <!--action="//up.qbox.me/"-->
+	                  <!--:on-success="handleAvatarSuccess"-->
+	                  <!--:on-error="handleError"-->
+	                  <!--:before-upload="beforeAvatarUpload"-->
+	                  <!--:data="postData"-->
+	                  <!--style="display:none">-->
+	                  <!--<el-button id="imgInput" type="primary">点击上传</el-button>-->
+	                <!--</el-upload>-->
+					    <!--</div>-->
+					  <!--</el-form-item>-->
+            <template>
+              <div class="components-container">
+                <div class="editor-container">
+                  <UE :defaultMsg="form.contents" :config=config ref="ue"></UE>
+                </div>
+              </div>
+            </template>
 
             <el-form-item label="类型：">
 					    <el-radio-group v-model="form.specialType">
@@ -89,9 +96,10 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
-	import {quillEditor} from 'vue-quill-editor';
-	import Quill from 'quill'
-	import ElCol from "element-ui/packages/col/src/col";
+  //import {quillEditor} from 'vue-quill-editor';
+  //import Quill from 'quill'
+  import ElCol from "element-ui/packages/col/src/col";
+  import UE from '../../components/editor/ueditor.vue';
 	var toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
@@ -121,7 +129,12 @@
             toolbar: toolbarOptions
           }
 
-       },
+        },
+        defaultMsg: '这里是UE测试',
+        config: {
+          initialFrameWidth: '',
+          initialFrameHeight: 350
+        },
       	postData: {token:''},
       	postDatapic: {token:''},
       	fileList:[],
@@ -158,14 +171,14 @@
     },
      mounted() {
       var _self =this
-      var imgHandler = async function(image) {
-        _self.addImgRange = _self.$refs.newEditor.quill.getSelection()
-        if (image) {
-          var fileInput = document.getElementById("imgInput") //隐藏的file文本ID
-          fileInput.click() //加一个触发事件
-        }
-      }
-      _self.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
+//      var imgHandler = async function(image) {
+//        _self.addImgRange = _self.$refs.newEditor.quill.getSelection()
+//        if (image) {
+//          var fileInput = document.getElementById("imgInput") //隐藏的file文本ID
+//          fileInput.click() //加一个触发事件
+//        }
+//      }
+//      _self.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
     },
     methods: {
       //获取数据
@@ -292,25 +305,25 @@
 //				console.info(arr[0].pic)
       	this.form.pics = JSON.stringify(arr);
       },
-      handleAvatarSuccess(res, file,fileList) {
-        var _self = this
-        var url = ''
-        if(file.url.indexOf('resources.kangxun360.com') != -1){
-          url = file.url;
-        }else{
-          url = 'https://resources.kangxun360.com/'+ file.response.key;
-        }
-        if (url != null && url.length > 0) {  // 将文件上传后的URL地址插入到编辑器文本中
-          var value = url
-          _self.addRange = _self.$refs.newEditor.quill.getSelection()
-          value = value.indexOf('http') !== -1 ? value : 'http:' + value
-          _self.$refs.newEditor.quill.insertEmbed(_self.addRange !== null ? _self.addRange.index : 0, 'image', value, Quill.sources.USER)   // 调用编辑器的 insertEmbed 方法，插入URL
-        } else {
-          _self.$message.warning("图片增加失败")
-        }
-        this.$refs['upload'].clearFiles()    // 插入成功后清除input的内容
-
-      },
+//      handleAvatarSuccess(res, file,fileList) {
+//        var _self = this
+//        var url = ''
+//        if(file.url.indexOf('resources.kangxun360.com') != -1){
+//          url = file.url;
+//        }else{
+//          url = 'https://resources.kangxun360.com/'+ file.response.key;
+//        }
+//        if (url != null && url.length > 0) {  // 将文件上传后的URL地址插入到编辑器文本中
+//          var value = url
+//          _self.addRange = _self.$refs.newEditor.quill.getSelection()
+//          value = value.indexOf('http') !== -1 ? value : 'http:' + value
+//          _self.$refs.newEditor.quill.insertEmbed(_self.addRange !== null ? _self.addRange.index : 0, 'image', value, Quill.sources.USER)   // 调用编辑器的 insertEmbed 方法，插入URL
+//        } else {
+//          _self.$message.warning("图片增加失败")
+//        }
+//        this.$refs['upload'].clearFiles()    // 插入成功后清除input的内容
+//
+//      },
       handleRemove(file,fileList){
       	this.fileList = fileList;
       },
@@ -323,26 +336,29 @@
       },
       //提交
       on_submit_form(){
-
-        this.$refs.form.validate((valid) => {
+        var _self = this;
+        var content = _self.$refs.ue.getUEContent(); // 调用子组件方法
+        _self.form.contents = content;
+        _self.$refs.form.validate((valid) => {
           if (!valid) return false
-          this.on_submit_loading = true
+          _self.on_submit_loading = true
           var myDate=new Date('2020-01-01 00:00:00')
-          this.form.sort = parseInt(this.sort)+myDate.getTime();
-          this.$fetch.api_wechat.saveArticle(this.form)
+          _self.form.sort = parseInt(_self.sort)+myDate.getTime();
+          _self.$fetch.api_wechat.saveArticle(_self.form)
             .then(({msg}) => {
-              this.$message.success(msg)
+              _self.$message.success(msg)
               setTimeout(this.$router.back(), 500)
             })
             .catch(() => {
-              this.on_submit_loading = false
+              _self.on_submit_loading = false
             })
         })
       }
     },
     components: {
       panelTitle,
-      quillEditor
+      UE
+      //quillEditor
     }
 
 

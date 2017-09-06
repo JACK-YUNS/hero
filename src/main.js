@@ -23,6 +23,10 @@ import 'font-awesome/css/font-awesome.css'
 import 'summernote'
 import 'summernote/dist/lang/summernote-zh-CN.js'
 import 'summernote/dist/summernote.css'
+import '../static/ue/ueditor.config.js'
+import '../static/ue/ueditor.all.min.js'
+import '../static/ue/lang/zh-cn/zh-cn.js'
+import '../static/ue/ueditor.parse.min.js'
 //导入Vue框架
 import Vue from 'vue'
 //导入element组件
