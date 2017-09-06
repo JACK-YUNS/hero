@@ -201,8 +201,8 @@
         })
           .then(response => {
             _self.ruleForm = response.data
-            _self.defaultMsg = response.data.topic.content;
             _self.load_data = false
+            //this.$refs.ue.setUEContent(response.data.contents);
           })
           .catch(() => {
             _self.load_data = false

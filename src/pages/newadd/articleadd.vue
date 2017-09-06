@@ -125,7 +125,7 @@
           }
 
         },
-        defaultMsg: '',
+        defaultMsg: '这里是UE测试',
         config: {
           initialFrameWidth: '',
           initialFrameHeight: 350
@@ -149,10 +149,10 @@
           value: "6",
           label: '生活'
         }, {
-          value: "7",
+          value: 7,
           label: '教育'
         }, {
-          value: "8",
+          value: 8,
           label: '房产'
         }],
       	postData: {token:''},

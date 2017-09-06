@@ -47,7 +47,7 @@
         //     'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
         //     'print', 'preview', 'searchreplace', 'help', 'drafts'
         // ]]
-      , toolbars:[["source",'fullscreen',"fontsize","bold","italic","underline",'justifyleft','justifycenter','justifyright',"|","insertorderedlist","insertunorderedlist","|","simpleupload","insertimage","|",'removeformat','forecolor','backcolor',"insertvideo","insertsc","inserttable"]]
+      , toolbars:[["source",'fullscreen',"fontfamily","fontsize","bold","italic","underline",'justifyleft','justifycenter','justifyright',"|","insertorderedlist","insertunorderedlist","|","simpleupload","insertimage","|",'removeformat','forecolor','backcolor',"insertvideo","insertsc","inserttable"]]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         //,labelMap:{
         //    'anchor':'', 'undo':''
