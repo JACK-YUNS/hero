@@ -48,6 +48,25 @@
               </div>
 					  </el-form-item>
 
+
+              <el-form-item label="封面图片：">
+                <el-upload
+                  class="avatar-uploader"
+                  :show-file-list="false"
+                  action="//up.qbox.me/"
+                  :on-success="handleAvatarSuccesspic"
+                  :on-error="handleErrorpic"
+                  :on-remove="handleRemovepic"
+                  :before-upload="beforeAvatarUploadpic"
+                  :data="postDatapic"
+                  :file-list="fileList"
+                >
+                  <img v-if="ruleForm.cover" :src="ruleForm.cover" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </el-form-item>
+
+
 					  <el-form-item>
 					    <el-button type="primary" @click="submitForm()">立即创建</el-button>
 					    <el-button @click="$router.back()">返回上一页</el-button>
@@ -90,6 +109,8 @@
     data(){
       return {
         postData: {token:''},
+        postDatapic: {token:''},
+        fileList:[],
         editorOption: {
           modules: {
             toolbar: toolbarOptions
@@ -108,8 +129,8 @@
           content: '',
           isPublish:false,
           id:this.$route.params.id,
-          flag:0
-
+          flag:0,
+          cover:''
         },
         rules: {
           title: [
@@ -139,6 +160,7 @@
         this.get_form_data();
       };
       this.getToken()
+      this.getTokenpic()
     },
     mounted() {
       var _self =this
@@ -214,6 +236,38 @@
       beforeAvatarUpload(file) {
 
       },
+      getTokenpic(){
+        this.$fetch.api_qiniu.getToken({
+        })
+          .then(response => {
+            console.log(response)
+            this.postDatapic = {token : response.data}
+            this.load_data = false
+          })
+          .catch(() => {
+            this.load_data = false
+          })
+      },
+      handleAvatarSuccesspic(res, file,fileList) {
+        this.fileList = fileList;
+        //上传成功后在图片框显示图片
+        this.ruleForm.cover ='http://resources.kangxun360.com/'+ res.key
+      },
+      handleRemovepic(file,fileList){
+        this.fileList = fileList;
+      },
+      handleErrorpic(res) {
+        //显示错误
+        console.log(res)
+      },
+      beforeAvatarUploadpic(file) {
+        const isLt2M = file.size / 1024 / 1024 < 3;
+
+        if (!isLt2M) {
+          this.$message.error('上传封面图片大小不能超过 3MB!');
+        }
+        return isLt2M;
+      },
       submitForm() {
           var _self = this;
         _self.$refs.ruleForm.validate((valid) => {
@@ -245,6 +299,29 @@
 	.note-image-input ,.form-control {
      display: block;
 }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
   .ql-container .ql-editor {
     min-height: 20em;
     padding-bottom: 1em;
