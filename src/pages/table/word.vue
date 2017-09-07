@@ -103,15 +103,18 @@
       </el-table-column>
       <el-table-column
         label="操作"
-        width="200"
+        width="260"
       >
         <template scope="props">
-          <el-button type="info" size="small" icon="edit"  prop="template" v-if="props.row.templateId" @click="deltemplate(props.row.id)">
+          <el-button type="info" size="small"   prop="template" v-if="props.row.templateId" @click="deltemplate(props.row.id)">
             <span>取消模板</span>
           </el-button>
-          <el-button type="info" size="small" icon="edit"  prop="template" v-else  @click="get_template_type(props.row.id,props.$index)">
+          <el-button type="info" size="small"   prop="template" v-else  @click="get_template_type(props.row.id,props.$index)">
             <span>设置模板</span>
           </el-button>
+          <router-link :to="{name: 'wordAdd',params: {id: props.row.id}}" tag="span">
+            <el-button type="primary" size="small" >编辑</el-button>
+          </router-link>
           <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
         </template>
       </el-table-column>
