@@ -42,7 +42,7 @@
         label="主标题"
       >
         <template scope="props">
-          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id,title:props.row.id,content:props.row.content,sort:props.row.sort}}" tag="span">
+          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id}}" tag="span">
             <span class="link-type">{{props.row.title}}</span>
           </router-link>
         </template>
@@ -63,7 +63,11 @@
         label="操作"
         width="200"
       >
+
         <template scope="props">
+          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id}}" tag="span">
+            <el-button type="primary" size="small" >编辑</el-button>
+          </router-link>
           <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
         </template>
       </el-table-column>

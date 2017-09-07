@@ -125,10 +125,13 @@
           label="入职时间">
         </el-table-column>
         <el-table-column
-          label="密码重置"
-          width="130"
+          label="操作"
+          width="180"
           >
           <template scope="props">
+            <router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">
+              <el-button type="primary" size="small" >编辑</el-button>
+            </router-link>
             <el-button type="info" size="small" icon="edit" @click="">重置密码</el-button>
           </template>
         </el-table-column>

@@ -81,9 +81,12 @@
 
         <el-table-column
           label="操作"
-          width="100"
+          width="200"
           >
           <template scope="props">
+            <router-link :to="{name: 'templateAdd',params: {id: props.row.id}}" tag="span">
+              <el-button type="primary" size="small" >编辑</el-button>
+            </router-link>
             <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
           </template>
         </el-table-column>
