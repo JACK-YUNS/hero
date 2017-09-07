@@ -59,7 +59,7 @@
       </el-table-column>
       <el-table-column
         label="主标题"
-        show-overflow-tooltip="true"
+        :show-overflow-tooltip=true
       >
         <template scope="props">
           <router-link :to="{name: 'wordAdd',params: {id: props.row.id}}" tag="span">
@@ -70,7 +70,7 @@
       <el-table-column
         prop="subtitle"
         label="副标题"
-        show-overflow-tooltip="true"
+        :show-overflow-tooltip=true
       >
       </el-table-column>
       <el-table-column
@@ -92,7 +92,7 @@
         :formatter="sortFormat"
         label="排序"
         width="120"
-        show-overflow-tooltip="true">
+        :show-overflow-tooltip=true>
         <template scope="props">
           <span class="link-type" @click="handleUpdate(props.row)">{{props.row.sort | sortFormat}}</span>
         </template>

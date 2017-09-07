@@ -95,11 +95,11 @@
           width="130"
          >
         </el-table-column>
-        <el-table-column
-          prop="mobile"
-          label="手机号"
-          width="130">
-        </el-table-column>
+        <!--<el-table-column-->
+          <!--prop="mobile"-->
+          <!--label="手机号"-->
+          <!--width="130">-->
+        <!--</el-table-column>-->
         <el-table-column
           prop="area.areaName"
           label="所在区"
@@ -112,8 +112,7 @@
         </el-table-column>
         <el-table-column
           prop="area.groupName"
-          label="所在组"
-          show-overflow-tooltip="true">
+          label="所在组">
         </el-table-column>
         <el-table-column
           prop="gradeLevel"
@@ -126,8 +125,8 @@
           label="入职时间">
         </el-table-column>
         <el-table-column
-          label="操作"
-          width="180"
+          label="密码重置"
+          width="200"
           >
           <template scope="props">
             <router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">

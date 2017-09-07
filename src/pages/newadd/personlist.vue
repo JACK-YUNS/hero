@@ -9,12 +9,12 @@
               	<el-form ref="form" :model="form">
 								  <el-form-item>
 								    <el-col :span="5">
-								      <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+								      <el-date-picker type="date" placeholder="开始日期" v-model="form.startDate" style="width: 100%;"></el-date-picker>
 								    </el-col>
 								    <el-col :span="5" style="margin-left: 5px">
-								      <el-time-picker type="fixed-time" placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
+                      <el-date-picker type="date" placeholder="结束日期" v-model="form.endDate" style="width: 100%;"></el-date-picker>
 								    </el-col>
-								    <el-button type="primary" @click="onSubmit" style="margin-left: 5px">立即创建</el-button>
+								    <el-button type="primary" @click="onSubmit" style="margin-left: 5px">确定</el-button>
 								  </el-form-item>
                   <div>{{ this.userName}}-<span>{{this.gradeLevel}}</span>-{{this.agentCode}}</div>
 								  <el-table
@@ -43,12 +43,38 @@
                       width="300"
                     >
                       <template scope="props">
-                        <router-link :to="{name: '',params: {id: props.row.id}}" tag="span">
-                          <span class="link-type">点击查看日志详情</span>
-                        </router-link>
+                        <span class="link-type" @click="handleUpdate(props.row)">点击查看日志详情</span>
                       </template>
                     </el-table-column>
 							    </el-table>
+                  <el-dialog title="日志详情" :visible.sync="dialogFormVisible">
+                    <el-form class="small-space" :model="temp" label-position="left" label-width="100px" style='width: 600px; margin-left:50px;'>
+                      <el-form-item label="日志时间">
+                        <el-input v-model="temp.journalTime"></el-input>
+                      </el-form-item>
+                      <el-form-item label="新增客户">
+                        <el-input v-model="temp.statisticsAddCustomer"></el-input>
+                      </el-form-item>
+                      <el-form-item label="上门拜访">
+                        <el-input v-model="temp.statisticsVisit"></el-input>
+                      </el-form-item>
+                      <el-form-item label="邀约">
+                        <el-input v-model="temp.statisticsOffer"></el-input>
+                      </el-form-item>
+                      <el-form-item label="早会内容">
+                        <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4}" v-model="temp.morning_content"></el-input>
+                      </el-form-item>
+                      <el-form-item label="拜访情况">
+                        <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4}" v-model="temp.visitsContent"></el-input>
+                      </el-form-item>
+                      <el-form-item label="主管辅导点评">
+                        <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 4}" v-model="temp.approverContent"></el-input>
+                      </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                      <el-button @click="dialogFormVisible = false">返回上一级</el-button>
+                    </div>
+                  </el-dialog>
 							    <bottom-tool-bar>
 						        <div slot="page">
 						          <el-pagination
@@ -63,17 +89,16 @@
 								</el-form>
               </el-tab-pane>
               <el-tab-pane label="收到的日志" class="area">
-              	<el-form ref="form" :model="form">
-								   <el-form-item>
-								    <el-col :span="5">
-								      <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-								    </el-col>
-								    <el-col :span="5" style="margin-left:5px;">
-								      <el-time-picker type="fixed-time" placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-
-								    </el-col>
-								     <el-button type="success" @click="on_submit_form" :loading="on_submit_loading" style="margin-left: 5px">保存</el-button>
-								  </el-form-item>
+              	<!--<el-form ref="form" :model="formline">-->
+								   <!--<el-form-item>-->
+                     <!--<el-col :span="5">-->
+                       <!--<el-date-picker type="date" placeholder="开始日期" v-model="formline.startDate" style="width: 100%;"></el-date-picker>-->
+                     <!--</el-col>-->
+                     <!--<el-col :span="5" style="margin-left: 5px">-->
+                       <!--<el-date-picker type="date" placeholder="结束日期" v-model="formline.endDate" style="width: 100%;"></el-date-picker>-->
+                     <!--</el-col>-->
+								     <!--<el-button type="success" @click="onSubmit" :loading="on_submit_loading" style="margin-left: 5px">保存</el-button>-->
+								  <!--</el-form-item>-->
                   <div>{{ this.userName}}-<span>{{this.gradeLevel}}</span>-{{this.agentCode}}</div>
                   <el-table
 							      :data="table_data"
@@ -192,30 +217,47 @@
         totals: 0,
         //每页显示多少条数据
         length: 7,
-         tableData: [],
-           form: {
-          		userName: '',
-		          journalTime: '',
-		          date1: '',
-		          date2: '',
-		          delivery: false,
-		          type: [],
-		          resource: '',
-		          desc: ''
-		        },
+        tableData: [],
+        form: {
+          userName: '',
+          journalTime: '',
+          startDate: '',
+          endDate: '',
+          startDater: '',
+          endDater: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formline:{
+          startDate: '',
+          endDate: ''
+        },
+        temp: {
+          journalTime: '',
+          statisticsAddCustomer: '',
+          statisticsVisit: '',
+          statisticsOffer: '',
+          morning_content: '',
+          visitsContent:'',
+          approverContent: '',
+          status: 'published'
+        },
         userName:'',
         gradeLevel:'',
         agentCode:'',
-		        table_data:[],
-            tabledata:[],
-		         //请求时的loading效果
-		        load_data: true,
-            route_id: this.$route.params.id,
-		        load_data: false,
-		        on_submit_loading: false,
-		        rules: {
-		          name: [{required: true, message: '主标题不能为空', trigger: 'blur'}]
-		        }
+        dialogFormVisible: false,
+        table_data:[],
+        tabledata:[],
+        //请求时的loading效果
+        load_data: true,
+        route_id: this.$route.params.id,
+        load_data: false,
+        on_submit_loading: false,
+        rules: {
+          name: [{required: true, message: '主标题不能为空', trigger: 'blur'}]
+        }
       }
     },
     created(){
@@ -235,9 +277,11 @@
       	var _self = this;
          _self.load_data = false
          _self.$fetch.api_journal.journalpage({
-          userId:this.route_id,
+          userId:6,
           current: _self.currentPage,
           pageSize: _self.length,
+          startDate:_self.form.startDate,
+          endDate:_self.form.endDate
         })
           .then(response => {
             this.tableData = response.data.list.records
@@ -279,6 +323,8 @@
           userId:this.route_id ,
           current: _self.currentPage,
           pageSize: _self.length,
+          startDate:_self.formline.startDate,
+          endDate:_self.formline.endDate
         })
           .then(response => {
             this.table_data = response.data.records
@@ -311,7 +357,7 @@
         this.get_table_data()
       },
       onSubmit() {
-        console.log('submit!');
+        this.get_table_data();
       },
       //提交
       on_submit_form(){
@@ -327,7 +373,28 @@
               this.on_submit_loading = false
             })
         })
+      },
+      handleUpdate(row) {
+        this.temp = Object.assign({}, row);
+        this.dialogStatus = 'update';
+        this.dialogFormVisible = true;
+        var sort = this.temp.sort;
+        var myDate=new Date('2020-01-01 00:00:00')
+        var sortnum = sort - myDate.getTime()
+//      console.log(sortnum)
+        this.sort =sortnum;
+        if (sort < myDate.getTime()) {
+          this.sort=0;
+        }
+        else if(sort == null){
+          this.sort=0;
+        }
+        else{
+          this.sort =sortnum;
+        }
+
       }
+
     },
     components: {
       panelTitle,

@@ -93,7 +93,7 @@
           prop="agentCode"
           label="内容"
           width="130"
-          show-overflow-tooltip="true"
+          :show-overflow-tooltip=true
         >
         </el-table-column>
         <el-table-column
@@ -109,7 +109,7 @@
         <el-table-column
           prop="area.groupName"
           label="所在组"
-          show-overflow-tooltip="true">
+          :show-overflow-tooltip=true>
         </el-table-column>
         <el-table-column
           prop="gradeLevel"
@@ -299,7 +299,7 @@
       get_table_data(){
         var _self = this;
         _self.load_data = false
-        _self.$fetch.api_table.list({
+        _self.$fetch.api_feedback.feedbacks({
           current: _self.currentPage,
           pageSize: _self.length,
           areaName:_self.formInline.areaName,
@@ -316,9 +316,9 @@
           .then(response => {
 
           this.table_data = response.data.records
-        this.currentPage = response.data.current
-        this.total = response.data.total
-        this.load_data = false
+          this.currentPage = response.data.current
+          this.total = response.data.total
+          this.load_data = false
 
       })
       .catch(() => {

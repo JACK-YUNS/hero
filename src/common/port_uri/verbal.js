@@ -5,3 +5,4 @@ export const verbalpage = "/api/verbal/verbalpage"
 export const newly = "/api/verbal/newly"
 //话术更新
 export const details = "/api/verbal/details"
+

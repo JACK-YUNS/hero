@@ -27,3 +27,4 @@ export function details(data) {
     data
   })
 }
+

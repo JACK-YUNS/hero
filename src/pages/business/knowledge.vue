@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column
           label="主标题"
-          show-overflow-tooltip="true"
+          :show-overflow-tooltip=true
           >
            <template scope="props">
 			        <span class="link-type">{{props.row.title}}</span>

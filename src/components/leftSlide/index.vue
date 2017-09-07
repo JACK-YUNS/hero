@@ -125,7 +125,7 @@
             path: "/table/example"
           }]
         },{
-          title: "内容中心",
+          title: "运营管理",
           path: "/wordOperation",
           icon: "el-icon-message ",
           child: [{
