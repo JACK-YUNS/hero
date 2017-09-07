@@ -263,16 +263,17 @@
           })
       },
       handleAvatarSuccessPic(res, file,fileListpic) {
-      	this.fileListpic = fileListpic;
+          var _self=this;
+        _self.fileListpic = fileListpic;
       	//上传成功后在图片框显示图片
       	var imageUrl ='http://resources.kangxun360.com/'+ res.key
       	console.log(imageUrl)
 				var arr = []
-      	var isnum = this.form.showType;
+      	var isnum = _self.form.showType;
 					console.log('qqq')
       	if(isnum==0){
-          this.fileListpic = fileListpic.slice(-1);
-      			$.each(this.fileListpic, function(index, value, array) {
+          _self.fileListpic = fileListpic.slice(-1);
+      			$.each(_self.fileListpic, function(index, value, array) {
 					        	console.log(value.url)
 					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
 					        	 		arr.push({
@@ -287,8 +288,8 @@
 									});
       	}
       	if(isnum==1){
-          this.fileListpic = fileListpic.slice(-3);
-      			$.each(this.fileListpic, function(index, value, array) {
+          _self.fileListpic = fileListpic.slice(-3);
+      			$.each(_self.fileListpic, function(index, value, array) {
 					        	console.log(value.url)
 					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
 					        	 		arr.push({
@@ -304,7 +305,7 @@
 
       	}
 //				console.info(arr[0].pic)
-      	this.form.pics = JSON.stringify(arr);
+        _self.form.pics = JSON.stringify(arr);
       },
 //      handleAvatarSuccess(res, file,fileList) {
 //        var _self = this

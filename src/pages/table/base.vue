@@ -84,7 +84,7 @@
           width="100"
           >
           <template scope="props">
-           	<router-link :to="{name: 'personlist',params: {id: props.row.id,userName:props.row.userName,agentCode:props.row.agentCode,gradeLevel:props.row.gradeLevel}}" tag="span">
+           	<router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">
 			        <span class="link-type">{{props.row.userName}}</span>
 			      </router-link>
 	        </template>

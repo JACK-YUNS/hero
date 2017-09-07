@@ -16,7 +16,7 @@
 								    </el-col>
 								    <el-button type="primary" @click="onSubmit" style="margin-left: 5px">立即创建</el-button>
 								  </el-form-item>
-                  <div>{{this.route_name}}- <span v-text="this.route_level == 01 ? '降级试用业务员代表' : this.route_level == 02 ?'试用业务员':this.route_level == 03 ?'正式业务员':this.route_level == 04 ?'业务主任':this.route_level == 05 ?'业务经理一级':this.route_level == 06 ?'业务经理二级':this.route_level == 07 ?'高级经理一级':'区域总监'"></span>-{{this.route_agentCode}}</div>
+                  <div>{{ this.userName}}-<span>{{this.gradeLevel}}</span>-{{this.agentCode}}</div>
 								  <el-table
 							      :data="tableData"
 							      style="width: 100%">
@@ -74,7 +74,7 @@
 								    </el-col>
 								     <el-button type="success" @click="on_submit_form" :loading="on_submit_loading" style="margin-left: 5px">保存</el-button>
 								  </el-form-item>
-                  <div>{{this.route_name}}- <span v-text="this.route_level == 01 ? '降级试用业务员代表' : this.route_level == 02 ?'试用业务员':this.route_level == 03 ?'正式业务员':this.route_level == 04 ?'业务主任':this.route_level == 05 ?'业务经理一级':this.route_level == 06 ?'业务经理二级':this.route_level == 07 ?'高级经理一级':'区域总监'"></span>-{{this.route_agentCode}}</div>
+                  <div>{{ this.userName}}-<span>{{this.gradeLevel}}</span>-{{this.agentCode}}</div>
                   <el-table
 							      :data="table_data"
 							      style="width: 100%">
@@ -118,7 +118,7 @@
               </el-tab-pane>
               <el-tab-pane label="拜访记录" class="area">
                  <el-form ref="form" :model="form">
-                   <div>{{this.route_name}}- <span v-text="this.route_level == 01 ? '降级试用业务员代表' : this.route_level == 02 ?'试用业务员':this.route_level == 03 ?'正式业务员':this.route_level == 04 ?'业务主任':this.route_level == 05 ?'业务经理一级':this.route_level == 06 ?'业务经理二级':this.route_level == 07 ?'高级经理一级':'区域总监'"></span>-{{this.route_agentCode}}</div>
+                   <div>{{ this.userName}}-<span>{{this.gradeLevel }}</span>-{{this.agentCode}}</div>
                    <el-table
 							      :data="tabledata"
 							      style="width: 100%">
@@ -203,14 +203,14 @@
 		          resource: '',
 		          desc: ''
 		        },
+        userName:'',
+        gradeLevel:'',
+        agentCode:'',
 		        table_data:[],
             tabledata:[],
 		         //请求时的loading效果
 		        load_data: true,
             route_id: this.$route.params.id,
-            route_name: this.$route.params.userName,
-            route_agentCode: this.$route.params.agentCode,
-            route_level: this.$route.params.gradeLevel,
 		        load_data: false,
 		        on_submit_loading: false,
 		        rules: {
@@ -243,7 +243,33 @@
             this.tableData = response.data.list.records
 	          this.currentPage = response.data.list.current
 	          this.total = response.data.list.total
+            this.userName=response.data.entity.userName
+            this.gradeLevel=response.data.entity.gradeLevel
+            this.agentCode=response.data.entity.agentCode
 	          this.load_data = false
+            if(this.gradeLevel=='01'){
+              this.gradeLevel='降级试用业务代表'
+            }else if(this.gradeLevel=='02'){
+              this.gradeLevel='试用业务员'
+            }else if(this.gradeLevel=='03'){
+              this.gradeLevel='正式业务员'
+            }else if(this.gradeLevel=='04'){
+              this.gradeLevel='业务主任'
+            }else if(this.gradeLevel=='05'){
+              this.gradeLevel='业务经理一级'
+            }else if(this.gradeLevel=='06'){
+              this.gradeLevel='业务经理二级'
+            }else if(this.gradeLevel=='07'){
+              this.gradeLevel='高级经理一级'
+            }else if(this.gradeLevel=='08'){
+              this.gradeLevel='高级经理二级'
+            }else if(this.gradeLevel=='09'){
+              this.gradeLevel='区域总监'
+            }else if(this.gradeLevel=='10'){
+              this.gradeLevel='区域总经理'
+            }else{
+              this.gradeLevel='高管'
+            }
           })
           .catch(() => {
             this.load_data = false
