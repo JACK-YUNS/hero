@@ -9,60 +9,60 @@
       </router-link>-->
     </panel-title>
     <div class="panel-body">
-    	<el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <!--<el-form-item>
-          <el-select v-model="formInline.isTop" placeholder="首页">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="是" value="0"></el-option>
-            <el-option label="否" value="1"></el-option>
-          </el-select>
-        </el-form-item>-->
-        <el-form-item>
-          <el-select v-model="f.p" placeholder="请选择区" clearable @clear="clearArea"  @change="selArea">
-            <el-option v-for="(v,i) in area"  :value="i" :label="v.name"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="f.c" placeholder="请选择部门" clearable @change="selDept" @clear="clearDept">
-            <el-option v-for="(v,i) in dept"  :value="i" :label="v.name"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="f.cc" placeholder="请选择组" clearable  @change="result" @clear="clearGroup">
-            <el-option v-for="(v,i) in group"  :value="i" :label="v.name"></el-option>
-          </el-select>
-        </el-form-item>
+      <!--<el-form :inline="true" :model="formInline" class="demo-form-inline">-->
+        <!--&lt;!&ndash;<el-form-item>-->
+          <!--<el-select v-model="formInline.isTop" placeholder="首页">-->
+            <!--<el-option label="全部" value=""></el-option>-->
+            <!--<el-option label="是" value="0"></el-option>-->
+            <!--<el-option label="否" value="1"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>&ndash;&gt;-->
+        <!--<el-form-item>-->
+          <!--<el-select v-model="f.p" placeholder="请选择区" clearable @clear="clearArea"  @change="selArea">-->
+            <!--<el-option v-for="(v,i) in area"  :value="i" :label="v.name"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-select v-model="f.c" placeholder="请选择部门" clearable @change="selDept" @clear="clearDept">-->
+            <!--<el-option v-for="(v,i) in dept"  :value="i" :label="v.name"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-select v-model="f.cc" placeholder="请选择组" clearable  @change="result" @clear="clearGroup">-->
+            <!--<el-option v-for="(v,i) in group"  :value="i" :label="v.name"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
 
 
 
-        <el-form-item>
-          <el-select v-model="formInline.gradeLevel"  @change="get_table_data" placeholder="筛选 — 职级">
-            <el-option v-for="item in levelArr" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="formInline.userName" @change="get_table_data" placeholder="请输入姓名查询"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="formInline.mobile" @change="get_table_data" placeholder="请输入手机号查询"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="formInline.agentCode" @change="get_table_data" placeholder="请输入工号查询"></el-input>
-        </el-form-item>
-        <el-form-item>
-					<el-col>
-						<el-date-picker type="date"  placeholder="入职开始时间" v-model="formInline.startDate" style="width: 100%;"></el-date-picker>
-					</el-col>
-				</el-form-item>
-				<el-form-item>
-					<el-col>
-						<el-date-picker type="date" placeholder="入职结束时间" v-model="formInline.endDate" style="width: 100%;"></el-date-picker>
-					</el-col>
-				</el-form-item>
-        <el-form-item>
-          <el-button type="success" @click="get_table_data" :loading="on_submit_loading">确定</el-button>
-        </el-form-item>
-      </el-form>
+        <!--<el-form-item>-->
+          <!--<el-select v-model="formInline.gradeLevel"  @change="get_table_data" placeholder="筛选 — 职级">-->
+            <!--<el-option v-for="item in levelArr" :label="item.label" :value="item.value"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-input v-model="formInline.userName" @change="get_table_data" placeholder="请输入姓名查询"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-input v-model="formInline.mobile" @change="get_table_data" placeholder="请输入手机号查询"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-input v-model="formInline.agentCode" @change="get_table_data" placeholder="请输入工号查询"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-col>-->
+            <!--<el-date-picker type="date"  placeholder="入职开始时间" v-model="formInline.startDate" style="width: 100%;"></el-date-picker>-->
+          <!--</el-col>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-col>-->
+            <!--<el-date-picker type="date" placeholder="入职结束时间" v-model="formInline.endDate" style="width: 100%;"></el-date-picker>-->
+          <!--</el-col>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-button type="success" @click="get_table_data" :loading="on_submit_loading">确定</el-button>-->
+        <!--</el-form-item>-->
+      <!--</el-form>-->
 
       <el-table
         :data="table_data"
@@ -82,23 +82,19 @@
         <el-table-column
           label="姓名"
           width="100"
-          >
+        >
           <template scope="props">
-           	<router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">
-			        <span class="link-type">{{props.row.userName}}</span>
-			      </router-link>
-	        </template>
+            <router-link :to="{name: '',params: {id: props.row.id}}" tag="span">
+              <span class="link-type">{{props.row.userName}}</span>
+            </router-link>
+          </template>
         </el-table-column>
         <el-table-column
           prop="agentCode"
-          label="工号"
+          label="内容"
           width="130"
-         >
-        </el-table-column>
-        <el-table-column
-          prop="mobile"
-          label="手机号"
-          width="130">
+          show-overflow-tooltip="true"
+        >
         </el-table-column>
         <el-table-column
           prop="area.areaName"
@@ -123,19 +119,19 @@
         <el-table-column
           prop="companyDate"
           :formatter="dateFormat"
-          label="入职时间">
+          label="反馈时间">
         </el-table-column>
-        <el-table-column
-          label="操作"
-          width="180"
-          >
-          <template scope="props">
-            <router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">
-              <el-button type="primary" size="small" >编辑</el-button>
-            </router-link>
-            <el-button type="info" size="small" icon="edit" @click="">重置密码</el-button>
-          </template>
-        </el-table-column>
+        <!--<el-table-column-->
+          <!--label="操作"-->
+          <!--width="180"-->
+        <!--&gt;-->
+          <!--<template scope="props">-->
+            <!--<router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">-->
+              <!--<el-button type="primary" size="small" >编辑</el-button>-->
+            <!--</router-link>-->
+            <!--<el-button type="info" size="small" icon="edit" @click="">重置密码</el-button>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
       </el-table>
       <bottom-tool-bar>
         <div slot="page">
@@ -163,7 +159,7 @@
     data(){
 
       return {
-      	formInline: {
+        formInline: {
           areaName: '',
           deptName: '',
           groupName: '',
@@ -259,11 +255,11 @@
       panelTitle,
       bottomToolBar
     },
-     computed: {
+    computed: {
 
-  },
+    },
     created(){
-    	var _self = this;
+      var _self = this;
       _self.get_table_data()
       _self.get_area_data();
 
@@ -279,7 +275,7 @@
         return moment(date).format("YYYY-MM-DD");
       },
       levelFormat:function (row,column) {
-          var _self = this;
+        var _self = this;
         var level = row[column.property];
         return _self.levelArr[Number.parseInt(level)-1]['label'];
       },
@@ -291,21 +287,21 @@
         this.get_table_data()
       },
       get_area_data(){
-          var _self = this;
-          _self.$fetch.api_table.get_area({})
-            .then(response => {
-                _self.area = response.data;
-              _self.dept=_self.area[0]['child'];
-              _self.group=_self.dept[0]['child'];
-            })
+        var _self = this;
+        _self.$fetch.api_table.get_area({})
+          .then(response => {
+          _self.area = response.data;
+        _self.dept=_self.area[0]['child'];
+        _self.group=_self.dept[0]['child'];
+      })
       },
       //获取数据
       get_table_data(){
-      	 var _self = this;
+        var _self = this;
         _self.load_data = false
-     	  _self.$fetch.api_table.list({
-	        current: _self.currentPage,
-	        pageSize: _self.length,
+        _self.$fetch.api_table.list({
+          current: _self.currentPage,
+          pageSize: _self.length,
           areaName:_self.formInline.areaName,
           deptName:_self.formInline.deptName,
           groupName:_self.formInline.groupName,
@@ -316,18 +312,18 @@
           startDate:_self.formInline.startDate,
           endDate:_self.formInline.endDate
 
-	      })
-	        .then(response => {
+        })
+          .then(response => {
 
-	          this.table_data = response.data.records
-	          this.currentPage = response.data.current
-	          this.total = response.data.total
-	          this.load_data = false
+          this.table_data = response.data.records
+        this.currentPage = response.data.current
+        this.total = response.data.total
+        this.load_data = false
 
-	        })
-	        .catch(() => {
-	          this.load_data = false
-	        })
+      })
+      .catch(() => {
+          this.load_data = false
+      })
       },
 
       //单个删除
@@ -338,26 +334,26 @@
           type: 'warning'
         })
           .then((index, row) => {
-            this.load_data = true;
-            try{
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功'
-                        });
-                        this.table_data.splice(index, 1);
-                    		this.load_data = false;
-                }catch(err){
-                    this.$message({
-                        type: 'error',
-                        message: err.message
-                    });
-                }
-          })
-          .catch(() => {
-          })
+          this.load_data = true;
+        try{
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          });
+          this.table_data.splice(index, 1);
+          this.load_data = false;
+        }catch(err){
+          this.$message({
+            type: 'error',
+            message: err.message
+          });
+        }
+      })
+      .catch(() => {
+        })
       },
       onSubmit(){
-      	this.get_table_data();
+        this.get_table_data();
       },
       //页码选择
       handleCurrentChange(val) {
@@ -383,7 +379,7 @@
         this.result();
       },
       result:function(){
-          var _self = this;
+        var _self = this;
         if(_self.f.p !== ""){
           _self.formInline.areaName = _self.area[_self.f.p].name;
         }
@@ -420,7 +416,7 @@
   }
 </script>
 <style scoped="scoped">
- .el-select{margin-bottom: 10px;}
- .el-autocomplete{margin-bottom: 10px;}
- .link-type{color: #007ACC;}
+  .el-select{margin-bottom: 10px;}
+  .el-autocomplete{margin-bottom: 10px;}
+  .link-type{color: #007ACC;}
 </style>

@@ -75,7 +75,7 @@
           width="120"
           sortable>
           <template scope="props">
-	            <span>{{props.row.sort | sortFormat}}</span>
+	            <span>{{props.row.sort}}</span>
           </template>
         </el-table-column>
 

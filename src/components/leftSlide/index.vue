@@ -125,12 +125,15 @@
             path: "/table/example"
           }]
         },{
-          title: "话术",
+          title: "内容中心",
           path: "/wordOperation",
           icon: "el-icon-message ",
           child: [{
             title: "话术",
             path: "/wordOperation/wordOperation"
+          },{
+            title: "反馈",
+            path: "/wordOperation/feedBack"
           }]
         }]
       }

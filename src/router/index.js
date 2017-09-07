@@ -87,6 +87,8 @@ import knowledgeAddComponent from 'pages/newadd/knowledgeadd'
 import wordOperationComponent from 'pages/wordOperation/wordOperation'
 //wordOperationadd newadd
 import wordOperationAddComponent from 'pages/newadd/wordOperationadd'
+//wordOperation feedBack
+import feedBackComponent from 'pages/wordOperation/feedBack'
 
 Vue.use(VueRouter)
 
@@ -361,6 +363,14 @@ const routes = [{
     component: wordOperationAddComponent,
     meta: {
       title: "话术",
+      auth: true
+    }
+  },{
+    path: '/wordOperation/feedBack',
+    name: 'feedBack',
+    component: feedBackComponent,
+    meta: {
+      title: "反馈",
       auth: true
     }
   }]

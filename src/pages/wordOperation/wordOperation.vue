@@ -40,6 +40,7 @@
       </el-table-column>
       <el-table-column
         label="主标题"
+        show-overflow-tooltip="true"
       >
         <template scope="props">
           <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id}}" tag="span">
