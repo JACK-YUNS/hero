@@ -222,21 +222,13 @@
             }
 
             var picArr = JSON.parse(this.form.pics);
-          	var arr =[];
           	var arrpic = [];
-            $.each(picArr, function(index, value, array) {
-						  arr.push({
-			          url: value.pic,
-			          status: 'finished'
-			        });
-						});
 						$.each(picArr, function(index, value, array) {
 						  arrpic.push({
 			          url: value.pic,
 			          status: 'finished'
 			        });
 						});
-						this.fileList = arr;
 						this.fileListpic = arrpic;
             this.load_data = false
 //          console.log(this.fileList)
@@ -277,12 +269,9 @@
       	console.log(imageUrl)
 				var arr = []
       	var isnum = this.form.showType;
-        var picArr = JSON.parse(this.form.pics)
-				var arrlength = arr.length+picArr.length;
-					console.log(arrlength)
 					console.log('qqq')
       	if(isnum==0){
-      		if(arrlength<=1){
+          this.fileListpic = fileListpic.slice(-1);
       			$.each(this.fileListpic, function(index, value, array) {
 					        	console.log(value.url)
 					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
@@ -296,12 +285,9 @@
 					        	 }
 
 									});
-      		}else{
-      			return
-      		}
       	}
       	if(isnum==1){
-      		if(arrlength<3){
+          this.fileListpic = fileListpic.slice(-3);
       			$.each(this.fileListpic, function(index, value, array) {
 					        	console.log(value.url)
 					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
@@ -315,13 +301,8 @@
 					        	 }
 
 									});
-      		}
-      		else{
-      			return
-      		}
+
       	}
-
-
 //				console.info(arr[0].pic)
       	this.form.pics = JSON.stringify(arr);
       },

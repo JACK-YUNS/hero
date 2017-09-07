@@ -203,7 +203,7 @@
         _self.$fetch.api_verbal.verbalpage({
           current: _self.currentPage,
           pageSize: _self.length,
-          Title:_self.formInline.title
+          title:_self.formInline.title
         })
           .then(response => {
             var list = response.data.records;
