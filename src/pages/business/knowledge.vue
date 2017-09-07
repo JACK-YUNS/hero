@@ -20,7 +20,7 @@
 		      </router-link>
 			  </el-form-item>
 			</el-form>
-		</div>
+
 
       <el-table
         :data="table_data"
@@ -95,6 +95,7 @@
         </div>
       </bottom-tool-bar>
     </div>
+  </div>
 </template>
 <script type="text/javascript">
   import {panelTitle, bottomToolBar} from 'components'

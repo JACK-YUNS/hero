@@ -38,7 +38,7 @@
           </router-link>
         </el-form-item>
       </el-form>
-    </div>
+
 
     <el-table
       :data="table_data"
@@ -165,6 +165,7 @@
         </el-pagination>
       </div>
     </bottom-tool-bar>
+  </div>
   </div>
 </template>
 <script type="text/javascript">
