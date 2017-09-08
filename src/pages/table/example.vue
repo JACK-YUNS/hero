@@ -57,7 +57,7 @@
          >
         </el-table-column>
         <el-table-column
-          prop="sort"
+          prop="type"
           :formatter="typeFormat"
           label="类型"
           width="100">
@@ -196,7 +196,7 @@
         if (aType == undefined) {
           return "";
         }
-        var arr = ['','图文（1） ','文章（2） ','海报（3） '];
+        var arr = ['','图文 ','文章 ','海报 '];
         return arr[aType];
       },
     	sortFormat:function(row, column,cellValue) {
