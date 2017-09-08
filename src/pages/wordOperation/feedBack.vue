@@ -316,7 +316,6 @@
         if(level!=null){
           return _self.levelArr[Number.parseInt(level)-1]['label'];
         }
-
       },
       //刷新
       on_refresh(){
