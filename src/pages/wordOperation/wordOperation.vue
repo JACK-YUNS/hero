@@ -260,7 +260,7 @@
             this.$fetch.api_verbal.newly(data)
               .then(({msg}) => {
                 this.get_table_data()
-                this.$message.success(msg)
+//                this.$message.success(msg)
               })
               .catch(() => {
               })

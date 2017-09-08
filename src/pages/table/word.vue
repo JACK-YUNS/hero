@@ -399,7 +399,7 @@
             this.$fetch.api_wechat.delImage(data)
               .then(({msg}) => {
                 this.get_table_data()
-                this.$message.success(msg)
+//                this.$message.success(msg)
               })
               .catch(() => {
               })
