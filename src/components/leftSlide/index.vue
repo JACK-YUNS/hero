@@ -70,23 +70,6 @@
               }, {
                 title: "团队风采",
                 path: "/business/team"
-              },{
-                title: "长见识",
-                path: "/business/knowledge"
-              }]
-            }, {
-              title: "人员",
-              path: "/list",
-              icon: "fa-table",
-              child: [{
-                title: "概况",
-                path: "/charts/barline"
-              }, {
-                title: "城市分布",
-                path: "/charts/city"
-              }, {
-                title: "人员列表",
-                path: "/table/base"
               }]
             }]
         }else {
