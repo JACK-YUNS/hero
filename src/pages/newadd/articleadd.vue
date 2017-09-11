@@ -167,7 +167,6 @@
           isTop:'',
           showType:'',
           articleCopy:'',
-          imageUrl: '',
           pics: [],
           contents:'',
           sort:''

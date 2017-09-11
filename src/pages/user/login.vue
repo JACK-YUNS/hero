@@ -48,39 +48,39 @@
       ...mapGetters({
         get_user_info: GET_USER_INFO
       })
-    },
-    methods: {
-      ...mapActions({
-        set_user_info: SET_USER_INFO
-      }),
+  },
+  methods: {
+  ...mapActions({
+      set_user_info: SET_USER_INFO
+    }),
       //提交
       submit_form() {
-        this.$refs.form.validate((valid) => {
-          if (!valid) return false
-          this.load_data = true
-          //登录提交
-          this.$fetch.api_user.login(this.form)
-            .then(({data, msg}) => {
-              this.set_user_info({
-                user: data,
-                token:data.token,//用户登录后的token
-                login: true
-              })
-              this.$message.success(msg)
-              setTimeout(this.$router.push({path: '/'}), 500)
-            })
-            .catch(({code,msg}) => {
-              this.load_data = false
+      this.$refs.form.validate((valid) => {
+        if (!valid) return false
+      this.load_data = true
+      //登录提交
+      this.$fetch.api_user.login(this.form)
+        .then(({data, msg}) => {
+        this.set_user_info({
+        user: data,
+        token:data.token,//用户登录后的token
+        login: true
+      })
+      this.$message.success(msg)
+      setTimeout(this.$router.push({path: '/'}), 500)
+    })
+    .catch(({code,msg}) => {
+        this.load_data = false
 //              if (code === port_code.error) {
 //                this.$notify.info({
 //                  title: '温馨提示',
 //                  message: msg
 //                })
 //              }
-            })
-        })
-      }
+    })
+    })
     }
+  }
   }
 </script>
 <style lang="scss" type="text/scss" rel="stylesheet/scss">

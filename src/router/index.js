@@ -329,7 +329,7 @@ const routes = [{
     path: '/business/goodmorning',
     name: 'businessGoodmorning',
     component: goodmorningComponent,
-     meta: {
+    meta: {
       title: "早会流程",
       auth: true
     }
@@ -337,7 +337,7 @@ const routes = [{
     path: '/business/team',
     name: 'businessTeam',
     component: teamComponent,
-     meta: {
+    meta: {
       title: "团队风采",
       auth: true
     }
@@ -345,7 +345,7 @@ const routes = [{
     path: '/business/knowledge',
     name: 'businessKnowledge',
     component: knowledgeComponent,
-     meta: {
+    meta: {
       title: "长见识",
       auth: true
     }
@@ -392,23 +392,23 @@ const router = new VueRouter({
 //路由开始之前的操作
 router.beforeEach((to, from, next) => {
   NProgress.done().start()
-  let toName = to.name
-  // let fromName = from.name
-  let is_login = store.state.user_info.login
+let toName = to.name
+// let fromName = from.name
+let is_login = store.state.user_info.login
 
-  if (!is_login && toName !== 'login') {
+if (!is_login && toName !== 'login') {
+  next({
+    name: 'login'
+  })
+} else {
+  if (is_login && toName === 'login') {
     next({
-      name: 'login'
+      path: '/'
     })
   } else {
-    if (is_login && toName === 'login') {
-      next({
-        path: '/'
-      })
-    } else {
-      next()
-    }
+    next()
   }
+}
 })
 
 //路由完成之后的操作
