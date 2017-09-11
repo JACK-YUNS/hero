@@ -34,11 +34,11 @@
                 <el-form-item label="营业区名称:" prop="areaName">
 		              <el-input v-model="form.areaName" placeholder="最多10个汉字" style="width: 500px;" :maxlength=10></el-input>
 		            </el-form-item>
-		            <el-form-item label="欢迎词:" prop="welcome">
-		              <el-input v-model="form.welcome" placeholder="最多15个汉字" style="width: 500px;" :maxlength=15></el-input>
-		            </el-form-item>
-		            <el-form-item label="文案：">
-							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.chiefInspector" style="width: 500px;" placeholder="最多50个汉字" :maxlength=50></el-input>
+		            <!--<el-form-item label="欢迎词:" prop="welcome">-->
+		              <!--<el-input v-model="form.welcome" placeholder="最多15个汉字" style="width: 500px;" :maxlength=15></el-input>-->
+		            <!--</el-form-item>-->
+		            <el-form-item label="总监寄语：">
+							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.chiefInspector" style="width: 500px;" placeholder="最多40个汉字" :maxlength=40></el-input>
 							  </el-form-item>
 		            <el-form-item>
 		              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
