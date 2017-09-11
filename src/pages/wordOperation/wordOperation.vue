@@ -35,7 +35,7 @@
       <el-table-column
         type="index"
         label="序号"
-        width="200"
+        width="80"
       >
       </el-table-column>
       <el-table-column

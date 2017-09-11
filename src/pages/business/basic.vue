@@ -3,22 +3,22 @@
     <div class="panel">
       <panel-title :title="$route.meta.title"></panel-title>
       <div class="panel-body">
-      	
+
         <el-tabs>
               <el-tab-pane label="智慧营业区封面" class="area">
               	<el-form ref="form" :model="form" :rules="rules">
                 <el-form-item label="跟换封面图片：">
-	               	<el-upload 
+	               	<el-upload
 	               		class="avatar-uploader"
 										:show-file-list="false"
-							    	action="//up.qbox.me/" 
-							    	:on-success="handleAvatarSuccess" 
-							    	:on-error="handleError" 
+							    	action="//up.qbox.me/"
+							    	:on-success="handleAvatarSuccess"
+							    	:on-error="handleError"
 							    	:on-remove="handleRemove"
-							    	:before-upload="beforeAvatarUpload" 
+							    	:before-upload="beforeAvatarUpload"
 							    	:data="postData"
 							    	:file-list="fileList"
-							    	> 
+							    	>
 						    	<img v-if="form.cover" :src="form.cover" class="avatar">
   								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						    	<div class="el-upload__tip" slot="tip">上传封面图片大小不能超过 3MB!</div>
@@ -56,10 +56,10 @@
                </el-form>
               </el-tab-pane>
             </el-tabs>
-            
+
       </div>
     </div>
-    
+
   </el-row>
 </template>
 <script type="text/javascript">
@@ -97,7 +97,7 @@
         this.$fetch.api_wisdom.settings({
           areaName: '昆明十二区'
         })
-          .then(response => {	
+          .then(response => {
             this.form = response.data
             this.load_data = false
           })
@@ -108,7 +108,7 @@
       getToken(){
       	this.$fetch.api_qiniu.getToken({
         })
-          .then(response => {	
+          .then(response => {
           	console.log(response)
             this.postData = {token : response.data}
             this.load_data = false
@@ -120,15 +120,15 @@
       handleAvatarSuccess(res, file,fileList) {
       	this.fileList = fileList;
       	//上传成功后在图片框显示图片
-      	this.form.cover ='http://resources.kangxun360.com/'+ res.key 
+      	this.form.cover ='http://resources.kangxun360.com/'+ res.key
       },
       handleRemove(file,fileList){
       	this.fileList = fileList;
       },
-      handleError(res) { 
+      handleError(res) {
       		//显示错误
       		console.log(res)
-      }, 
+      },
       beforeAvatarUpload(file) {
         const isLt2M = file.size / 1024 / 1024 < 3;
 
