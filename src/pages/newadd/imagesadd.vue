@@ -102,14 +102,16 @@
           "albumId":this.albumId
         })
           .then(response => {
-            this.photoList = response.data;
-            for(var item in this.photoList){
-                if(item.cover == 1){
-                    this.coverId = item.id;
-                    break;
+              var _self = this;
+            _self.photoList = response.data;
+            for(var item in _self.photoList){
+                console.log(_self.photoList[item].cover);
+                if(_self.photoList[item].cover == 1){
+                  _self.coverId = _self.photoList[item].id;
+                  break;
                 }
             }
-            this.load_data = false
+            _self.load_data = false
           })
           .catch(() => {
             this.load_data = false
