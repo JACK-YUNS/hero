@@ -61,3 +61,11 @@ export function get_area(data) {
     data
   })
 }
+//重置密码
+export function resetPwd(data) {
+  return fetch({
+    url: port_table.resetPwd,
+    method: 'post',
+    data
+  })
+}

@@ -21,3 +21,5 @@ export const save = "/api/post/table/save"
 export const batch_del = "/api/post/table/batch/del"
 //获得区部组
 export const get_area = "/api/user/selectArea"
+//数据列表
+export const resetPwd = "/api/user/resetPwd"

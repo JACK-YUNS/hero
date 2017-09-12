@@ -132,7 +132,7 @@
             <router-link :to="{name: 'personlist',params: {id: props.row.id}}" tag="span">
               <el-button type="primary" size="small" >编辑</el-button>
             </router-link>
-            <el-button type="info" size="small" icon="edit" @click="">重置密码</el-button>
+            <el-button type="info" size="small" icon="edit" @click="editPassword(props.$index,props.row.id)">重置密码</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -241,6 +241,7 @@
         on_submit_loading:false,
         //批量选择数组
         batch_select: [],
+        currentId:'',
         value: '',
         area:"",
         dept:"",
@@ -327,6 +328,40 @@
 	        .catch(() => {
 	          this.load_data = false
 	        })
+      },
+      //重置密码
+      editPassword(item){
+        this.currentId = this.table_data[item].id;
+        this.$confirm('此操作将重置您的密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then((id) => {
+            this.load_data = true;
+            try{
+              this.$message({
+                type: 'success',
+                message: '重置密码成功'
+              });
+              this.load_data = false;
+            }catch(err){
+              this.$message({
+                type: 'error',
+                message: err.message
+              });
+              console.log('重置密码失败')
+            }
+            var data = {"id":this.currentId}
+            this.$fetch.api_table.resetPwd(data)
+              .then(({msg}) => {
+              this.get_table_data()
+           })
+            .catch(() => {
+              })
+            })
+        .catch(() => {
+          })
       },
 
       //单个删除

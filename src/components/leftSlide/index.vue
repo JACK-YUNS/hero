@@ -41,16 +41,16 @@
   </div>
 </template>
 <script type="text/javascript">
-  import store from 'store'
-  export default{
+import store from 'store'
+export default{
     name: 'slide',
     data(){
       return {
-        nav_menu_data: []
+          nav_menu_data: []
       }
     },
     created(){
-      this.getUser()
+        this.getUser()
     },
     methods:{
       getUser(){
