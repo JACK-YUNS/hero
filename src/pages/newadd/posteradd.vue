@@ -67,7 +67,7 @@
       	    id:'',
           title: '',
           assortmentType:'1',
-          isTop:'0',
+          isTop:'1',
           isRecommend:'0',
           imageUrl: '',
           pics: [],

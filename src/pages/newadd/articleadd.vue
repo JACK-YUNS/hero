@@ -270,7 +270,7 @@
 				var arr = []
       	var isnum = _self.form.showType;
 					console.log('qqq')
-      	if(isnum==0){
+      	if(isnum==1){
           _self.fileListpic = fileListpic.slice(-1);
       			$.each(_self.fileListpic, function(index, value, array) {
 					        	console.log(value.url)
@@ -286,7 +286,7 @@
 
 									});
       	}
-      	if(isnum==1){
+      	if(isnum==0){
           _self.fileListpic = fileListpic.slice(-3);
       			$.each(_self.fileListpic, function(index, value, array) {
 					        	console.log(value.url)

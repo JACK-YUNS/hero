@@ -71,7 +71,7 @@
           subtitle: '',
           contents: '',
           assortmentType:'1',
-          isTop:'0',
+          isTop:'1',
           imageUrl: '',
           pics: [],
           sort:''
