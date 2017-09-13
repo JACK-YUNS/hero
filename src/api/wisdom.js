@@ -90,3 +90,11 @@ export function setCover(data) {
     data
   })
 }
+//设置封面
+export function selectPermission(data) {
+  return fetch({
+    url:port_wisdom.selectPermission,
+    method: 'post',
+    data
+  })
+}

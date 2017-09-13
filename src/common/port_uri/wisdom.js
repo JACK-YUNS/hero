@@ -21,3 +21,5 @@ export const savePhoto = "/api/wisdom/savePhoto"
 export const cleanPhotoName = "/api/wisdom/cleanPhotoName"
 //设置封面
 export const setCover = "/api/wisdom/setCover"
+//选择用户
+export const selectPermission = "/api/wisdom/selectPermission"

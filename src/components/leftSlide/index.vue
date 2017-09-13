@@ -8,6 +8,7 @@
         class="menu-box"
         theme="dark"
         router
+        unique-opened
         :default-active="$route.path">
         <div
           v-for="(item, index) in nav_menu_data"

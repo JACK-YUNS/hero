@@ -55,7 +55,7 @@
     color: #333333;
 }
 .el-tabs__active-bar {
-    height: 0px; 
+    height: 0px;
 }
 .el-tabs__nav {
     border-top: 1px solid #ccc;
@@ -64,7 +64,7 @@
 .el-upload{
 	border: 1px dashed #e6e6e6;
 }
-
-
+.el-transfer-panel__body{height:400px;}
+  .el-transfer-panel__list.is-filterable{height: 300px;}
 
 </style>
