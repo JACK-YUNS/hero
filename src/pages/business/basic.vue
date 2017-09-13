@@ -40,7 +40,7 @@
                   <span  style="position: absolute;left: 15px;top: 120px;color: #48576a;font-size: 14px;font-weight: bold;display: inline-block;width: 80px;height:45px;overflow: hidden" v-if="this.form.chiefTitle==''|| this.form.chiefTitle==null">总监寄语：</span>
                   <span  style="position: absolute;left: 15px;top: 120px;color: #48576a;font-size: 14px;font-weight: bold;display: inline-block;width: 80px;height:45px;overflow: hidden" v-else>{{this.form.chiefTitle}}：</span>
 		            <el-form-item>
-							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.chiefInspector" style="width: 500px;" placeholder="最多40个汉字" :maxlength=40 readonly="readonly"></el-input>
+							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.chiefInspector" style="width: 500px;" placeholder="最多40个汉字" :maxlength=40 ></el-input>
 							  </el-form-item>
 		            <el-form-item>
 		              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
