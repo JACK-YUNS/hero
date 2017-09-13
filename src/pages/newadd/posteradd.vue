@@ -35,8 +35,8 @@
             </el-form-item>
             <el-form-item label="是否首页展示：">
 					    <el-radio-group v-model="form.isTop">
-					      <el-radio label="1">是</el-radio>
-					      <el-radio label="2">否</el-radio>
+					      <el-radio label="0">是</el-radio>
+					      <el-radio label="1">否</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="是否推荐展示：">
@@ -67,7 +67,7 @@
       	    id:'',
           title: '',
           assortmentType:'1',
-          isTop:'1',
+          isTop:'0',
           isRecommend:'0',
           imageUrl: '',
           pics: [],

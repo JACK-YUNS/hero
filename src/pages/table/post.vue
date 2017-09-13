@@ -75,7 +75,7 @@
           label="是否首页"
           width="100">
           <template scope="props">
-	            <span v-text="props.row.isTop == 1 ? '是' : '否'"></span>
+	            <span v-text="props.row.isTop == 0 ? '是' : '否'"></span>
 	          </template>
         </el-table-column>
         <el-table-column
