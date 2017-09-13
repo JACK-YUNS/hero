@@ -16,8 +16,8 @@
         <el-form-item>
           <el-select v-model="formInline.isTop" placeholder="首页">
             <el-option label="全部" value=""></el-option>
-            <el-option label="是" value="0"></el-option>
-            <el-option label="否" value="1"></el-option>
+            <el-option label="是" value="1"></el-option>
+            <el-option label="否" value="2"></el-option>
           </el-select>
         </el-form-item>
 			  <el-form-item>
@@ -75,7 +75,7 @@
           label="是否首页"
           width="100">
           <template scope="props">
-	            <span v-text="props.row.isTop == 0 ? '是' : '否'"></span>
+	            <span v-text="props.row.isTop == 1 ? '是' : '否'"></span>
 	          </template>
         </el-table-column>
         <el-table-column
