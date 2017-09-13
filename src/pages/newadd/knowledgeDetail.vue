@@ -9,8 +9,8 @@
       </router-link>-->
     </panel-title>
     <div class="panel-body">
-      <div><span>案例分析</span><span>家庭健康托管计划提高效率  助您批量销售家庭保单 </span><span>发表于2017-08-28 12:45:00</span></div>
-      <div>
+      <div style="padding-bottom: 10px;border-bottom: 1px dotted #ccc"><span class="case">案例分析</span><span class="caseword">家庭健康托管计划提高效率 &nbsp;&nbsp; 助您批量销售家庭保单 </span><span class="casetime">发表于2017-08-28 12:45:00</span></div>
+      <div class="content">
         <img>
         <div>
           设想一下自己签过的保单，当没有家庭健康保障理念时，签了家里的第一张保单，再收第二张就非常难。但当与客户沟通了家庭健康保单理念后，哪怕一张一张签，再收单也非常容易，再收第三张就更容易。所以要把家庭健康托管理念植入客户心里，不管客户要给谁买，都要讲家庭健康托管的理念。
@@ -153,4 +153,8 @@
  .el-select{margin-bottom: 10px;}
  .el-autocomplete{margin-bottom: 10px;}
   .link-type{color: #007ACC;}
+  .case{color: #007ACC;padding: 6px;background-color:#E8F2FF;font-size: 12px;}
+  .caseword{font-size: 16px;font-weight: 500;color: #666666;margin-left: 10px}
+  .casetime{font-size: 12px;color: #999999;float: right}
+  .content{width: 345px;height:200px;font-size: 15px;line-height: 1.6;color: #333333;margin: 15px;overflow: auto}
 </style>
