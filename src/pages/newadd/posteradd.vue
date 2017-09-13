@@ -69,9 +69,7 @@
           assortmentType:'1',
           isTop:'1',
           isRecommend:'0',
-          imageUrl: '',
           pics: [],
-        	dialogVisible:true,
           sort:''
         },
         sort:'',

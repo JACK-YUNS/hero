@@ -43,7 +43,9 @@
           :show-overflow-tooltip=true
           >
            <template scope="props">
+             <router-link :to="{name: 'knowledgeAdd',params: {id: props.row.id}}" tag="span">
 			        <span class="link-type">{{props.row.title}}</span>
+             </router-link>
 	        </template>
         </el-table-column>
         <el-table-column

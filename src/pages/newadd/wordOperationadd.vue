@@ -37,7 +37,6 @@
       return {
         form: {
           content: '',
-          dialogVisible:true,
           sort:'',
           flag:''
         },

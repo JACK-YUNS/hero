@@ -41,8 +41,9 @@
       return {
         form: {
           title: '',
-          subtitle: '',
-          type:1
+          subTitle: '',
+          type:1,
+          sort:''
         },
         route_id: this.$route.params.id,
         load_data: false,
