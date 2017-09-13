@@ -195,7 +195,7 @@
         if (aType == undefined) {
           return "";
         }
-        var arr = ['','图文 ','文章 ','海报 '];
+        var arr = ['','图文 ','海报 ','文章'];
         return arr[aType];
       },
     	sortFormat:function(row, column,cellValue) {
