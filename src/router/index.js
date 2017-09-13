@@ -71,6 +71,8 @@ import articleAddComponent from 'pages/newadd/articleadd'
 import meetingAddComponent from 'pages/newadd/meetingadd'
 //imagesadd newadd
 import imagesAddComponent from 'pages/newadd/imagesadd'
+//viewComments newadd
+import viewCommentsComponent from 'pages/newadd/viewComments'
 //basic business
 import basicComponent from 'pages/business/basic'
 //goodmorning business
@@ -83,6 +85,8 @@ import knowledgeComponent from 'pages/business/knowledge'
 import personlistComponent from 'pages/newadd/personlist'
 //knowledge newadd
 import knowledgeAddComponent from 'pages/newadd/knowledgeadd'
+//knowledgeDetail newadd
+import knowledgeDetailComponent from 'pages/newadd/knowledgeDetail'
 //wordOperation wordOperation
 import wordOperationComponent from 'pages/wordOperation/wordOperation'
 //wordOperationadd newadd
@@ -253,7 +257,23 @@ const routes = [{
       title: "上传图片",
       auth: true
     }
+  },{
+    path: '/newadd/add',
+    name: 'viewComments',
+    component: viewCommentsComponent,
+    meta: {
+      title: "评论",
+      auth: true
+    }
   }, {
+    path: '/newadd/add',
+    name: 'knowledgeDetail',
+    component: knowledgeDetailComponent,
+    meta: {
+      title: "文章详情",
+      auth: true
+    }
+  },{
     path: '/charts/bar',
     name: 'chartsBar',
     component: barChartsComponent,
