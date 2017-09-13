@@ -162,8 +162,8 @@
         form: {
           title: '',
           subtitle: '',
-          assortmentType: 1,
-          specialType:'',
+          assortmentType: '1',
+          specialType:'0',
           isTop:'1',
           showType:'1',
           articleCopy:'',
