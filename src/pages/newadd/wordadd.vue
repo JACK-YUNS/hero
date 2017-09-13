@@ -67,12 +67,11 @@
       	postData: {token:''},
       	fileList:[],
         form: {
-          titile: '',
+          title: '',
           subtitle: '',
           contents: '',
           assortmentType:'1',
           isTop:'1',
-          imageUrl: '',
           pics: [],
           sort:''
         },
