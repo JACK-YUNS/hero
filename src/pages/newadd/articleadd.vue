@@ -56,8 +56,8 @@
 					  </el-form-item>
 					  <el-form-item label="封面：">
 					    <el-radio-group v-model="form.showType">
-					      <el-radio label="0">单图</el-radio>
-					      <el-radio label="1">三图</el-radio>
+					      <el-radio label="1">单图</el-radio>
+					      <el-radio label="0">三图</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					   <el-form-item label="上传图片：">
@@ -160,12 +160,12 @@
       	fileList:[],
       	fileListpic:[],
         form: {
-          title: null,
+          title: '',
           subtitle: '',
           assortmentType: 1,
           specialType:'',
-          isTop:'',
-          showType:'',
+          isTop:'1',
+          showType:'1',
           articleCopy:'',
           pics: [],
           contents:'',

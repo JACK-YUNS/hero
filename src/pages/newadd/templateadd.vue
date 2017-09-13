@@ -40,16 +40,9 @@
     data(){
       return {
         form: {
-          title: null,
+          title: '',
           subtitle: '',
-          contents: '',
-          type:1,
-          assortmentType:1,
-          isTop:'',
-          imageUrl: '',
-          pics: [],
-          sort: '',
-        	dialogVisible:true,
+          type:1
         },
         route_id: this.$route.params.id,
         load_data: false,

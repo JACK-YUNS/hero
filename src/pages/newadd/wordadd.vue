@@ -74,7 +74,6 @@
           isTop:'0',
           imageUrl: '',
           pics: [],
-        	dialogVisible:true,
           sort:''
         },
         sort:'',
