@@ -21,7 +21,7 @@
 					    </el-radio-group>
 					  </el-form-item>
 					  <el-form-item label="排序：">
-					    <el-input-number v-model="form.sort" :min="1" :max="10"></el-input-number>
+					    <el-input-number v-model="form.sort" :min="1" ></el-input-number>
 					  </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
