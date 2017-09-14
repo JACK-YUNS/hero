@@ -9,7 +9,7 @@
           <el-form>
             <el-form-item  >
             	<p>选择早会日期</p>
-            	<el-button v-for="(item,index) in form"   @click="detail(index)" :class='{active:index==isA}'>{{item.meetingDate}} </el-button>
+            	<el-button v-for="(item,index) in form" :key="item.id"  @click="detail(index)" :class='{active:index==isA}'>{{item.meetingDate}} </el-button>
               <!--<el-button type="primary" :disabled="true">7月31日</el-button>
               <el-button type="primary" :disabled="true">8月1日</el-button>
               <el-button type="primary">8月2日</el-button>
@@ -20,7 +20,7 @@
             </el-form-item>
            <el-form-item>
             	<p>添加流程<span class="rull">每个环节名称不超过14个汉字</span></p>
-              <el-form-item v-for="(item,index) in currentFlow"  :label="(index+1).toString()">
+              <el-form-item v-for="(item,index) in currentFlow" :key="item.id" :label="(index+1).toString()">
 
 	              <el-input v-model="item.content" style="width: 300px;"  v-if="index < (currentFlow.length-1)" :maxlength=14></el-input>
 	              <el-input v-model="item.content" style="width: 300px;"  v-if="index == (currentFlow.length-1)" :maxlength=14></el-input>

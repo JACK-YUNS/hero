@@ -13,7 +13,7 @@
 				      <el-input v-model="form.name" auto-complete="off" placeholder="给相册起个名字吧~（最多输入30个字）" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" :maxlength=30></el-input>
 				    </el-form-item>
 				    <el-form-item label="相册类型"  :label-width="formLabelWidth" v-model="form.type">
-				      <el-button v-for="(item,$index) in items" @click="form.type=item.value " :class="{'active':item.value==form.type,'unactive':!item.value==form.type}">{{item.label}}</el-button>
+				      <el-button v-for="(item,$index) in items" @click="form.type=item.value " :class="{'active':item.value==form.type,'unactive':!item.value==form.type}" :key="item.id">{{item.label}}</el-button>
 				    </el-form-item>
 				  </el-form>
 				  <div slot="footer" class="dialog-footer">
@@ -24,7 +24,7 @@
 
 
         <el-row>
-				  <el-col :span="4" v-for="(item,$index) in table_data" style='margin:10px;position: relative;width: 200px;height: 300px;' >
+				  <el-col :span="4" v-for="(item,$index) in table_data" :key="item.id" style='margin:10px;position: relative;width: 200px;height: 300px;' >
 				  	<div class="" style="height: 100%;width: 100%;" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >
 				  		<el-card :body-style="{ padding: '0px' ,height:'73%' }" style="height: 100%;width: 100%;" >
 								<div style="width: 100%; background-color: rgba(0, 0, 0, 0.7);position: absolute;left: 0;right: 0;" v-show="isShow==$index && isShow >1 ">

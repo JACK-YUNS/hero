@@ -22,7 +22,7 @@
 		      <template scope="props">
 		        <el-form label-position="left" inline class="demo-table-expand">
 		        	<el-steps :space="40" direction="vertical">
-							  <el-step v-for="item in props.row.flow" :title="item.content"></el-step>
+							  <el-step v-for="item in props.row.flow" :title="item.content" :key="item.id"></el-step>
 							</el-steps>
 		        </el-form>
 		      </template>

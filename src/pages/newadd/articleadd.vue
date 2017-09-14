@@ -15,7 +15,7 @@
             </el-form-item>
             <el-form-item label="分类：">
 					    <el-radio-group v-model="form.assortmentType">
-					      <el-radio :label="item.value"  v-for="item in options">{{item.label}}</el-radio>
+					      <el-radio :label="item.value"  v-for="item in options" :key="item.id">{{item.label}}</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
 					  <!--<el-form-item >-->

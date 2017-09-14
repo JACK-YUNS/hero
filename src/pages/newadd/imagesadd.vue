@@ -32,7 +32,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" v-for="(item,$index) in photoList" style='margin:10px;position: relative;width: 200px;height: 300px;' >
+          <el-col :span="4" v-for="(item,$index) in photoList" :key="item.id" style='margin:10px;position: relative;width: 200px;height: 300px;' >
             <div class="" style="height: 100%;width: 100%;" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >
               <el-card :body-style="{ padding: '0px' ,height:'73%' }" style="height: 100%;width: 100%;" >
                   <div class="new-item-badge" v-show="coverId == item.id">封面</div>

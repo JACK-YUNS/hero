@@ -22,13 +22,13 @@
         </el-form-item>
         <el-form-item>
           <el-select v-model="formInline.assortmentType" placeholder="是否分类">
-            <el-option v-for="item in options" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in options" :label="item.label" :value="item.value" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-select v-model="formInline.templateId" placeholder="模板">
             <el-option label="全部" value="">选择模版</el-option>
-            <el-option v-for="item in template_type" :label="item.title" :value="item.id"></el-option>
+            <el-option v-for="item in template_type" :label="item.title" :value="item.id" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>

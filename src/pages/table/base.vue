@@ -19,17 +19,17 @@
         </el-form-item>-->
         <el-form-item>
           <el-select v-model="f.p" placeholder="请选择区" clearable @clear="clearArea"  @change="selArea">
-            <el-option v-for="(v,i) in area"  :value="i" :label="v.name"></el-option>
+            <el-option v-for="(v,i) in area"  :value="i" :label="v.name" :key="v.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-select v-model="f.c" placeholder="请选择部门" clearable @change="selDept" @clear="clearDept">
-            <el-option v-for="(v,i) in dept"  :value="i" :label="v.name"></el-option>
+            <el-option v-for="(v,i) in dept"  :value="i" :label="v.name" :key="v.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-select v-model="f.cc" placeholder="请选择组" clearable  @change="result" @clear="clearGroup">
-            <el-option v-for="(v,i) in group"  :value="i" :label="v.name"></el-option>
+            <el-option v-for="(v,i) in group"  :value="i" :label="v.name" :key="v.id"></el-option>
           </el-select>
         </el-form-item>
 
@@ -37,7 +37,7 @@
 
         <el-form-item>
           <el-select v-model="formInline.gradeLevel"  @change="get_table_data" placeholder="筛选 — 职级">
-            <el-option v-for="item in levelArr" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in levelArr" :label="item.label" :value="item.value" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
