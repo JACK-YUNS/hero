@@ -329,8 +329,8 @@
       },
       get_template_list(){
         this.$fetch.api_wechat.templateList({
-          current: this.currentPage,
-          pageSize: this.length,
+          current: 1,
+          pageSize: 50,
           type:this.type
         })
           .then(response => {
