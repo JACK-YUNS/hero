@@ -114,7 +114,7 @@
         </el-table>
       </el-dialog>
       <el-dialog title="内容" :visible.sync="dialogFormVisible">
-        <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 600px; margin-left:50px;'>
+        <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 80%; margin-left:50px;'>
           <el-form-item label="内容">
             <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.contents"></el-input>
           </el-form-item>

@@ -43,7 +43,7 @@
           :show-overflow-tooltip=true
           >
            <template scope="props">
-             <router-link :to="{name: '',params: {id: props.row.id}}" tag="span">
+             <router-link :to="{name: 'knowledgeDetail',params: {id: props.row.id}}" tag="span">
 			        <span class="link-type">{{props.row.title}}</span>
              </router-link>
 	        </template>
@@ -65,7 +65,7 @@
           width="300"
           >
           <template scope="props">
-            <router-link :to="{name: '',params: {id: props.row.id}}" tag="span">
+            <router-link :to="{name: 'viewComments',params: {id: props.row.id}}" tag="span">
           	  <el-button type="primary" size="small" >查看评论</el-button>
             </router-link>
             <router-link :to="{name: 'knowledgeAdd',params: {id: props.row.id}}" tag="span">
