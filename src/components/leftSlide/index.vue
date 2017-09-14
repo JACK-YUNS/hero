@@ -78,65 +78,68 @@ export default{
             title: "智慧营业区",
             path: "/business",
             icon: "fa-list",
-            child: [{
-              title: "基本设置",
-              path: "/business/basic"
-            }, {
-              title: "早会流程",
-              path: "/business/goodmorning"
-            }, {
-              title: "团队风采",
-              path: "/business/team"
-            },{
-              title: "长见识",
-              path: "/business/knowledge"
-            }]
-          },{
-            title: "系统管理",
-            path: "/home",
-            icon: "fa-home",
-            child: [{
-              title: "资源管理",
-              path: "/home/index"
-            }, {
-              title: "菜单管理",
-              path: "/home/menu"
-            }, {
-              title: "人员列表",
-              path: "/home/role"
-            }, {
-              title: "用户管理",
-              path: "/home/user"
-            }]
-          }, {
+            child: [
+              {
+                title: "长见识",
+                path: "/business/knowledge"
+              }
+            ]
+          },
+//            {
+//            title: "系统管理",
+//            path: "/home",
+//            icon: "fa-home",
+//            child: [
+//                {
+//                  title: "资源管理",
+//                  path: "/home/index"
+//                }, {
+//                  title: "菜单管理",
+//                  path: "/home/menu"
+//                }, {
+//                  title: "人员列表",
+//                  path: "/home/role"
+//                },
+//                {
+//                  title: "用户管理",
+//                  path: "/home/user"
+//                }
+//            ]
+//          },
+            {
             title: "人员",
             path: "/list",
             icon: "fa-table",
-            child: [{
-              title: "概况",
-              path: "/charts/barline"
-            }, {
-              title: "城市分布",
-              path: "/charts/city"
-            }, {
-              title: "人员列表",
-              path: "/table/base"
-            }]
-          }, {
-            title: "活动",
-            path: "/charts",
-            icon: "fa-bar-chart-o",
-            child: [{
-              title: "概况",
-              path: "/charts/bar"
-            }, {
-              title: "区域活动统计",
-              path: "/table/sort"
-            }, {
-              title: "排行榜",
-              path: "/table/list"
-            }]
-          }, {
+            child: [
+//              {
+//                title: "概况",
+//                path: "/charts/barline"
+//              }, {
+//                title: "城市分布",
+//                path: "/charts/city"
+//              },
+              {
+                title: "人员列表",
+                path: "/table/base"
+              }
+            ]
+          },
+//            {
+//            title: "活动",
+//            path: "/charts",
+//            icon: "fa-bar-chart-o",
+//            child: [{
+//              title: "概况",
+//              path: "/charts/bar"
+//            }, {
+//              title: "区域活动统计",
+//              path: "/table/sort"
+//            }, {
+//              title: "排行榜",
+//              path: "/table/list"
+//            }]
+//          },
+            {
             title: "朋友圈",
             path: "/table",
             icon: "el-icon-picture ",
