@@ -12,9 +12,12 @@
 				    <el-form-item label="相册名称" prop="name" :label-width="formLabelWidth">
 				      <el-input v-model="form.name" auto-complete="off" placeholder="给相册起个名字吧~（最多输入30个字）" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" :maxlength=30></el-input>
 				    </el-form-item>
-				    <el-form-item label="相册类型"  :label-width="formLabelWidth" v-model="form.type">
+				    <el-form-item label="相册类型"  :label-width="formLabelWidth" v-model="form.type" v-show="form.category >='3' || form.category ==''|| form.category == null ">
 				      <el-button v-for="(item,$index) in items" @click="form.type=item.value " :class="{'active':item.value==form.type,'unactive':!item.value==form.type}" :key="item.id">{{item.label}}</el-button>
 				    </el-form-item>
+              <el-form-item label="相册类型"  :label-width="formLabelWidth" v-model="form.type" v-show="form.category <=2 && form.category != null ">
+                <el-button v-text="form.category == 1 ? '团队荣誉': '总监风采' "></el-button>
+              </el-form-item>
 				  </el-form>
 				  <div slot="footer" class="dialog-footer">
 				    <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -23,10 +26,15 @@
 				</el-dialog>
 
 
+
+
         <el-row>
 				  <el-col :span="4" v-for="(item,$index) in table_data" :key="item.id" style='margin:10px;position: relative;width: 200px;height: 300px;' >
 				  	<div class="" style="height: 100%;width: 100%;" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >
 				  		<el-card :body-style="{ padding: '0px' ,height:'73%' }" style="height: 100%;width: 100%;" >
+                <div style="width: 100%; background-color: rgba(0, 0, 0, 0.7);position: absolute;left: 0;right: 0;" v-show="isShow==$index && isShow <=1 ">
+                  <el-button type="text" icon="edit" @click="editAlbum(item),indexNum =$index" class='centerbtnedit'>编辑</el-button>
+                </div>
 								<div style="width: 100%; background-color: rgba(0, 0, 0, 0.7);position: absolute;left: 0;right: 0;" v-show="isShow==$index && isShow >1 ">
 					    		<el-button type="text" icon="edit" @click="editAlbum(item),indexNum =$index" class='centerbtn'>编辑</el-button>
 					    		<el-button type="text" icon="delete" class='centerbtn' @click="delete_data(item.id)">删除</el-button>
@@ -67,7 +75,7 @@
     data(){
        return {
         dialogFormVisible: false,
-        totalnum:10,
+         totalnum:10,
         isShow:-1,
         title:"",
         indexNum:-1,
@@ -94,6 +102,7 @@
         }],
         form: {
           name: '',
+          category:'',
           type:1,
           id:"",
           isSys:1,
@@ -169,6 +178,8 @@
           this.form.isSys = item.isSys;
           this.form.id = item.id;
           this.form.cover = item.cover;
+         this.form.category = item.category;
+        console.log(item.category)
       },
       saveAlbum(){
         this.$refs.form.validate((valid) => {
@@ -275,4 +286,5 @@
       clear: both
   }
   .centerbtn{width: 45%;text-align: center;color: #fff;}
+  .centerbtnedit{width: 90%;text-align: center;color: #fff;}
 </style>
