@@ -163,7 +163,9 @@
 						index += 1;
 						if(parseInt(index) < 10){
 							index = "0"+index;
-						}
+						}else{
+						    index = ""+index;
+            }
 						var flowItem = {index:index,content:value.content};
 						if(value.content=='' || value.content==null || value.content == undefined){
 							return ;
