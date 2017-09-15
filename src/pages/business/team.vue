@@ -25,9 +25,6 @@
 				  </div>
 				</el-dialog>
 
-
-
-
         <el-row>
 				  <el-col :span="4" v-for="(item,$index) in table_data" :key="item.id" style='margin:10px;position: relative;width: 200px;height: 300px;' >
 				  	<div class="" style="height: 100%;width: 100%;" @mouseenter="isShow=$index" @mouseleave="isShow=-1" >

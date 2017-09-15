@@ -5,3 +5,9 @@ export const topicList = "/api/knowledge/topicList"
 export const saveTopic = "/api/knowledge/saveTopic"
 //获取详情
 export const getTopic = "/api/knowledge/getTopic"
+//长见识评论
+export const replayList = "/api/knowledge/replayList"
+//长见识评论外层删除
+export const delComment = "/api/knowledge/delComment"
+//长见识评论内层删除
+export const delReply = "/api/knowledge/delReply"

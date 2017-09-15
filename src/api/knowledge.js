@@ -26,3 +26,27 @@ export function getTopic(data) {
     data
   })
 }
+//评论
+export function replayList(data) {
+  return fetch({
+    url: port_knowledge.replayList,
+    method: 'post',
+    data
+  })
+}
+//长见识评论外层删除
+export function delComment(data) {
+  return fetch({
+    url: port_knowledge.delComment,
+    method: 'post',
+    data
+  })
+}
+//长见识评论内层删除
+export function delReply(data) {
+  return fetch({
+    url: port_knowledge.delReply,
+    method: 'post',
+    data
+  })
+}
