@@ -34,11 +34,11 @@
                 <el-form-item label="营业区名称:" prop="areaName">
 		              <el-input v-model="form.areaName" placeholder="最多10个汉字" style="width: 500px;" :maxlength=10 readonly="readonly"></el-input>
 		            </el-form-item>
-		            <el-form-item label="自定义标题:" prop="welcome">
-		              <el-input v-model="form.chiefTitle" placeholder="最多10个汉字" style="width: 500px;" :maxlength=10 ></el-input>
-		            </el-form-item>
-                  <span  style="position: absolute;left: 15px;top: 120px;color: #48576a;font-size: 14px;font-weight: bold;display: inline-block;width: 80px;height:45px;overflow: hidden" v-if="this.form.chiefTitle==''|| this.form.chiefTitle==null">总监寄语：</span>
-                  <span  style="position: absolute;left: 15px;top: 120px;color: #48576a;font-size: 14px;font-weight: bold;display: inline-block;width: 80px;height:45px;overflow: hidden" v-else>{{this.form.chiefTitle}}：</span>
+		            <!--<el-form-item label="自定义标题:">-->
+                  <!--<el-input v-model="form.chiefTitle" placeholder="最多10个汉字" style="width: 500px;" :maxlength=10 ></el-input>-->
+                <!--</el-form-item>-->
+                  <!--<span  style="position: absolute;left: 15px;top: 120px;color: #48576a;font-size: 14px;font-weight: bold;display: inline-block;width: 80px;height:45px;overflow: hidden" v-if="this.form.chiefTitle==''|| this.form.chiefTitle==null">总监寄语：</span>-->
+                  <el-input  style="position: absolute;left: 15px;top: 60px;color: #48576a;font-size: 14px;font-weight: bold;display: inline-block;width: 80px;height:45px;overflow: hidden" v-model="form.chiefTitle" :maxlength=10 :show-overflow-tooltip=true></el-input>
 		            <el-form-item>
 							    <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.chiefInspector" style="width: 500px;" placeholder="最多40个汉字" :maxlength=40 ></el-input>
 							  </el-form-item>
