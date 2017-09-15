@@ -17,17 +17,20 @@
           <el-table-column type="expand">
             <template scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item v-for="item in  props.row.replyList" v-show="props.row.replyList !=''">
-                  <span v-show="item.replyType == '1'"><span class="wordtitle">{{item.fromUname}}</span> : {{item.content}}  <el-button type="primary" size="small"  @click="delete_datareplyList(item.id)">删除</el-button></span>
-                  <span v-show="item.replyType == '2'"><span class="wordtitle">{{item.fromUname}}</span> 回复 <span class="spanword"> {{item.toUname}} </span> ： {{item.content}}  <el-button type="primary" size="small"  @click="delete_datareplyList(item.id)">删除</el-button></span>
-
+                <el-form-item v-for="(item,index) in  props.row.replyList">
+                  <span v-show="item.replyType == '1'"><span class="wordtitle">{{item.fromUname}}</span> : {{item.content}} </span>
+                  <span v-show="item.replyType == '2'"><span class="wordtitle">{{item.fromUname}}</span> 回复 <span class="spanword"> {{item.toUname}} </span> ： {{item.content}}</span>
+                  <button class="elbtndel"  @click="delete_datareplyList(index,item.id)">删除</button>
                 </el-form-item>
+
               </el-form>
             </template>
           </el-table-column>
           <el-table-column
             label="时间"
             prop="aTime"
+            :formatter="dateFormat"
+            width="120px"
             >
           </el-table-column>
           <el-table-column
@@ -36,53 +39,14 @@
           </el-table-column>
           <el-table-column
             label="操作"
+            width="120px"
            >
             <template scope="props">
               <el-button type="primary" size="small"  @click="delete_data(props.$index,props.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
-      <!--<el-table-->
-        <!--:data="table_data"-->
-        <!--v-loading="load_data"-->
-        <!--element-loading-text="拼命加载中"-->
-        <!--style="width: 100%;">-->
-        <!--<el-table-column-->
-          <!--type="index"-->
-          <!--label="序号"-->
-          <!--width="80">-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-          <!--label="内容"-->
-          <!--prop="title"-->
-          <!--&gt;-->
-        <!--</el-table-column>-->
-        <!--<el-table-column-->
-          <!--prop="aTime"-->
-          <!--:formatter="dateFormat"-->
-          <!--label="时间"-->
-          <!--width="120">-->
-        <!--</el-table-column>-->
-
-        <!--<el-table-column-->
-          <!--label="操作"-->
-          <!--width="200"-->
-          <!--&gt;-->
-          <!--<template scope="props">-->
-            <!--<el-button type="text" size="small"  @click="delete_data(props.$index,props.row.id)">删除</el-button>-->
-          <!--</template>-->
-        <!--</el-table-column>-->
-      <!--</el-table>-->
       <bottom-tool-bar>
-        <!--<el-button
-          type="danger"
-          icon="delete"
-          size="small"
-          :disabled="batch_select.length === 0"
-          @click="on_batch_del"
-          slot="handler">
-          <span>批量删除</span>
-        </el-button>-->
         <div slot="page">
           <el-pagination
             @current-change="handleCurrentChange"
@@ -201,10 +165,11 @@
           })
       },
       //评论内部单个删除
-      delete_datareplyList(id){
+      delete_datareplyList(item,id){
         var _self = this;
         _self.Id = id
-        console.log(_self.Id)
+        _self.item = item
+        console.log(_self.replyList)
         _self.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -220,6 +185,7 @@
               type: 'success',
               message: '删除成功'
             });
+           this.get_table_data()
             _self.load_data = false;
           }
         })
@@ -253,7 +219,8 @@
   .demo-table-expand .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
-    width: 100%;
+    width: 95%;
+    position: relative;
   }
   .spanword{
     font-size: 14px;
@@ -262,5 +229,27 @@
   .wordtitle{
     font-size: 14px;
     color: #5c7acd;
+  }
+  .elbtndel{
+    padding: 7px 9px;
+    font-size: 12px;
+    border-radius: 4px;
+    position: absolute;
+    right: -4.8%;
+    bottom: 0px;
+    color: #fff;
+    background: #ff6d6d;
+    border-color: #ff6d6d;
+    box-sizing: border-box;
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    outline: 0;
+    text-align: center;
+    text-transform: none;
+  }
+  .el-form--inline .el-form-item__content{
+    position: inherit;
   }
 </style>

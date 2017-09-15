@@ -307,9 +307,9 @@
         })
           .then(response => {
           	var list = response.data.records;
-            $.each(list, function(index, value, array) {
+        $.each(list, function(index, value, array) {
 //						 console.log(list[index].id)
-						});
+        });
 						this.table_data =list
 	          this.currentPage = response.data.current
 	          this.total = response.data.total
