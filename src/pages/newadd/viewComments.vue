@@ -252,5 +252,4 @@
   .el-form--inline .el-form-item__content{
     position: inherit;
   }
-
 </style>

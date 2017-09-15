@@ -165,6 +165,7 @@
         this.form.width = 570;
         this.form.height = 570;
         this.form.cover = "https://resources.kangxun360.com/nophoto.png";
+        this.form.category = 3;
       },
       editAlbum(item){
           this.dialogFormVisible = true;
