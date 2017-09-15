@@ -50,3 +50,11 @@ export function delReply(data) {
     data
   })
 }
+//文章详情
+export function getTopicComment(data) {
+  return fetch({
+    url: port_knowledge.getTopicComment,
+    method: 'post',
+    data
+  })
+}

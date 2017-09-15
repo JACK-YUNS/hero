@@ -66,5 +66,7 @@
 }
 .el-transfer-panel__body{height:400px;}
   .el-transfer-panel__list.is-filterable{height: 300px;}
-
+  .el-form-item__content{
+    position: static;
+  }
 </style>

@@ -11,3 +11,5 @@ export const replayList = "/api/knowledge/replayList"
 export const delComment = "/api/knowledge/delComment"
 //长见识评论内层删除
 export const delReply = "/api/knowledge/delReply"
+//获取文章详情
+export const getTopicComment = "/api/knowledge/getTopicComment"
