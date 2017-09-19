@@ -20,6 +20,7 @@ import * as api_journal from './journal'
 import * as api_record from './record'
 import * as api_verbal from './verbal'
 import * as api_feedback from './feedback'
+import * as api_system from './system'
 
 const apiObj = {
   api_file,
@@ -32,7 +33,8 @@ const apiObj = {
   api_journal,
   api_record,
   api_verbal,
-  api_feedback
+  api_feedback,
+  api_system
 }
 
 const install = function (Vue) {

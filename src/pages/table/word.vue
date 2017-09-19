@@ -519,7 +519,16 @@
 
       }
     },
-
+    beforeRouteEnter (to, from, next) {
+      next(vm =>{
+        if(from.path.indexOf("/add")==-1){
+          vm.currentPage=1;
+          vm.formInline = {};
+        }
+        vm.get_table_data();
+        vm.get_template_list();
+      });
+    },
     mounted() {
 
     }

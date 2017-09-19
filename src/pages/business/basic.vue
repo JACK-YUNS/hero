@@ -7,7 +7,7 @@
         <el-tabs @tab-click="changeTab">
               <el-tab-pane label="智慧营业区封面" class="area">
               	<el-form ref="form" :model="form" :rules="rules">
-                <el-form-item label="跟换封面图片：">
+                <el-form-item label="修改封面：">
 	               	<el-upload
 	               		class="avatar-uploader"
 										:show-file-list="false"

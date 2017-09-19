@@ -311,7 +311,8 @@ const routes = [{
     component: WordComponent,
     meta: {
       title: "金句",
-      auth: true
+      auth: true,
+      keepAlive: true // 需要被缓存
     }
   }, {
     path: '/table/example',
@@ -327,7 +328,8 @@ const routes = [{
     component: PostComponent,
     meta: {
       title: "海报",
-      auth: true
+      auth: true,
+      keepAlive: true // 需要被缓存
     }
   }, {
     path: '/table/article',
@@ -335,7 +337,8 @@ const routes = [{
     component: ArticleComponent,
     meta: {
       title: "文章",
-      auth: true
+      auth: true,
+      keepAlive: true // 需要被缓存
     }
   }, {
     path: '/business/basic',

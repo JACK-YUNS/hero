@@ -5,45 +5,28 @@
 		  <imp-panel>
 		    <h3 class="box-title" slot="header" style="width: 100%;">
 		      <el-button type="primary" icon="plus" @click="newAdd">新增</el-button>
-		      <el-button type="danger" icon="delete" @click="batchDelete">删除</el-button>
-		
+		      <!--<el-button type="danger" icon="delete" @click="batchDelete">删除</el-button>-->
+
 		    </h3>
 		    <el-row slot="body" :gutter="24" style="margin-bottom: 20px;">
 		      <el-col :span="6" :xs="24" :sm="24" :md="6" :lg="6" style="margin-bottom: 20px;">
 		        <el-tree v-if="roleTree"
 		                 :data="roleTree"
 		                 ref="roleTree"
-		                 show-checkbox
 		                 highlight-current
-		                 :render-content="renderContent"
+
 		                 @node-click="handleNodeClick" clearable node-key="id" :props="defaultProps"></el-tree>
 		      </el-col>
 		      <el-col :span="18" :xs="24" :sm="24" :md="18" :lg="18">
 		        <el-card class="box-card">
 		          <div class="text item">
-		            <el-form :model="form" ref="form">
-		              <el-form-item label="父级" :label-width="formLabelWidth">
-		                <!--<el-input v-model="form.parentId" auto-complete="off"></el-input>-->
-		                <el-select-tree v-model="form.parentId" :treeData="roleTree" :propNames="defaultProps" clearable
-		                                placeholder="请选择父级">
-		                </el-select-tree>
-		              </el-form-item>
+		            <el-form :model="form"  ref="form">
 		              <el-form-item label="名称" :label-width="formLabelWidth">
 		                <el-input v-model="form.name" auto-complete="off"></el-input>
 		              </el-form-item>
-		              <el-form-item label="英文" :label-width="formLabelWidth">
-		                <el-input v-model="form.enName" auto-complete="off"></el-input>
-		              </el-form-item>
-		              <el-form-item label="是否生效" :label-width="formLabelWidth">
-		                <el-radio class="radio" v-model="form.usable" label="1">是</el-radio>
-		                <el-radio class="radio" v-model="form.usable" label="0">否</el-radio>
-		              </el-form-item>
-		              <el-form-item label="排序" :label-width="formLabelWidth">
-		                <el-slider v-model="form.sort"></el-slider>
-		              </el-form-item>
 		              <el-form-item label="" :label-width="formLabelWidth">
-		                <el-button type="primary" @click="onSubmit" v-text="form.id?'修改':'新增'"></el-button>
-		                <el-button type="info" @click="settingResource($event,form.id)" icon="setting" v-show="form.id && form.id!=null">配置资源
+		                <el-button type="primary" :loading="on_submit_loading" @click="onSubmit" v-text="form.id?'修改':'新增'"></el-button>
+		                <el-button type="info" @click="settingResource($event,form.id)" icon="setting" v-show="form.id && form.id!=null">配置目录
 		                </el-button>
 		                <el-button type="danger" @click="deleteSelected" icon="delete" v-show="form.id && form.id!=null">删除
 		                </el-button>
@@ -51,7 +34,7 @@
 		            </el-form>
 		          </div>
 		        </el-card>
-		
+
 		        <el-dialog title="配置资源" v-model="dialogVisible" size="tiny">
 		          <div class="select-tree">
 		          <el-scrollbar
@@ -60,10 +43,10 @@
 		            wrap-class="el-select-dropdown__wrap"
 		            view-class="el-select-dropdown__list">
 		          <el-tree
-		            :data="resourceTree"
-		            ref="resourceTree"
+		            :data="menuTree"
+		            ref="menuTree"
 		            show-checkbox
-		            check-strictly
+
 		            node-key="id"
 		            v-loading="dialogLoading"
 		            :props="defaultProps">
@@ -86,62 +69,120 @@
   import panel from "../../components/panel.vue"
   import selectTree from "../../components/selectTree.vue"
   import treeter from "../../components/treeter"
-	import roleList from "../../components/data.json"
 	import axios from 'axios';
 
-  import * as api from "../../api"
+  Array.prototype.unique = function(){
+    var res = [];
+    var json = {};
+    for(var i = 0; i < this.length; i++){
+      if(!json[this[i]]){
+        res.push(this[i]);
+        json[this[i]] = 1;
+      }
+    }
+    return res;
+  };
+  Array.prototype.remove = function(val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+      this.splice(index, 1);
+    }
+  };
 
   export default {
     mixins: [treeter],
+    data(){
+      return {
+        dialogLoading:false,
+        dialogVisible:false,
+        on_submit_loading: false,
+        formLabelWidth: '100px',
+        defaultProps: {
+          children: 'child',
+          label: 'name',
+          id: "id",
+        },
+        roleId:null,
+        roleTree: [],
+        menuTree:[],
+        menuParent:[],
+        defaultMenu:[],
+        form: {
+          id: null,
+          name: '',
+          type:'1'
+        },
+        temp:{}
+
+      }
+    },
     components: {
       'imp-panel': panel,
       'el-select-tree': selectTree,
       panelTitle
     },
-    data(){
-      return {
-        dialogLoading:false,
-        dialogVisible:false,
-        formLabelWidth: '100px',
-        defaultProps: {
-          children: 'children',
-          label: 'name',
-          id: "id",
-        },
-        roleTree: [],
-        resourceTree:[],
-        maxId:700000,
-        form: {
-          id: null,
-          parentId: null,
-          name: '',
-          enName: '',
-          sort: 0,
-          usable: '1'
-        }
-      }
+    created(){
+      var _self = this;
+      _self.get_table_data();
+      _self.get_menu_data();
+
     },
     methods: {
-      configRoleResources(){
-        let checkedKeys = this.$refs.resourceTree.getCheckedKeys();
-        axios.get('http://localhost:8080/static/data.json' + "?roleId=" + this.form.id + "&resourceIds="+checkedKeys.join(','))
-          .then(res => {
-            this.$message('修改成功');
-            this.dialogVisible = false;
+      get_table_data(){
+        var _self = this;
+        _self.$fetch.api_system.roleList({})
+          .then(response => {
+          _self.roleTree = response.data;
+          _self.load_data = false
+        })
+          .catch(() => {
+            _self.load_data = false
           })
       },
+      get_menu_data(){
+        var _self = this;
+        _self.$fetch.api_system.menuList({})
+          .then(response => {
+            _self.menuTree = response.data;
+            response.data.forEach((item,index)=>{
+              _self.menuParent.push(item.id);
+            })
+          })
+          .catch(() => {
+          })
+      },
+      configRoleResources(){
+        var _self = this;
+        var checkedKeys = this.$refs.menuTree.getCheckedNodes();
+        var tempKeys = [];
+        checkedKeys.forEach((item,index)=>{
+          tempKeys.push(item.id);
+          if(item.pid != null)tempKeys.push(item.pid);
+        })
+        tempKeys = tempKeys.unique();
+        var menuIds = tempKeys.join(",");
+        _self.$fetch.api_system.updateRoleMenu({"roleId":_self.roleId,"menuIds":menuIds})
+          .then(({msg}) => {
+            _self.$message.success(msg)
+            _self.dialogVisible = false;
+          })
+          .catch(() => {
+            _self.dialogVisible = false;
+          })
+
+      },
       handleNodeClick(data){
-        this.form = data;
+        var _self = this;
+        _self.form.name = data.name;
+        _self.form.id = data.id;
+        _self.form.type = data.type;
+        _self.temp = data;
       },
       newAdd(){
         this.form = {
           id: null,
-          parentId: null,
           name: '',
-          enName: '',
-          sort: 0,
-          usable: '1',
-          remarks: ''
+          type: '1'
         };
       },
       batchDelete(){
@@ -161,98 +202,72 @@
               this.load();
             }).catch(e => {
             this.$message('操作成功');
-            console.log(checkKeys);
             this.batchDeleteFromTree(this.roleTree, checkKeys);
           })
         });
 
       },
       onSubmit(){
-        this.form.parentId = this.form.parentId;
-        axios.post('http://localhost:8080/static/data.json', this.form)
-          .then(res => {
-            this.form.id = res.data.id;
-            this.appendTreeNode(this.roleTree, res.data);
-          }).catch(e => {
-          this.maxId += 1;
-          this.$message('操作成功');
-          this.form.id = this.maxId;
-          var  ddd = {
-            id: this.form.id,
-            name: this.form.name,
-            sort: this.form.sort,
-            enName:this.form.enName,
-            parentId: this.form.parentId,
-            usable: this.form.usable,
-            children:[]
+          var _self = this;
+          if(_self.form.name.trim().length<=3 || _self.form.name.trim().length>=15){
+            this.$message({
+              message: '请输入角色名称，长度在 3 到 15 个字符',
+              type: 'warning'
+            });
+              return false;
           }
-          this.appendTreeNode(this.roleTree, ddd);
-          this.roleTree.push({});
-          this.roleTree.pop();
-        })
+          _self.on_submit_loading = true
+          _self.$fetch.api_system.saveRole(_self.form)
+            .then(({msg}) => {
+              _self.$message.success(msg)
+              _self.on_submit_loading = false;
+
+              _self.get_table_data();
+            })
+            .catch(() => {
+
+            })
       },
-      deleteSelected(id){
-      	axios.get('http://localhost:8080/static/data.json'+ "?roleIds=" + id)
-                .then(res => {
-			            this.$message('操作成功');
-			            this.deleteFromTree(this.roleTree, id);
-			            this.newAdd();
-			          }).catch(e =>{
-			          this.$message('操作成功');
-			          this.deleteFromTree(this.roleTree, id);
-			          this.newAdd();
-			        })
+      deleteSelected(){
+          var _self = this;
+        _self.on_submit_loading = true
+          _self.$fetch.api_system.delRole({"id":_self.form.id})
+            .then(({msg}) => {
+              _self.$message.success(msg)
+              _self.on_submit_loading = false;
+              _self.newAdd();
+              _self.get_table_data();
+          })
+          .catch(() => {
+
+          })
       },
-      load(){
-       axios.get('http://localhost:8080/static/data.json')
-          .then(res => {
-          	console.log(res);
-              res.data = res.data.roleList;
-            this.roleTree = [];
-            this.roleTree.push(...res.data)
-          }).catch((error) => {
-          console.log(error)
-        })
-      },
-//    renderContent(h, {node, data, store}) {
-//      return (
-//        <span>
-//          <span>
-//            <span>{node.label}</span>
-//          </span>
-//          <span class="render-content">
-//            <i class="fa fa-wrench" title="配置资源" on-click={(e)=>this.settingResource(e,data.id)}></i>
-//            <i class="fa fa-trash" on-click={ () => this.deleteSelected(data.id) }></i>
-//          </span>
-//        </span>);
-//    },
       settingResource(event,id){
+          var _self = this;
           event.stopPropagation();
           this.dialogVisible = true;
-          if(this.resourceTree==null||this.resourceTree.length<=0){
-            this.dialogLoading = true;
-            axios.get('http://localhost:8080/static/data.json')
-              .then(res => {
-                this.dialogLoading = false;
-                this.resourceTree = res.data.resourceList;
-              }).catch((error) => {
-                console.log(error)
-                this.dialogLoading = false;
+          _self.defaultMenu = [];
+          _self.roleId = id;
+          _self.$fetch.api_system.roleMenus({"roleId":id})
+            .then((response) => {
+                response.data.forEach((item, index) => {
+                  var indexOf = _self.menuParent.indexOf(item);
+                  if(indexOf==-1)_self.defaultMenu.push(item+"");
+                });
+              _self.$refs.menuTree.setCheckedKeys( _self.defaultMenu);
             })
-          }
-        axios.get('http://localhost:8080/static/data.json' + "?id=" + id)
-          .then(res => {
-            this.$refs.resourceTree.setCheckedKeys(res.data);
-          })
+            .catch(() => {
+
+            })
       }
-    },
-    created(){
-      this.load();
+
     }
+
   }
 </script>
 
 <style>
+  input[type=check]{disabled:disabled}
   .render-content {
     float: right;
     margin-right: 20px
