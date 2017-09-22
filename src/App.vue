@@ -69,4 +69,7 @@
   .el-form-item__content{
     position: static;
   }
+  .left-side .menu-box .menu-list.is-active, .left-side .menu-box .menu-list:hover, .left-side .menu-box .el-submenu__title.is-active, .left-side .menu-box .el-submenu__title:hover {
+    color: #20A0FF;
+  }
 </style>
