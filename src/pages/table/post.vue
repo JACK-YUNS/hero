@@ -115,9 +115,9 @@
       <el-dialog title="" :visible.sync="dialogTableVisible">
 			  <el-table :data="template_type" border>
 			    <!--<el-table-column property="index" label="序号" width="150"></el-table-column>-->
-			    <el-table-column property="title" label="主标题" width="200"></el-table-column>
-			    <el-table-column property="type" label="类型"></el-table-column>
-			    <el-table-column label="操作">
+			    <el-table-column property="title" label="主标题" ></el-table-column>
+			    <!--<el-table-column property="type" label="类型"></el-table-column>-->
+			    <el-table-column label="操作" width="200">
 			    	<template scope="props">
 	            <el-button type="info" size="small" icon="edit"  @click="addTemplate(props.row.id)">设置</el-button>
 	          </template>
