@@ -21,6 +21,7 @@ import * as api_record from './record'
 import * as api_verbal from './verbal'
 import * as api_feedback from './feedback'
 import * as api_system from './system'
+import * as api_theme from './theme'
 
 const apiObj = {
   api_file,
@@ -34,7 +35,8 @@ const apiObj = {
   api_record,
   api_verbal,
   api_feedback,
-  api_system
+  api_system,
+  api_theme
 }
 
 const install = function (Vue) {

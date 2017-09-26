@@ -155,6 +155,9 @@ export default{
             }, {
               title: "模板",
               path: "/table/example"
+            }, {
+              title: "专题",
+              path: "/table/specialTopic"
             }]
           },{
             title: "运营管理",

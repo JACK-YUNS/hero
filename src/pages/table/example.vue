@@ -73,7 +73,7 @@
           :formatter="sortFormat"
           label="排序"
           width="120"
-          sortable>
+          >
           <template scope="props">
 	            <span>{{props.row.sort}}</span>
           </template>

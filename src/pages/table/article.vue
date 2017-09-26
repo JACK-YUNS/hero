@@ -31,6 +31,12 @@
 			      <el-option v-for="item in template_type" :label="item.title" :value="item.id" :key="item.id"></el-option>
 			    </el-select>
 			  </el-form-item>
+        <el-form-item>
+          <el-select v-model="formInline.themeId"  placeholder="专题">
+            <el-option label="全部" value="">全部</el-option>
+            <el-option v-for="item in theme_type" :label="item.title" :value="item.id" :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
 			  <el-form-item>
 			    <el-button type="success" @click="onSubmit" :loading="on_submit_loading">查询</el-button>
 			    <router-link :to="{name: 'articleAdd',params: {id: ''}}" tag="span">
@@ -102,7 +108,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          width="260"
+          width="340"
           >
           <template scope="props">
             <el-button type="info" size="small"   prop="template" v-if="props.row.templateId" @click="deltemplate(props.row.id)">
@@ -111,6 +117,12 @@
 	          <el-button type="info" size="small"  prop="template" v-else  @click="get_template_type(props.row.id,props.$index)">
 	            <span>设置模板</span>
 	          </el-button>
+            <el-button type="info" size="small"   prop="theme" v-if="props.row.themeId" @click="deltheme(props.row.id)">
+              <span>取消专题</span>
+            </el-button>
+            <el-button type="info" size="small"  prop="theme" v-else  @click="get_theme_type(props.row.id,props.$index)">
+              <span>设置专题</span>
+            </el-button>
             <router-link :to="{name: 'articleAdd',params: {id: props.row.id}}" tag="span">
               <el-button type="primary" size="small" >编辑</el-button>
             </router-link>
@@ -130,6 +142,18 @@
 			    </el-table-column>
 			  </el-table>
 			</el-dialog>
+      <el-dialog title="" :visible.sync="dialogTableVisibletheme">
+        <el-table :data="theme_type" border>
+          <!--<el-table-column property="index" label="序号" width="150"></el-table-column>-->
+          <el-table-column property="title" label="专题标题"></el-table-column>
+          <!--<el-table-column property="type" label="类型"></el-table-column>-->
+          <el-table-column label="操作"  width="200">
+            <template scope="props">
+              <el-button type="info" size="small" icon="edit"   @click="addTheme(props.row.id)">设置</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
 			<el-dialog title="编辑排序" :visible.sync="dialogFormVisible">
 	      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
 	        <el-form-item label="排序">
@@ -178,7 +202,8 @@
           title: '',
           isTop: '',
           assortmentType: '',
-          templateId: ''
+          templateId: '',
+          themeId:''
        },
         options:[{
         value: '',
@@ -212,10 +237,12 @@
        on_submit_loading: false,
        dialogTableVisible:false,
        dialogFormVisible: false,
+       dialogTableVisibletheme : false,
        type:3,
        sort:'',
        currentId:'',
        template_type: [],
+        theme_type: [],
         table_data: [],
         //当前页码
         currentPage: 1,
@@ -238,6 +265,7 @@
       var _self = this;
       _self.get_table_data();
       _self.get_template_list();
+      _self.get_theme_id();
     },
     filters: {
       sortFormat:function(sort) {
@@ -303,7 +331,8 @@
           title:_self.formInline.title,
           assortmentType:_self.formInline.assortmentType,
           templateId:_self.formInline.templateId,
-          isTop:_self.formInline.isTop
+          isTop:_self.formInline.isTop,
+          themeId:_self.formInline.themeId
         })
           .then(response => {
           	var list = response.data.records;
@@ -325,7 +354,12 @@
         _self.dialogTableVisible = true;
         _self.currentId = id;
         _self.get_template_list();
-
+      },
+      //获取专题类型
+      get_theme_type(id){
+        var _self = this;
+        _self.dialogTableVisibletheme = true;
+        _self.currentId = id;
       },
       get_template_list(){
         this.$fetch.api_wechat.templateList({
@@ -339,6 +373,24 @@
           .catch(() => {
             this.load_data = false
           })
+      },
+      //搜索专题ID
+      get_theme_id(){
+        this.$fetch.api_theme.queryAll({
+
+        })
+          .then(response => {
+          var list = response.data;
+
+          $.each(list, function(index, value, array) {
+            this.themeId = list[index].id
+            console.log(this.themeId)
+          });
+          this.theme_type = list
+      })
+      .catch(() => {
+          this.load_data = false
+      })
       },
       //单个删除
       delete_data(item){
@@ -449,6 +501,64 @@
             _self.load_data = false
           })
 			},
+      //设置专题
+      addTheme(id){
+        var _self = this;
+        _self.themeId=id;
+        var type = this.type;
+        _self.dialogTableVisibletheme = false;
+        _self.load_data = false
+        _self.$fetch.api_wechat.setTheme({
+          id:_self.currentId,
+          themeId:this.themeId
+        })
+          .then(response => {
+          _self.get_table_data()
+      })
+      .catch(() => {
+          _self.load_data = false
+      })
+      },
+      //删除专题
+      deltheme(id) {
+        var _self = this;
+        var type = _self.type;
+        _self.currentId = id;
+        _self.themeId=-1;
+        _self.load_data = false
+        _self.$confirm('请确定是否取消专题?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+          try{
+            this.$message({
+            type: 'success',
+            message: '取消成功'
+          });
+
+      }catch(err){
+          this.$message({
+            type: 'error',
+            message: '已取消'
+          });
+          console.log('取消失败')
+        }
+        this.$fetch.api_wechat.setTheme({
+          id:this.currentId,
+          themeId:this.themeId
+        })
+          .then(response => {
+          this.get_table_data()
+      })
+      .catch(() => {
+          this.load_data = false
+      })
+      })
+      .catch(() => {
+        })
+      },
 			//跟换排序里面的值
 			inputsort(){
 

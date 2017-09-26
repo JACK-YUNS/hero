@@ -89,10 +89,15 @@ import knowledgeAddComponent from 'pages/newadd/knowledgeadd'
 import knowledgeDetailComponent from 'pages/newadd/knowledgeDetail'
 //wordOperation wordOperation
 import wordOperationComponent from 'pages/wordOperation/wordOperation'
-//wordOperationadd newadd
+//wordOperationadd
 import wordOperationAddComponent from 'pages/newadd/wordOperationadd'
+//specialTopicadd newadd
+import specialTopicAddComponent from 'pages/newadd/specialTopicadd'
+
 //wordOperation feedBack
 import feedBackComponent from 'pages/wordOperation/feedBack'
+//table specialTopic
+import specialTopicComponent from 'pages/table/specialTopic'
 
 Vue.use(VueRouter)
 
@@ -243,6 +248,14 @@ const routes = [{
     }
   }, {
     path: '/newadd/add',
+    name: 'specialTopicAdd',
+    component: specialTopicAddComponent,
+    meta: {
+      title: "新建专题",
+      auth: true
+    }
+  }, {
+    path: '/newadd/add',
     name: 'meetingAdd',
     component: meetingAddComponent,
     meta: {
@@ -339,6 +352,14 @@ const routes = [{
       title: "文章",
       auth: true,
       keepAlive: true // 需要被缓存
+    }
+  }, {
+    path: '/table/specialTopic',
+    name: 'specialTopic',
+    component: specialTopicComponent,
+    meta: {
+      title: "专题",
+      auth: true
     }
   }, {
     path: '/business/basic',

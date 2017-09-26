@@ -148,3 +148,11 @@ export function delTemplate(data) {
     data
   })
 }
+//设置专题
+export function setTheme(data) {
+  return fetch({
+    url: port_wechat.setTheme,
+    method: 'post',
+    data
+  })
+}

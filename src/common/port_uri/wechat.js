@@ -33,3 +33,5 @@ export const setTemplate = "/api/wechat/setTemplate"
 export const saveTemplate = "/api/wechat/saveTemplate"
 //删除模板
 export const delTemplate = "/api/wechat/delTemplate"
+//设置专题
+export const setTheme = "/api/wechat/setTheme"
