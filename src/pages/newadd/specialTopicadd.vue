@@ -28,21 +28,22 @@
                 </el-col>
               </div>
             </el-form-item>
-            <!--<el-form-item label="修改logo：">-->
-              <!--<el-upload-->
-                <!--class="avatar-uploader"-->
-                <!--:show-file-list="false"-->
-                <!--:on-success="handleAvatarSuccess"-->
-                <!--:on-error="handleError"-->
-                <!--:on-remove="handleRemove"-->
-                <!--:before-upload="beforeAvatarUpload"-->
-                <!--:data="postData"-->
-                <!--:file-list="fileList"-->
-              <!--&gt;-->
-                <!--<img v-if="form.pic" :src="form.pic" class="avatar">-->
-                <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-              <!--</el-upload>-->
-            <!--</el-form-item>-->
+            <el-form-item label="修改logo：">
+              <el-upload
+                class="avatar-uploader"
+                action="//up.qbox.me/"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :on-error="handleError"
+                :on-remove="handleRemove"
+                :before-upload="beforeAvatarUpload"
+                :data="postData"
+                :file-list="fileList"
+              >
+                <img v-if="form.pic" :src="form.pic" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
 
             <el-form-item label="排序：">
               <el-input v-model="form.sort" style="width: 200px;"></el-input>
@@ -71,7 +72,8 @@
           sort:'',
           type:1,
           pic: '',
-          endTime:''
+          endTime:'',
+          sort:''
         },
         options:{
           disabledDate(time) {
@@ -83,7 +85,7 @@
         load_data: false,
         on_submit_loading: false,
         rules: {
-          name: [{required: true, message: '主标题不能为空', trigger: 'blur'}]
+          title: [{required: true, message: '主标题不能为空', trigger: 'blur'}]
         }
       }
     },
@@ -111,21 +113,12 @@
             this.load_data = false
           })
       },
-      change(status){
-//        var _self = this;
-//        _self.type = status;
-//        if(status){
-//          _self.flag=1;
-//        }else{
-//          _self.flag = 0;
-//        }
-      },
       getToken(){
         this.$fetch.api_qiniu.getToken({
         })
           .then(response => {
           this.postData = {token : response.data}
-        this.load_data = false
+           this.load_data = false
       })
       .catch(() => {
           this.load_data = false
@@ -194,5 +187,8 @@
     width: 178px;
     height: 178px;
     display: block;
+  }
+  ..el-form-item__error{
+    position: static;
   }
 </style>

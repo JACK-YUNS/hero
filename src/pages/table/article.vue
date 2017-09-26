@@ -612,6 +612,7 @@
         }
         vm.get_table_data();
         vm.get_template_list();
+      vm.get_theme_id();
       });
     },
     mounted() {

@@ -13,24 +13,24 @@
         <el-form-item>
           <el-input v-model="formInline.title" placeholder="请输入标题查询"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-select v-model="formInline.isTop" placeholder="首页">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="是" value="0"></el-option>
-            <el-option label="否" value="1"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="formInline.assortmentType" placeholder="是否分类">
-            <el-option v-for="item in options" :label="item.label" :value="item.value" :key="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="formInline.templateId" placeholder="模板">
-            <el-option label="全部" value="">选择模版</el-option>
-            <el-option v-for="item in template_type" :label="item.title" :value="item.id" :key="item.id"></el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item>-->
+          <!--<el-select v-model="formInline.isTop" placeholder="首页">-->
+            <!--<el-option label="全部" value=""></el-option>-->
+            <!--<el-option label="是" value="0"></el-option>-->
+            <!--<el-option label="否" value="1"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-select v-model="formInline.assortmentType" placeholder="是否分类">-->
+            <!--<el-option v-for="item in options" :label="item.label" :value="item.value" :key="item.id"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item>-->
+          <!--<el-select v-model="formInline.templateId" placeholder="模板">-->
+            <!--<el-option label="全部" value="">选择模版</el-option>-->
+            <!--<el-option v-for="item in template_type" :label="item.title" :value="item.id" :key="item.id"></el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item>
           <el-button type="success" @click="onSubmit" :loading="on_submit_loading">查询</el-button>
           <router-link :to="{name: 'specialTopicAdd',params: {id: ''}}" tag="span">
@@ -100,7 +100,7 @@
       </el-table-column>
       <el-table-column
         label="操作"
-        width="260"
+        width="180"
       >
         <template scope="props">
           <router-link :to="{name: 'specialTopicAdd',params: {id: props.row.id}}" tag="span">
@@ -171,25 +171,6 @@
           info: '',
           templateId: ''
         },
-        options:[
-          {
-            value: '',
-            label: '全部'
-          }, {
-            value: '1',
-            label: '保险理念'
-          }, {
-            value: '2',
-            label: '励志成长'
-          }, {
-            value: '3',
-            label: '生活锦囊'
-          }, {
-            value: '4',
-            label: '轻松一刻'
-          }
-        ],
-        addtemplate:'设置模板',
         on_submit_loading: false,
         dialogFormVisible: false,
         dialogTableVisible:false,
@@ -238,7 +219,6 @@
     created(){
       var _self = this;
       _self.get_table_data();
-      _self.get_template_list();
     },
     filters: {
       statusFilter(status) {
@@ -254,7 +234,6 @@
       },
         dateFormat:function(value) {
           return new Date(parseInt(value)).toLocaleDateString()
-
     }
     },
     methods: {
@@ -265,13 +244,6 @@
           return "";
         }
         return moment(date).format("YYYY-MM-DD");
-      },
-      typeFormat:function(row, column) {
-        var aType = row[column.property];
-        if (!aType) {
-          return "";
-        }
-        return this.options[aType].label;
       },
       //刷新
       on_refresh(){
@@ -284,10 +256,7 @@
         _self.$fetch.api_theme.themeList({
           current: _self.currentPage,
           pageSize: _self.length,
-          title:_self.formInline.title,
-          assortmentType:_self.formInline.assortmentType,
-          templateId:_self.formInline.templateId,
-          isTop:_self.formInline.isTop
+          title:_self.formInline.title
         })
           .then(response => {
             var list = response.data.records;
@@ -298,27 +267,6 @@
             this.currentPage = response.data.current
             this.total = response.data.total
             this.load_data = false
-          })
-          .catch(() => {
-            this.load_data = false
-          })
-      },
-      //获取模板类型
-      get_template_type(id){
-        var _self = this;
-        _self.dialogTableVisible = true;
-        _self.currentId = id;
-        _self.get_template_list();
-
-      },
-      get_template_list(){
-        this.$fetch.api_wechat.templateList({
-          current: 1,
-          pageSize: 50,
-          type:this.type
-        })
-          .then(response => {
-            this.template_type = response.data.records
           })
           .catch(() => {
             this.load_data = false
@@ -416,25 +364,6 @@
           .catch(() => {
           })
       },
-      //设置模板
-      addTemplate(id){
-        var _self = this;
-        _self.templateId=id;
-        var type = _self.type;
-        _self.dialogTableVisible = false;
-        _self.load_data = false
-        _self.$fetch.api_wechat.setTemplate({
-          id:_self.currentId,
-          templateId:_self.templateId,
-          type:_self.type
-        })
-          .then(response => {
-            _self.get_table_data()
-          })
-          .catch(() => {
-            _self.load_data = false
-          })
-      },
       //跟换排序里面的值
       inputsort(){
       },
@@ -447,33 +376,6 @@
         this.sort =this.temp.sort;
 
       },
-      create() {
-        this.dialogFormVisible = false
-        console.log(this.temp.id)
-        this.table_data.sort = parseInt(this.sort);
-        console.log(this.table_data.sort )
-        this.$fetch.api_theme.addTheme({
-          sort:this.table_data.sort,
-          id:this.temp.id
-        })
-          .then(response => {
-            this.get_table_data()
-          })
-          .catch(() => {
-            this.load_data = false
-          })
-
-      }
-    },
-    beforeRouteEnter (to, from, next) {
-      next(vm =>{
-        if(from.path.indexOf("/add")==-1){
-          vm.currentPage=1;
-          vm.formInline = {};
-        }
-        vm.get_table_data();
-        vm.get_template_list();
-      });
     },
     mounted() {
 
