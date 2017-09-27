@@ -69,6 +69,7 @@
 					    	:before-upload="beforeAvatarUpload"
 					    	:data="postDatapic"
 					    	:file-list="fileListpic"
+                accept="image/*"
 					    	list-type="picture-card">
 					    	<i class="el-icon-plus"></i>
 					    </el-upload>
@@ -95,6 +96,7 @@
   //import Quill from 'quill'
   import ElCol from "element-ui/packages/col/src/col";
   import UE from '../../components/editor/ueditor.vue';
+  import moment from 'moment'
 	var toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
@@ -333,7 +335,21 @@
       		console.log(res)
       },
       beforeAvatarUpload(file) {
-
+//        let _self = this;
+//        let curr = moment().format('YYYYMMDD').toString()
+//        let prefix = moment(file.lastModified).format('HHmmss').toString()
+//        let suffix = file.name
+//        let key = encodeURI(`${prefix}_${suffix}`)
+//        _self.$fetch.api_qiniu.getToken({key:key
+//        })
+//          .then(response => {
+//            _self.postDatapic ={token:response.data}
+//            console.info(_self.postDatapic)
+//            _self.load_data = false
+//          })
+//          .catch(() => {
+//            _self.load_data = false
+//          })
       },
       //提交
       on_submit_form(){
