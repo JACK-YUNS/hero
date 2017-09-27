@@ -16,7 +16,7 @@
             </el-form-item>
 
             <el-form-item label="排序：">
-              <el-input v-model="form.sort" style="width: 200px;"></el-input>
+              <el-input-number v-model="form.sort"  :min="0"  :maxlength=5 ></el-input-number>
             </el-form-item>
 
             <el-form-item>

@@ -78,7 +78,7 @@
               <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.articleCopy"></el-input>
             </el-form-item>
             <el-form-item label="排序：">
-              <el-input v-model="sort" style="width: 200px;"></el-input>
+              <el-input-number v-model="sort"  :min="0"  :maxlength=5></el-input-number>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>

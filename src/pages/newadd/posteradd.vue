@@ -31,7 +31,7 @@
 					    </el-upload>
 					  </el-form-item>
             <el-form-item label="排序：">
-              <el-input v-model="sort" style="width: 200px;"></el-input>
+              <el-input-number v-model="sort"  :min="0"  :maxlength=5 ></el-input-number>
             </el-form-item>
             <el-form-item label="是否首页展示：">
 					    <el-radio-group v-model="form.isTop">

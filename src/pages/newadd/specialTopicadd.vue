@@ -8,10 +8,10 @@
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="专题名称:" prop="title">
-              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
+              <el-input v-model="form.title" placeholder="请输入内容(最多10字）" style="width: 500px;" :maxlength=10></el-input>
             </el-form-item>
             <el-form-item label="专题内容:" prop="info">
-              <el-input v-model="form.info" placeholder="请输入内容" style="width: 500px;"></el-input>
+              <el-input v-model="form.info" placeholder="请输入内容(最多200字)" type="textarea" :autosize="{ minRows: 8, maxRows: 12}" style="width: 500px;" :maxlength=200></el-input>
             </el-form-item>
 
             <el-form-item label="选择专题类型：">
@@ -46,7 +46,7 @@
             </el-form-item>
 
             <el-form-item label="排序：">
-              <el-input v-model="form.sort" style="width: 200px;"></el-input>
+              <el-input-number v-model="form.sort"  :min="0"  :maxlength=5></el-input-number>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="on_submit_form" :loading="on_submit_loading">立即提交</el-button>
@@ -72,8 +72,7 @@
           sort:'',
           type:1,
           pic: '',
-          endTime:'',
-          sort:''
+          endTime:''
         },
         options:{
           disabledDate(time) {
@@ -85,7 +84,9 @@
         load_data: false,
         on_submit_loading: false,
         rules: {
-          title: [{required: true, message: '主标题不能为空', trigger: 'blur'}]
+          title: [{required: true, message: '主标题不能为空', trigger: 'blur'}],
+          info: [{required: true, message: '专题内容不能为空', trigger: 'blur'}],
+          sort: [{required: true, message: '专题内容不能为空', trigger: 'blur'}]
         }
       }
     },
@@ -188,7 +189,7 @@
     height: 178px;
     display: block;
   }
-  ..el-form-item__error{
+  .el-form-item__error{
     position: static;
   }
 </style>
