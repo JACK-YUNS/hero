@@ -266,12 +266,9 @@
         _self.fileListpic = fileListpic;
       	//上传成功后在图片框显示图片
       	var imageUrl ='http://resources.kangxun360.com/'+ res.key
-      	console.log(imageUrl)
+      	console.log(_self.fileListpic)
 				var arr = []
-      	var isnum = _self.form.showType;
 					console.log('qqq')
-      	if(isnum==1){
-          _self.fileListpic = fileListpic.slice(-1);
       			$.each(_self.fileListpic, function(index, value, array) {
 					        	console.log(value.url)
 					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
@@ -283,26 +280,7 @@
 								          pic: 'http://resources.kangxun360.com/'+ value.response.key
 								      	});
 					        	 }
-
 									});
-      	}
-      	if(isnum==0){
-          _self.fileListpic = fileListpic.slice(-3);
-      			$.each(_self.fileListpic, function(index, value, array) {
-					        	console.log(value.url)
-					        	 if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
-					        	 		arr.push({
-								          pic:value.url
-								      	});
-					        	 }else{
-						        	 	arr.push({
-								          pic: 'http://resources.kangxun360.com/'+ value.response.key
-								      	});
-					        	 }
-
-									});
-
-      	}
 //				console.info(arr[0].pic)
         _self.form.pics = JSON.stringify(arr);
       },
@@ -326,20 +304,44 @@
 //
 //      },
       handleRemove(file,fileList){
-      	this.fileList = fileList;
+          var _self = this;
+        _self.fileListpic = fileList;
+        var arr = []
+        $.each(_self.fileListpic, function(index, value, array) {
+          if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
+            arr.push({
+              pic:value.url
+            });
+          }else{
+            arr.push({
+              pic: 'http://resources.kangxun360.com/'+ value.response.key
+            });
+          }
+        });
+        _self.form.pics = JSON.stringify(arr);
       },
       handleError(res) {
       		//显示错误
       		console.log(res)
       },
-      beforeAvatarUpload(file) {
-
+      beforeAvatarUpload(file,fileList) {
+        this.fileList = fileList;
       },
       //提交
       on_submit_form(){
         var _self = this;
         var content = _self.$refs.ue.getUEContent(); // 调用子组件方法
+        var isnum = _self.form.showType;
         _self.form.contents = content;
+        var file = this.fileListpic
+        if(isnum==0 &&  file.length!=3){
+          _self.$message.warning("请上传3张图片");
+          return false;
+        }
+        if(isnum==1 &&  file.length!=1){
+          _self.$message.warning("请上传1张图片");
+          return false;
+        }
         _self.$refs.form.validate((valid) => {
           if (!valid) return false
           _self.on_submit_loading = true
