@@ -21,35 +21,19 @@
 		    </h3>
 		    <div slot="body">
 		      <el-table
-		        :data="tableData.rows"
+		        :data="table_data"
 		        border
 		        style="width: 100%"
-		        v-loading="listLoading"
+            v-loading="load_data"
+            element-loading-text="拼命加载中"
 		        @selection-change="handleSelectionChange">
 		        <el-table-column
-		          prop="id"
-		          type="selection"
-		          width="45">
-		        </el-table-column>
-		        <el-table-column
-		          prop="name"
-		          label="名称">
-		        </el-table-column>
-		        <el-table-column
-		          prop="loginName"
+		          prop="nickname"
 		          label="登录用户名">
 		        </el-table-column>
 		        <el-table-column
-		          prop="photo"
-		          label="照片">
-		        </el-table-column>
-		        <el-table-column
-		          prop="email"
-		          label="邮箱">
-		        </el-table-column>
-		        <el-table-column
-		          prop="status"
-		          label="状态">
+		          prop="areaName"
+		          label="所属区">
 		        </el-table-column>
 		        <el-table-column label="操作" width="285">
 		          <template scope="scope">
@@ -73,17 +57,17 @@
 		          </template>
 		        </el-table-column>
 		      </el-table>
-		
+
 		      <el-pagination
 		        @size-change="handleSizeChange"
 		        @current-change="handleCurrentChange"
-		        :current-page="tableData.pagination.pageNo"
+		        :current-page="currentPage"
 		        :page-sizes="[5, 10, 20]"
-		        :page-size="tableData.pagination.pageSize"
-		        layout="total, sizes, prev, pager, next, jumper"
-		        :total="tableData.pagination.total">
+		        :page-size="length"
+		        layout="total, sizes, prev, pager, next"
+		        :total="total">
 		      </el-pagination>
-		
+
 		      <el-dialog title="配置用户角色" v-model="dialogVisible" size="tiny">
 		        <div class="select-tree">
 		          <el-scrollbar
@@ -91,12 +75,18 @@
 		            class='is-empty'
 		            wrap-class="el-select-dropdown__wrap"
 		            view-class="el-select-dropdown__list">
+                <!--<ul v-for="item in roleTree">-->
+                  <!--<li :class="choose(item.id)" style="padding-left: 15px;height: 30px;line-height: 30px;border-bottom: 1px solid #ebebeb;">{{item.name}}</li>-->
+                <!--</ul>-->
 		            <el-tree
 		              ref="roleTree"
 		              :data="roleTree"
-		              show-checkbox
 		              check-strictly
-		              node-key="id" v-loading="dialogLoading"
+                  show-checkbox
+                  highlight-current
+		              node-key="id"
+                  v-loading="dialogLoading"
+                  current-change=""
 		              :props="defaultProps">
 		            </el-tree>
 		          </el-scrollbar>
@@ -107,8 +97,8 @@
 		          </span>
 		      </el-dialog>
 		    </div>
-		
-		
+
+
 		  </imp-panel>
 		</div>
 	</div>
@@ -118,10 +108,30 @@
 	import {panelTitle} from 'components'
   import panel from "../../components/panel.vue"
   import * as api from "../../api"
-  import testData from "../../../static/data.json"
+  import selectTree from "../../components/selectTree.vue"
+  import treeter from "../../components/treeter"
   import axios from 'axios';
 
+  Array.prototype.unique = function(){
+    var res = [];
+    var json = {};
+    for(var i = 0; i < this.length; i++){
+      if(!json[this[i]]){
+        res.push(this[i]);
+        json[this[i]] = 1;
+      }
+    }
+    return res;
+  };
+  Array.prototype.remove = function(val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+      this.splice(index, 1);
+    }
+  };
+
   export default {
+    mixins: [treeter],
     components: {
       'imp-panel': panel,
       panelTitle
@@ -137,82 +147,133 @@
           id: "id",
         },
         roleTree: [],
+        uid:"",
+        defaultRole:[],
         listLoading: false,
         searchKey: '',
-        tableData: {
-          pagination: {
-            total: 0,
-            pageNo: 1,
-            pageSize: 10,
-            parentId: 0
-          },
-          rows: []
-        }
+        table_data: [],
+        //当前页码
+        currentPage: 1,
+        //数据总条目
+        total: 0,
+        //每页显示多少条数据
+        length: 5,
+        load_data: true
       }
     },
+    created(){
+      var _self = this;
+      _self.get_table_data();
+      _self.get_role_data();
+    },
     methods: {
+      get_table_data(){
+        var _self = this;
+        _self.load_data = true;
+        _self.$fetch.api_system.queryUUser({
+          current: _self.currentPage,
+          pageSize: _self.length,
+          nickName:_self.searchKey
+        })
+          .then(response => {
+            _self.table_data = response.data.records;
+            _self.currentPage = response.data.current;
+            _self.total = response.data.total;
+            _self.load_data = false;
+          })
+          .catch(() => {
+            _self.load_data = false;
+          })
+      },
+      get_role_data(){
+        var _self = this;
+        _self.$fetch.api_system.roleList({})
+          .then(response => {
+            _self.roleTree = response.data;
+          })
+          .catch(() => {
+          })
+      },
       search(target){
-        this.loadData();
+        var _self = this;
+        _self.get_table_data();
       },
       handleSelectionChange(val){
 
       },
       handleRoleConfig(index, row){
-        this.currentRow = row;
-        this.dialogVisible = true;
-        if (this.roleTree.length <= 0) {
-          axios.get( 'http://localhost:8080/static/data.json' + "?selectChildren=true")
-            .then(res => {
-              this.roleTree = res.data.roleList
-            })
-        }
-        axios.get('http://localhost:8080/static/data.json' + "?id=" + row.id)
-          .then(res => {
-            this.$refs.roleTree.setCheckedKeys(res.data);
-          })
+        var _self = this;
+        _self.currentRow = row;
+        _self.dialogVisible = true;
+        _self.uid = row.id;
+        setTimeout(() => {
+          _self.defaultRole = [];
+          for(var i=0;i<row.roleStrlist.length;i++){
+            _self.defaultRole.push(row.roleStrlist[i]);
+          }
+          this.$refs.roleTree.setCheckedKeys(_self.defaultRole);
+        },500);
+
+
       },
       configUserRoles(){
-        let checkedKeys = this.$refs.roleTree.getCheckedKeys();
-          axios.get('http://localhost:8080/static/data.json' + "?userId=" + this.currentRow.id + "&roleIds="+checkedKeys.join(','))
-          .then(res => {
-              this.$message('修改成功');
-              this.dialogVisible = false;
+        var _self = this;
+        var checkedKeys = _self.$refs.roleTree.getCheckedKeys();
+        var tempKeys = [];
+        checkedKeys.forEach((item,index)=>{
+          tempKeys.push(item+"");
+        })
+        tempKeys = tempKeys.unique();
+        var rids = tempKeys.join(",");
+        _self.$fetch.api_system.updateRoleUuser({"uid":_self.uid,"rids":rids})
+          .then(({msg}) => {
+            _self.$message.success(msg)
+            _self.get_table_data();
+            _self.dialogVisible = false;
           })
+          .catch(() => {
+            _self.dialogVisible = false;
+          })
+
       },
       handleSizeChange(val) {
-        this.tableData.pagination.pageSize = val;
-        this.loadData();
+          var _self = this;
+        _self.length = val;
+        _self.get_table_data();
       },
       handleCurrentChange(val) {
-        this.tableData.pagination.pageNo = val;
-        this.loadData();
+        var _self = this;
+        _self.currentPage = val;
+        _self.get_table_data();
       },
       handleEdit(index, row){
-        this.$router.push({path: 'userAdd', query: {id: row.id}})
+        this.$router.push({path: 'userAdd', query:{id: row.id}})
       },
       handleDelete(index, row){
-        axios.get('http://localhost:8080/static/data.json' + "?userIds=" + row.id).then(res => {
-          this.loadData();
-        });
-      },
-      loadData(){
-        var d = {"offset":0,"limit":2147483647,"total":1,"size":10,"pages":1,"current":1,"searchCount":true,"optimizeCount":false,"orderByField":null,"records":[
-            {"id":1,"delFlag":0,"companyId":1,"officeId":2,"loginName":"admin","password":"",
-              "no":"0001","name":"系统管理员","email":"lanux@foxmail.com","phone":"731","mobile":"13769999998",
-              "userType":"1","photo":null,"loginIp":"127.0.0.1","loginDate":1453188598000,"loginFlag":"1",
-              "remarks":"最高管理员","status":1,"token":null}],"condition":{},"asc":true,"offsetCurrent":0};
-        this.tableData.rows = d.records;
-//      this.tableData.pagination.total = d.total;
-        //        this.$http.get(api.SYS_USER_PAGE + "?key=" + this.searchKey + "&pageSize=" + this.tableData.pagination.pageSize + "&pageNo=" + this.tableData.pagination.pageNo)
-//          .then(res => {
-//            this.tableData.rows = res.data.records;
-//            this.tableData.pagination.total = res.data.total;
-//          });
+        var _self = this;
+        _self.$confirm('确定删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          _self.$fetch.api_system.delUUser({"id":row.id})
+            .then(({msg}) => {
+              _self.$message.success(msg)
+              _self.get_table_data();
+            })
+            .catch(() => {
+
+            })
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });;
       }
-    },
-    created(){
-      this.loadData();
     }
+
   }
 </script>
 <style>
@@ -220,4 +281,5 @@
     float: right;
     margin-top: 15px;
   }
+  .choose{background-color: #e6effb}
 </style>
