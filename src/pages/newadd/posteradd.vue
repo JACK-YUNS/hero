@@ -26,7 +26,8 @@
 					    	:before-upload="beforeAvatarUpload"
 					    	:data="postData"
 					    	:file-list="fileList"
-					    	list-type="picture-card">
+					    	list-type="picture-card"
+                accept="image/*">
 					    	<i class="el-icon-plus"></i>
 					    </el-upload>
 					  </el-form-item>

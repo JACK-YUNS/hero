@@ -39,6 +39,7 @@
                 :before-upload="beforeAvatarUpload"
                 :data="postData"
                 :file-list="fileList"
+                accept="image/*"
               >
                 <img v-if="form.pic" :src="form.pic" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>

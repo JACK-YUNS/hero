@@ -23,6 +23,7 @@
               :on-error="handleError"
               :before-upload="beforeAvatarUpload"
               :data="postData"
+              accept="image/*"
               multiple>
               <el-button type="primary">点击上传</el-button>
             </el-upload>
