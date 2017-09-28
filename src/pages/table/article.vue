@@ -111,20 +111,23 @@
           width="340"
           >
           <template scope="props">
-            <el-button type="info" size="small"   prop="template" v-if="props.row.templateId" @click="deltemplate(props.row.id)">
+            <el-button type="primary" size="small"   prop="template"  v-if="props.row.templateId" @click="deltemplate(props.row.id)">
 	            <span>取消模板</span>
 	          </el-button>
-	          <el-button type="info" size="small"  prop="template" v-else  @click="get_template_type(props.row.id,props.$index)">
+	          <el-button type="primary" size="small"  prop="template"  v-else  @click="get_template_type(props.row.id,props.$index)">
 	            <span>设置模板</span>
 	          </el-button>
-            <el-button type="info" size="small"   prop="theme" v-if="props.row.themeId" @click="deltheme(props.row.id)">
+            <el-button type="primary" size="small"   prop="theme" v-if="props.row.themeId" @click="deltheme(props.row.id)">
               <span>取消专题</span>
             </el-button>
-            <el-button type="info" size="small"  prop="theme" v-else  @click="get_theme_type(props.row.id,props.$index)">
+            <el-button type="primary" size="small"  prop="theme" v-else-if="props.row.themeId && props.row.artice.specialType"  @click="get_theme_type(props.row.id,props.$index)">
+              <span>设置专题</span>
+            </el-button>
+            <el-button type="primary" size="small"  prop="theme" :disabled="true" v-else >
               <span>设置专题</span>
             </el-button>
             <router-link :to="{name: 'articleAdd',params: {id: props.row.id}}" tag="span">
-              <el-button type="primary" size="small" >编辑</el-button>
+              <el-button type="primary" size="small" icon="edit">编辑</el-button>
             </router-link>
             <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
           </template>
