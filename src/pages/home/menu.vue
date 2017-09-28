@@ -20,7 +20,7 @@
 		      <el-col :span="18" :xs="24" :sm="24" :md="18" :lg="18">
 		        <el-card class="box-card">
 		          <div class="text item">
-		            <el-form :model="form" ref="form">
+		            <el-form :model="form" ref="form" :rules="rules">
 		              <el-form-item label="父级" :label-width="formLabelWidth">
 		                <!--<el-input v-model="form.parentId" auto-complete="off"></el-input>-->
 		               <!-- <el-select-tree v-model="form.parentId" :treeData="menuTree" :propNames="defaultProps"
@@ -37,7 +37,7 @@
                       </el-option>
                     </el-select>
 		              </el-form-item>
-		              <el-form-item label="名称" :label-width="formLabelWidth">
+		              <el-form-item label="名称" prop="name" :label-width="formLabelWidth">
 		                <el-input v-model="form.name" auto-complete="off"></el-input>
 		              </el-form-item>
 		              <el-form-item label="链接" :label-width="formLabelWidth">
@@ -115,6 +115,12 @@
           icon:'',
           path: '',
           pid: null,
+        },
+        rules:{
+          name: [
+            { required: true, message: '请输入菜单名称', trigger: 'change' },
+            { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'change' }
+          ],
         }
       }
     },
@@ -130,9 +136,12 @@
     methods: {
       get_table_data(){
         var _self = this;
+
         _self.$fetch.api_system.menuList({})
           .then(response => {
             _self.menuTree = response.data;
+            _self.parentMenu=[];
+            _self.emptyMenu=[];
             response.data.forEach((item,index)=>{
               _self.parentMenu.push({value:item.id,label:item.name})
             })
@@ -148,6 +157,7 @@
       },
 
       newAdd(){
+          var _self = this;
         this.form = {
           id: "",
           name: '',
@@ -155,21 +165,17 @@
           path: '',
           pid: ''
         };
-      },
-      deleteSelected(){
-        axios.get('http://localhost:8080/static/data.json' + "?menuIds=" + this.form.id)
-          .then(res => {
-            this.$message('操作成功');
-            this.deleteFromTree(this.menuTree, this.form.id);
-            this.newAdd();
-          }).catch(e =>{
-            this.$message('操作成功');
-            this.deleteFromTree(this.menuTree, this.form.id);
-            this.newAdd();
-        })
+        var temp = [];
+        if(_self.parentMenu.length==0){
+          temp = _self.emptyMenu;
+          _self.emptyMenu = _self.parentMenu;
+          _self.parentMenu = temp;
+        }
       },
       batchDelete(){
         var checkKeys = this.$refs.menuTree.getCheckedKeys();
+        console.log(checkKeys);
+        var _self = this;
         if (checkKeys == null || checkKeys.length <= 0) {
           this.$message.warning('请选择要删除的资源');
           return;
@@ -179,16 +185,23 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          axios.get('http://localhost:8080/static/data.json' + "?menuIds=" + checkKeys.join(','))
-            .then(res => {
-              this.$message('操作成功');
-              this.load();
-            }).catch(e => {
-             this.$message('操作成功');
-            console.log(checkKeys);
-            this.batchDeleteFromTree(this.menuTree, checkKeys);
-          })
-        });
+          var menuIds = checkKeys.join(",");
+
+          _self.$fetch.api_system.batchDelMenu({"menuIds":menuIds})
+            .then(({msg}) => {
+              _self.$message.success(msg)
+              _self.get_table_data();
+            })
+            .catch(() => {
+
+            })
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });;
 
       },
       handleNodeClick(data){
@@ -196,6 +209,8 @@
         _self.form.name = data.name;
         _self.form.id = data.id;
         _self.form.pid = data.pid;
+        _self.form.icon = data.icon;
+        _self.form.path = data.path;
         var temp = [];
         if(data.child.length>0){
           if(_self.parentMenu.length>0){
@@ -214,23 +229,18 @@
       onSubmit(){
         var _self = this;
         _self.on_submit_loading = true
-        _self.$fetch.api_system.saveMenu(_self.form)
-          .then(({msg}) => {
-            _self.$message.success(msg)
-            _self.on_submit_loading = false;
+        _self.$refs.form.validate((valid) =>{
+          if (!valid) return false
+          _self.$fetch.api_system.saveMenu(_self.form)
+            .then(({msg}) => {
+              _self.$message.success(msg)
+              _self.on_submit_loading = false;
 
-            _self.get_table_data();
-          })
-          .catch(() => {
+              _self.get_table_data();
+            })
+            .catch(() => {
 
-          })
-      },
-      load(){
-        axios.get('http://localhost:8080/static/data.json')
-          .then(res => {
-            this.menuTree = res.data.menuList;
-          }).catch((error) => {
-           console.log(error)
+            })
         })
       }
     }
@@ -253,6 +263,9 @@
   .select-tree .is-empty i:hover{
     background-color: #0d6aad;
     color: #ffffff;
+  }
+  .el-form-item__content .el-form-item__error{
+    position:static;
   }
 
 </style>

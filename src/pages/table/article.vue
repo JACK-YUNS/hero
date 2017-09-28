@@ -14,19 +14,19 @@
 			    <el-input v-model="formInline.title" placeholder="请输入标题查询"></el-input>
 			  </el-form-item>
 			  <el-form-item>
-			    <el-select v-model="formInline.assortmentType" placeholder="分类">
+			    <el-select v-model="formInline.assortmentType" placeholder="分类" @change="handleSelect">
 			    	<el-option v-for="item in options" :label="item.label" :value="item.value" :key="item.id"></el-option>
 			    </el-select>
 			  </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.isTop" placeholder="首页">
+          <el-select v-model="formInline.isTop" placeholder="首页" @change="handleSelect">
             <el-option label="全部" value=""></el-option>
             <el-option label="是" value="0"></el-option>
             <el-option label="否" value="1"></el-option>
           </el-select>
         </el-form-item>
 			  <el-form-item>
-			    <el-select v-model="formInline.templateId"  placeholder="模板">
+			    <el-select v-model="formInline.templateId"  placeholder="模板" @change="handleSelect">
 			      <el-option label="全部" value="">全部</el-option>
 			      <el-option v-for="item in template_type" :label="item.title" :value="item.id" :key="item.id"></el-option>
 			    </el-select>
@@ -440,6 +440,9 @@
       on_batch_select(val){
         this.batch_select = val
       },
+      handleSelect() {
+        this.get_table_data();
+      },
       //查询
       onSubmit(){
         this.get_table_data();
@@ -603,20 +606,7 @@
           .catch(() => {
             this.load_data = false
           })
-
       }
-
-    },
-    beforeRouteEnter (to, from, next) {
-      next(vm =>{
-        if(from.path.indexOf("/add")==-1){
-          vm.currentPage=1;
-          vm.formInline = {};
-        }
-        vm.get_table_data();
-        vm.get_template_list();
-      vm.get_theme_id();
-      });
     },
     mounted() {
 
