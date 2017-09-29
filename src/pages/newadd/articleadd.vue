@@ -8,10 +8,10 @@
         <el-col :span="20">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="主标题:" prop="title">
-              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
+              <el-input v-model="form.title" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
             </el-form-item>
             <el-form-item label="副标题:" prop="subtitle">
-              <el-input v-model="form.subtitle" placeholder="请输入内容" style="width: 500px;"></el-input>
+              <el-input v-model="form.subtitle" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
             </el-form-item>
             <el-form-item label="分类：">
               <el-radio-group v-model="form.assortmentType">
@@ -75,7 +75,7 @@
               </el-upload>
             </el-form-item>
             <el-form-item label="文案：">
-              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.articleCopy"></el-input>
+              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.articleCopy" placeholder="请输入内容（最多500字）"  :maxlength=500></el-input>
             </el-form-item>
             <el-form-item label="排序：">
               <el-input-number v-model="sort"  :min="0"  :maxlength=5></el-input-number>
@@ -92,6 +92,7 @@
 </template>
 <script type="text/javascript">
   import {panelTitle} from 'components'
+  import {upload} from 'components'
   //import {quillEditor} from 'vue-quill-editor';
   //import Quill from 'quill'
   import ElCol from "element-ui/packages/col/src/col";
@@ -178,7 +179,9 @@
         load_data: false,
         on_submit_loading: false,
         rules: {
-          name: [{required: true, message: '主标题不能为空', trigger: 'blur'}]
+          title: [{required: true, message: '主标题不能为空', trigger: 'blur'}],
+          subtitle: [{required: true, message: '副标题不能为空', trigger: 'blur'}],
+          articlecopy: [{required: true, message: '文案内容不能为空', trigger: 'blur'}]
         }
       }
     },
