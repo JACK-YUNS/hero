@@ -6,13 +6,13 @@
          element-loading-text="拼命加载中">
       <el-row>
         <el-col :span="16">
-          <el-form ref="form" :model="form" label-width="120px">
+          <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="主标题:" prop="title">
-              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
+              <el-input v-model="form.title" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
             </el-form-item>
 
             <el-form-item label="内容：">
-              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.content"></el-input>
+              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.content" placeholder="请输入内容（最多500字）" :maxlength=500></el-input>
             </el-form-item>
 
             <el-form-item label="排序：">
@@ -42,7 +42,11 @@
         },
         route_id: this.$route.params.id,
         load_data: false,
-        on_submit_loading: false
+        on_submit_loading: false,
+        rules: {
+          title: [{required: true, message: '主标题不能为空', trigger: 'blur'}],
+          content: [{required: true, message: '内容不能为空', trigger: 'blur'}]
+        }
       }
     },
     created(){

@@ -77,6 +77,8 @@ import viewCommentsComponent from 'pages/newadd/viewComments'
 import basicComponent from 'pages/business/basic'
 //goodmorning business
 import goodmorningComponent from 'pages/business/goodmorning'
+//cloud business
+import cloudComponent from 'pages/business/cloud'
 //team business
 import teamComponent from 'pages/business/team'
 //knowledge business
@@ -378,6 +380,14 @@ const routes = [{
       auth: true
     }
   }, {
+    path: '/business/cloud',
+    name: 'businessCloud',
+    component: cloudComponent,
+    meta: {
+      title: "云盘",
+      auth: true
+    }
+  },{
     path: '/business/team',
     name: 'businessTeam',
     component: teamComponent,
