@@ -120,7 +120,7 @@
             <el-button type="primary" size="small"   prop="theme" v-if="props.row.themeId" @click="deltheme(props.row.id)">
               <span>取消专题</span>
             </el-button>
-            <el-button type="primary" size="small"  prop="theme" v-else-if="props.row.themeId && props.row.artice.specialType"  @click="get_theme_type(props.row.id,props.$index)">
+            <el-button type="primary" size="small"  prop="theme" v-else-if="props.row.themeId && props.row.specialType"  @click="get_theme_type(props.row.id,props.$index)">
               <span>设置专题</span>
             </el-button>
             <el-button type="primary" size="small"  prop="theme" :disabled="true" v-else >
