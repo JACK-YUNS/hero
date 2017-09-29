@@ -120,12 +120,12 @@
             <el-button type="primary" size="small"   prop="theme" v-if="props.row.themeId" @click="deltheme(props.row.id)">
               <span>取消专题</span>
             </el-button>
-            <el-button type="primary" size="small"  prop="theme" v-else-if="props.row.specialType =='1' || props.row.specialType =='2' "  @click="get_theme_type(props.row.id,props.$index)">
+            <el-button type="primary" size="small"  prop="theme" v-else  @click="get_theme_type(props.row.id,props.$index)">
               <span>设置专题</span>
             </el-button>
-            <el-button type="primary" size="small"  prop="theme" :disabled="true" v-else >
-              <span>设置专题</span>
-            </el-button>
+            <!--<el-button type="primary" size="small"  prop="theme" :disabled="true" v-else >-->
+              <!--<span>设置专题</span>-->
+            <!--</el-button>-->
             <router-link :to="{name: 'articleAdd',params: {id: props.row.id}}" tag="span">
               <el-button type="primary" size="small" icon="edit">编辑</el-button>
             </router-link>
