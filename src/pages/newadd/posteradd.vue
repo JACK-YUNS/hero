@@ -165,12 +165,12 @@
 //      	}
 
         this.$refs.form.validate((valid) => {
-          var _self = this;
-        var file = this.fileList
-        if(file.length!=1){
-          _self.$message.warning("请上传1张图片");
-          return false;
-        }
+//          var _self = this;
+//        var file = this.fileList
+//        if(file.length!=1){
+//          _self.$message.warning("请上传1张图片");
+//          return false;
+//        }
           if (!valid) return false
           this.on_submit_loading = true
           var myDate=new Date('2020-01-01 00:00:00')

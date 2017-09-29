@@ -288,12 +288,6 @@
           var content = _self.$refs.ue.getUEContent(); // 调用子组件方法
           _self.ruleForm.content = content;
         _self.$refs.ruleForm.validate((valid) => {
-          var _self = this;
-        var file = this.fileList
-        if(file.length!=1){
-          _self.$message.warning("请上传1张图片");
-          return false;
-        }
           if (valid) {
             _self.$fetch.api_knowledge.saveTopic(_self.ruleForm)
               .then(({msg}) => {

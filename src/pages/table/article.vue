@@ -327,7 +327,7 @@
       //获取数据
       get_table_data(){
         var _self = this;
-        _self.load_data = false
+        _self.load_data = true
         _self.$fetch.api_wechat.articleList({
           current: _self.currentPage,
           pageSize: _self.length,

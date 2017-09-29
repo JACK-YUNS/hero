@@ -376,6 +376,20 @@
         this.sort =this.temp.sort;
 
       },
+      create() {
+        this.dialogFormVisible = false
+        console.log(this.temp.id)
+        this.$fetch.api_theme.addTheme({
+          sort:this.sort,
+          id:this.temp.id
+        })
+          .then(response => {
+          this.get_table_data()
+      })
+      .catch(() => {
+          this.load_data = false
+      })
+      }
     },
     mounted() {
 
