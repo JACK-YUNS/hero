@@ -1,112 +1,59 @@
 <template>
-    <el-upload
-      action="//up.qbox.me/"
-      :on-success="handleAvatarSuccessPic"
-      :on-error="handleError"
-      :on-remove="handleRemove"
-      :before-upload="beforeAvatarUpload"
-      :data="postDatapic"
-      :file-list="fileListpic"
-      accept="image/*"
-      list-type="picture-card">
-      <i class="el-icon-plus"></i>
-    </el-upload>
+  <el-upload
+    class="avatar-uploader"
+    :show-file-list="false"
+    action="//up.qbox.me/"
+    :on-success="handleAvatarSuccess"
+    :on-error="handleError"
+    :on-remove="handleRemove"
+    :before-upload="beforeAvatarUpload"
+    :data="postData"
+    :file-list="fileList"
+    accept="image/*"
+  >
+    <img v-if="form.cover" :src="form.cover" class="avatar">
+    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    <div class="el-upload__tip" slot="tip">上传封面图片大小不能超过 3MB!</div>
+  </el-upload>
 </template>
 <script>
-  // import { getToken } from 'api/qiniu'
+//   import { getToken } from 'api/qiniu'
 
   export default {
     name: 'upload',
     props: {
       content: {
-        type: Array
+        type: String
       }
     },
     data() {
       return {
-        fileListpic: [],
-        postDatapic: {token:''},
+        fileList: [],
+        postData: {token:''},
         form: {
-          pics: []
+          cover: ''
         }
       }
     },
-    created(){
-      this.getTokenpic()
-    },
     methods: {
-      getTokenpic(){
-        var _self = this;
-        _self.$fetch.api_qiniu.getToken({
-        })
-          .then(response => {
-            _self.postDatapic = {token : response.data}
-            _self.load_data = false
-          })
-          .catch(() => {
-            _self.load_data = false
-          })
-      },
-      handleAvatarSuccessPic(res, file,fileListpic) {
-        var _self=this;
-        _self.fileListpic = fileListpic;
+      handleAvatarSuccess(res, file,fileList) {
+        this.fileList = fileList;
         //上传成功后在图片框显示图片
-        var imageUrl ='http://resources.kangxun360.com/'+ res.key
-        console.log(_self.fileListpic)
-        var arr = []
-        console.log('qqq')
-        $.each(_self.fileListpic, function(index, value, array) {
-          console.log(value.url)
-          if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
-            arr.push({
-              pic:value.url
-            });
-          }else{
-            arr.push({
-              pic: 'http://resources.kangxun360.com/'+ value.response.key
-            });
-          }
-        });
-//				console.info(arr[0].pic)
-        _self.form.pics = JSON.stringify(arr);
+        this.form.cover ='http://resources.kangxun360.com/'+ res.key
       },
       handleRemove(file,fileList){
-        var _self = this;
-        _self.fileListpic = fileList;
-        var arr = []
-        $.each(_self.fileListpic, function(index, value, array) {
-          if(value.url.indexOf('resources.kangxun360.com') != -1 || value.url.indexOf('7mnn49.com2.z0.glb.clouddn.com')!=-1){
-            arr.push({
-              pic:value.url
-            });
-          }else{
-            arr.push({
-              pic: 'http://resources.kangxun360.com/'+ value.response.key
-            });
-          }
-        });
-        _self.form.pics = JSON.stringify(arr);
+        this.fileList = fileList;
       },
       handleError(res) {
         //显示错误
-        console.log(res)
       },
       beforeAvatarUpload(file) {
-//        let _self = this;
-//        let curr = moment().format('YYYYMMDD').toString()
-//        let prefix = moment(file.lastModified).format('HHmmss').toString()
-//        let suffix = file.name
-//        let key = encodeURI(`${prefix}_${suffix}`)
-//        _self.$fetch.api_qiniu.getToken({key:key
-//        })
-//          .then(response => {
-//            _self.postDatapic ={token:response.data}
-//            console.info(_self.postDatapic)
-//            _self.load_data = false
-//          })
-//          .catch(() => {
-//            _self.load_data = false
-//          })
+        const isLt2M = file.size / 1024 / 1024 < 3;
+
+        if (!isLt2M) {
+          this.$message.error('上传封面图片大小不能超过 3MB!');
+        }
+        return isLt2M;
       }
     }
   }
