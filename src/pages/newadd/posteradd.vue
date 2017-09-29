@@ -122,7 +122,7 @@
 //						this.fileList = arr;
 //						console.log("filelist-size:"+this.fileList.length)
             this.load_data = false
-            console.log(this.fileList)
+//            console.log(this.fileList)
           })
           .catch(() => {
             this.load_data = false

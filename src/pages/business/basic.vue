@@ -8,7 +8,22 @@
               <el-tab-pane label="智慧营业区封面" class="area">
               	<el-form ref="form" :model="form" :rules="rules">
                 <el-form-item label="修改封面：">
-	               	<upload></upload>
+	               	<el-upload
+	               		class="avatar-uploader"
+										:show-file-list="false"
+							    	action="//up.qbox.me/"
+							    	:on-success="handleAvatarSuccess"
+							    	:on-error="handleError"
+							    	:on-remove="handleRemove"
+							    	:before-upload="beforeAvatarUpload"
+							    	:data="postData"
+							    	:file-list="fileList"
+                    accept="image/*"
+							    	>
+						    	<img v-if="form.cover" :src="form.cover" class="avatar">
+  								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+						    	<div class="el-upload__tip" slot="tip">上传封面图片大小不能超过 3MB!</div>
+						    </el-upload>
 						    <el-form-item>
 			              <el-button type="success" @click="on_submit_form" :loading="on_submit_loading">保存</el-button>
 		            </el-form-item>
@@ -74,7 +89,6 @@
   import {panelTitle, charts} from 'components'
   import {port_qiniu} from 'common/port_uri'
   import ElCol from "element-ui/packages/col/src/col";
-  import Upload from "../../components/updload/index";
 
   export default{
     data(){
@@ -210,7 +224,6 @@
 
     },
     components: {
-      Upload,
       ElCol,
       panelTitle,
       charts
