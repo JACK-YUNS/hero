@@ -87,7 +87,8 @@
         rules: {
           title: [{required: true, message: '主标题不能为空', trigger: 'blur'}],
           info: [{required: true, message: '专题内容不能为空', trigger: 'blur'}],
-          sort: [{required: true, message: '专题内容不能为空', trigger: 'blur'}]
+          sort: [{required: true, message: '排序不能为空', trigger: 'blur'}],
+          endTime: [{type: 'date', required: true, message: '请选择日期', trigger: 'change'}]
         }
       }
     },

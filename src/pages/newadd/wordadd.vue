@@ -83,7 +83,7 @@
         rules: {
           title: [{required: true, message: '主标题不能为空', trigger: 'blur'}],
           subtitle: [{required: true, message: '副标题不能为空', trigger: 'blur'}],
-          contents: [{required: true, message: '内容不能为空', trigger: 'blur'}]
+          contents: [{required: true, message: '请输入内容', trigger: 'blur'}]
         }
       }
     },
