@@ -68,10 +68,12 @@ export default{
               }, {
                 title: "早会流程",
                 path: "/business/goodmorning"
-              }, {
-                title: "云盘",
-                path: "/business/cloud"
-              }, {
+              },
+//                {
+//                title: "云盘",
+//                path: "/business/cloud"
+//              },
+                {
                 title: "团队风采",
                 path: "/business/team"
               }]
