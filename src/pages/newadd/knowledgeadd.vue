@@ -8,7 +8,7 @@
         <el-col :span="20">
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 					  <el-form-item label="文章标题" prop="title">
-					    <el-input v-model="ruleForm.title" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
+					    <el-input v-model="ruleForm.title" placeholder="请输入内容（最多30字）" style="width: 500px;" :maxlength=30></el-input>
 					  </el-form-item>
 					 <el-form-item label="文章类型" >
 					    <el-radio-group v-model="ruleForm.type">
@@ -55,7 +55,7 @@
                 </div>
               </div>
             </template>
-              <el-form-item label="封面图片：">
+              <el-form-item label="封面图片：" style="margin-top: 20px">
                 <el-upload
                   class="avatar-uploader"
                   :show-file-list="false"
@@ -288,6 +288,10 @@
           var content = _self.$refs.ue.getUEContent(); // 调用子组件方法
           _self.ruleForm.content = content;
         _self.$refs.ruleForm.validate((valid) => {
+          if(this.ruleForm.cover==''){
+            this.$message.warning("请上传1张封面图片");
+            return false;
+          }
           if (valid) {
             _self.$fetch.api_knowledge.saveTopic(_self.ruleForm)
               .then(({msg}) => {

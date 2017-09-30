@@ -8,7 +8,7 @@
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="专题名称:" prop="title">
-              <el-input v-model="form.title" placeholder="请输入内容(最多10字）" style="width: 500px;" :maxlength=10></el-input>
+              <el-input v-model="form.title" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="专题内容:" prop="info">
               <el-input v-model="form.info" placeholder="请输入内容(最多200字)" type="textarea" :autosize="{ minRows: 8, maxRows: 12}" style="width: 500px;" :maxlength=200></el-input>
@@ -140,13 +140,17 @@
         const isLt2M = file.size / 1024 / 1024 < 3;
 
         if (!isLt2M) {
-          this.$message.error('上传封面图片大小不能超过 3MB!');
+          this.$message.error('上传logo图片大小不能超过 3MB!');
         }
         return isLt2M;
       },
       //提交
       on_submit_form(){
         this.$refs.form.validate((valid) => {
+          if(this.form.pic==''){
+          this.$message.warning("请上传1张logo图片");
+          return false;
+        }
           if (!valid) return false
           this.on_submit_loading = true
           this.$fetch.api_theme.addTheme(this.form)

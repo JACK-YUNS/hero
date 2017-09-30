@@ -11,7 +11,7 @@
               <el-input v-model="form.title" placeholder="请输入内容（最多30字）" style="width: 500px;" :maxlength=30></el-input>
             </el-form-item>
             <el-form-item label="副标题:" prop="subtitle">
-              <el-input v-model="form.subtitle" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
+              <el-input v-model="form.subtitle" placeholder="请输入内容" style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="分类：">
               <el-radio-group v-model="form.assortmentType">

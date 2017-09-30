@@ -8,7 +8,7 @@
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="主标题:" prop="title">
-              <el-input v-model="form.title" placeholder="请输入内容（最多15字）" :maxlength=15 style="width: 500px;"></el-input>
+              <el-input v-model="form.title" placeholder="请输入内容（最多30字）" :maxlength=30 style="width: 500px;"></el-input>
             </el-form-item>
             <el-form-item label="类型：">
 					    <el-radio-group v-model="form.assortmentType">
@@ -165,6 +165,10 @@
 //      	}
 
         this.$refs.form.validate((valid) => {
+            if(this.form.pics==''){
+              this.$message.warning("请上传1张图片");
+              return false;
+            }
 //          var _self = this;
 //        var file = this.fileList
 //        if(file.length!=1){

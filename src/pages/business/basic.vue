@@ -175,6 +175,10 @@
       //提交
       on_submit_form(){
         this.$refs.form.validate((valid) => {
+          if(this.form.cover==''){
+            this.$message.warning("请上传1张封面图片");
+            return false;
+          }
           if (!valid) return false
           this.on_submit_loading = true
           this.$fetch.api_wisdom.updateSettings(this.form)

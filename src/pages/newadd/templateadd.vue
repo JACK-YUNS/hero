@@ -8,10 +8,10 @@
         <el-col :span="16">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="主标题:" prop="title">
-              <el-input v-model="form.title" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
+              <el-input v-model="form.title" placeholder="请输入内容（最多30字）" style="width: 500px;" :maxlength=30></el-input>
             </el-form-item>
             <el-form-item label="副标题:" prop="subTitle">
-              <el-input v-model="form.subTitle" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
+              <el-input v-model="form.subTitle" placeholder="请输入内容" style="width: 500px;" ></el-input>
             </el-form-item>
             <el-form-item label="类型：">
 					    <el-radio-group v-model="form.type">
