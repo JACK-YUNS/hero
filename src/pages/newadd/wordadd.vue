@@ -21,8 +21,8 @@
 					      <el-radio label="4">轻松一刻</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
-            <el-form-item label="内容：">
-					    <el-input v-model="form.contents"  type="textarea" :autosize="{ minRows: 8, maxRows: 12}"  placeholder="请输入内容（最多500字）" :maxlength=500></el-input>
+            <el-form-item label="内容："  prop="contents">
+					    <el-input v-model="form.contents"  type="textarea"  placeholder="请输入内容（最多500字）" :maxlength=500></el-input>
 					  </el-form-item>
 
 					   <el-form-item label="上传图片：">

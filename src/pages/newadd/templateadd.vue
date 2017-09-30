@@ -10,7 +10,7 @@
             <el-form-item label="主标题:" prop="title">
               <el-input v-model="form.title" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
             </el-form-item>
-            <el-form-item label="副标题:" prop="subtitle">
+            <el-form-item label="副标题:" prop="subTitle">
               <el-input v-model="form.subTitle" placeholder="请输入内容（最多15字）" style="width: 500px;" :maxlength=15></el-input>
             </el-form-item>
             <el-form-item label="类型：">

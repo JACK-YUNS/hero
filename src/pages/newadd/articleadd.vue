@@ -74,8 +74,8 @@
                 <i class="el-icon-plus"></i>
               </el-upload>
             </el-form-item>
-            <el-form-item label="文案：">
-              <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 12}" v-model="form.articleCopy" placeholder="请输入内容（最多500字）"  :maxlength=500></el-input>
+            <el-form-item label="文案：" prop="articleCopy">
+              <el-input type="textarea"  v-model="form.articleCopy" placeholder="请输入内容（最多500字）"  :maxlength=500></el-input>
             </el-form-item>
             <el-form-item label="排序：">
               <el-input-number v-model="sort"  :min="0"  :maxlength=5></el-input-number>
