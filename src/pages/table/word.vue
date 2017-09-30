@@ -136,7 +136,7 @@
     <el-dialog title="编辑排序" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
         <el-form-item label="排序">
-          <el-input v-model="sort" @blur="inputsort"></el-input>
+          <el-input-number v-model="sort"  :min="0"  :maxlength=5></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -479,10 +479,6 @@
             _self.load_data = false
           })
       },
-      //跟换排序里面的值
-      inputsort(){
-      },
-
       handleUpdate(row) {
         this.temp = Object.assign({}, row);
         this.dialogStatus = 'update';
@@ -509,7 +505,7 @@
         var myDate=new Date('2020-01-01 00:00:00')
         this.table_data.sort = parseInt(this.sort)+myDate.getTime();
         console.log(this.table_data.sort )
-        this.$fetch.api_wechat.saveImage({
+        this.$fetch.api_wechat.imageSort ({
           sort:this.table_data.sort,
           id:this.temp.id
         })

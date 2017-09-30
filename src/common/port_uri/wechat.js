@@ -35,3 +35,9 @@ export const saveTemplate = "/api/wechat/saveTemplate"
 export const delTemplate = "/api/wechat/delTemplate"
 //设置专题
 export const setTheme = "/api/wechat/setTheme"
+//文章排序
+export const articleSort = "/api/wechat/articleSort"
+//海报排序
+export const posterSort = "/api/wechat/posterSort"
+//金句排序
+export const imageSort = "/api/wechat/imageSort"

@@ -76,7 +76,7 @@
     <el-dialog title="编辑排序" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
         <el-form-item label="排序">
-          <el-input v-model="sort" @blur="inputsort"></el-input>
+          <el-input-number v-model="sort"  :min="0"  :maxlength=5></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -257,7 +257,7 @@
               console.log('删除失败')
             }
             var data = {"id":this.currentId,"flag":-1}
-            this.$fetch.api_verbal.newly(data)
+            this.$fetch.api_verbal.verbalModify(data)
               .then(({msg}) => {
                 this.get_table_data()
 //                this.$message.success(msg)
@@ -273,12 +273,6 @@
         this.currentPage = val
         this.get_table_data()
       },
-
-      //跟换排序里面的值
-      inputsort(){
-        console.log(this.sort)
-      },
-
       handleUpdate(row) {
         this.temp = Object.assign({}, row);
         this.dialogStatus = 'update';
@@ -289,7 +283,7 @@
       create() {
         this.dialogFormVisible = false
 //    	console.log(this.temp.id)
-        this.$fetch.api_verbal.newly({
+        this.$fetch.api_verbal.verbalModify({
           sort:this.sort,
           id:this.temp.id
         })

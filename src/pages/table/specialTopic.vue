@@ -125,7 +125,7 @@
     <el-dialog title="编辑排序" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
         <el-form-item label="排序">
-          <el-input v-model="sort" @blur="inputsort"></el-input>
+          <el-input-number v-model="sort"  :min="0"  :maxlength=5></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -364,10 +364,6 @@
           .catch(() => {
           })
       },
-      //跟换排序里面的值
-      inputsort(){
-      },
-
       handleUpdate(row) {
         this.temp = Object.assign({}, row);
         this.dialogStatus = 'update';
@@ -379,7 +375,7 @@
       create() {
         this.dialogFormVisible = false
         console.log(this.temp.id)
-        this.$fetch.api_theme.addTheme({
+        this.$fetch.api_theme.themeSort({
           sort:this.sort,
           id:this.temp.id
         })

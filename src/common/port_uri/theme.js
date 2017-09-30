@@ -9,3 +9,5 @@ export const delTheme = "/api/theme/delTheme"
 export const addTheme = "/api/theme/addTheme"
 //专题搜索
 export const queryAll = "/api/theme/queryAll"
+//专题排序
+export const themeSort = "/api/theme/themeSort"
