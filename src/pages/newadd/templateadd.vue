@@ -50,7 +50,7 @@
         on_submit_loading: false,
         rules: {
           title: [{required: true, message: '主标题不能为空', trigger: 'blur'}],
-          subTitle: [{required: true, message: '副不能为空', trigger: 'blur'}]
+          subTitle: [{required: true, message: '副标题不能为空', trigger: 'blur'}]
         }
       }
     },

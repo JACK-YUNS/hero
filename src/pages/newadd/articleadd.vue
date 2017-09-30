@@ -181,7 +181,7 @@
         rules: {
           title: [{required: true, message: '主标题不能为空', trigger: 'blur'}],
           subtitle: [{required: true, message: '副标题不能为空', trigger: 'blur'}],
-          articlecopy: [{required: true, message: '文案内容不能为空', trigger: 'blur'}]
+          articleCopy: [{required: true, message: '文案内容不能为空', trigger: 'blur'}]
         }
       }
     },

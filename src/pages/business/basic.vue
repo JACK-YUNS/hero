@@ -164,7 +164,7 @@
       handleError(res) {
       		//显示错误
       },
-      beforeAvatarUpload(file) {
+      beforeAvatarUpload(file                                                                                                                                                                      ) {
         const isLt2M = file.size / 1024 / 1024 < 3;
 
         if (!isLt2M) {
