@@ -12,7 +12,7 @@
             </el-form-item>
 
             <el-form-item label="内容："  prop="content">
-              <el-input type="textarea"  v-model="form.content" placeholder="请输入内容（最多500字）" :maxlength=500></el-input>
+              <el-input type="textarea"  v-model="form.content" placeholder="请输入内容（最多500字）" :autosize="{ minRows: 8, maxRows: 12}" :maxlength=500></el-input>
             </el-form-item>
 
             <el-form-item label="排序：">
