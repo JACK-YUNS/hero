@@ -212,7 +212,7 @@
           .then(() => {
             _self.load_date = true;
             var entity = {id:id,flag:-1};
-            _self.$fetch.api_knowledge.saveTopic(entity)
+            _self.$fetch.api_knowledge.delTopic(entity)
               .then(response =>{
                 try{
                   _self.$message({
