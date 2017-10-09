@@ -22,17 +22,14 @@
   export default {
     name: 'upload',
     props: {
-      content: {
+      cover: {
         type: String
       }
     },
     data() {
       return {
         fileList: [],
-        postData: {token:''},
-        form: {
-          cover: ''
-        }
+        postData: {token:''}
       }
     },
     methods: {
@@ -49,7 +46,6 @@
       },
       beforeAvatarUpload(file) {
         const isLt2M = file.size / 1024 / 1024 < 3;
-
         if (!isLt2M) {
           this.$message.error('上传封面图片大小不能超过 3MB!');
         }
