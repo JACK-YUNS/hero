@@ -12,9 +12,9 @@ export function verbalpage(data) {
 }
 
 //话术新建、删除
-export function newly(data) {
+export function saveVerbal(data) {
   return fetch({
-    url: port_verbal.newly,
+    url: port_verbal.saveVerbal,
     method: 'post',
     data
   })
@@ -27,4 +27,11 @@ export function details(data) {
     data
   })
 }
-
+//话术排序
+export function verbalModify(data) {
+  return fetch({
+    url: port_verbal.verbalModify,
+    method: 'post',
+    data
+  })
+}

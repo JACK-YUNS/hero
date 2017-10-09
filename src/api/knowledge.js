@@ -10,7 +10,7 @@ export function topicList(data) {
     data
   })
 }
-//save
+//新增，更新
 export function saveTopic(data) {
   return fetch({
     url: port_knowledge.saveTopic,
@@ -54,6 +54,14 @@ export function delReply(data) {
 export function getTopicComment(data) {
   return fetch({
     url: port_knowledge.getTopicComment,
+    method: 'post',
+    data
+  })
+}
+//删除
+export function delTopic(data) {
+  return fetch({
+    url: port_knowledge.delTopic,
     method: 'post',
     data
   })

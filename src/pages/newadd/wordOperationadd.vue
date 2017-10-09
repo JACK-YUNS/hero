@@ -78,7 +78,7 @@
           if (!valid) return false
         this.on_submit_loading = true
         this.form.flag=0
-        this.$fetch.api_verbal.newly(this.form)
+        this.$fetch.api_verbal.saveVerbal(this.form)
           .then(({msg}) => {
           this.$message.success(msg)
         setTimeout(this.$router.back(), 500)

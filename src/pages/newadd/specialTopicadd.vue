@@ -151,6 +151,13 @@
           this.$message.warning("请上传1张logo图片");
           return false;
         }
+        if(this.form.type==2){
+              if(this.form.endTime=='' || this.form.endTime==null){
+                this.$message.warning("请选择结束时间");
+                return false;
+              }
+
+        }
           if (!valid) return false
           this.on_submit_loading = true
           this.$fetch.api_theme.addTheme(this.form)

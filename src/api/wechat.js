@@ -156,3 +156,27 @@ export function setTheme(data) {
     data
   })
 }
+//文章排序
+export function articleSort(data) {
+  return fetch({
+    url: port_wechat.articleSort,
+    method: 'post',
+    data
+  })
+}
+//海报排序
+export function posterSort(data) {
+  return fetch({
+    url: port_wechat.posterSort,
+    method: 'post',
+    data
+  })
+}
+//金句排序
+export function imageSort(data) {
+  return fetch({
+    url: port_wechat.imageSort,
+    method: 'post',
+    data
+  })
+}

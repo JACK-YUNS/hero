@@ -42,3 +42,11 @@ export function queryAll(data) {
     data
   })
 }
+//专题排序
+export function themeSort(data) {
+  return fetch({
+    url: port_theme.themeSort,
+    method: 'post',
+    data
+  })
+}
