@@ -23,6 +23,7 @@ import * as port_verbal from './verbal'
 import * as port_feedback from './feedback'
 import * as port_system from './system'
 import * as port_theme from './theme'
+import * as port_cloudDisk from './cloudDisk'
 
 export {
   port_code,
@@ -38,5 +39,6 @@ export {
   port_verbal,
   port_feedback,
   port_system,
-  port_theme
+  port_theme,
+  port_cloudDisk
 }

@@ -22,6 +22,7 @@ import * as api_verbal from './verbal'
 import * as api_feedback from './feedback'
 import * as api_system from './system'
 import * as api_theme from './theme'
+import * as api_cloudDisk from './cloudDisk'
 
 const apiObj = {
   api_file,
@@ -36,7 +37,8 @@ const apiObj = {
   api_verbal,
   api_feedback,
   api_system,
-  api_theme
+  api_theme,
+  api_cloudDisk
 }
 
 const install = function (Vue) {

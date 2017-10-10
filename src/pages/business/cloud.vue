@@ -9,9 +9,21 @@
       </router-link>-->
     </panel-title>
     <div class="panel-body">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form :inline="true" class="demo-form-inline">
         <el-form-item>
-          <el-button type="primary" @click="onSubmit" :loading="on_submit_loading" style="float: left">上传资料</el-button>
+          <el-upload
+            ref="upload"
+            action="//up.qbox.me/"
+            :on-success="handleAvatarSuccess"
+            :on-error="handleError"
+            :before-upload="beforeAvatarUpload"
+            :data="postData"
+            accept="*/*"
+            multiple
+            style="float: left">
+            <el-button type="primary">上传资料</el-button>
+          </el-upload>
+
           <div style="float: left;font-size: 14px;color: #666666;margin-left: 10px">单份资料不超过20M，支持上传格式：doc(.docx)、ppt(.pptx)、xls(.xlsx)、pdf、txt、png、jpeg、jpg、bmp、gif、tiff</div>
           <!--<router-link :to="{name: 'wordOperationAdd',params: {id: ''}}" tag="span">-->
             <!--<el-button type="success">新建</el-button>-->
@@ -24,6 +36,7 @@
       :data="table_data"
       v-loading="load_data"
       element-loading-text="拼命加载中"
+      v-loading.fullscreen.lock="fullscreenLoading"
       border
       style="width: 100%;">
       <!--<el-table-column
@@ -41,16 +54,16 @@
         :show-overflow-tooltip=true
       >
         <template scope="props">
-          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id}}" tag="span">
-            <span class="link-type">{{props.row.title}}</span>
-          </router-link>
+            <span class="link-type">{{props.row.fileName}}</span>
         </template>
       </el-table-column>
 
       <el-table-column
         label="文件大小"
-        prop="sort"
       >
+        <template scope="props">
+          <span class="link-type">{{props.row.fileSize}} KB</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="aTime"
@@ -63,35 +76,12 @@
       >
 
         <template scope="props">
-          <router-link :to="{name: 'wordOperationAdd',params: {id: props.row.id}}" tag="span">
-            <el-button type="primary" size="small" >下载</el-button>
-          </router-link>
+          <el-button type="primary" size="small" >下载</el-button>
           <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="编辑排序" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="排序">
-          <el-input v-model="sort" @blur="inputsort"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="create(temp.id)">确 定</el-button>
-      </div>
-    </el-dialog>
-
     <bottom-tool-bar>
-      <!--<el-button
-        type="danger"
-        icon="delete"
-        size="small"
-        :disabled="batch_select.length === 0"
-        @click="on_batch_del"
-        slot="handler">
-        <span>批量删除</span>
-      </el-button>-->
       <div slot="page">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -114,31 +104,9 @@
     data(){
 
       return {
-        formInline: {
-          title: '',
-          isTop: '',
-          assortmentType: '',
-          templateId: ''
-        },
+        postData: {token:''},
+        fileList:[],
         on_submit_loading: false,
-        dialogFormVisible: false,
-        template_type: [],
-        dialogStatus: '',
-        dialogPvVisible: false,
-
-        temp: {
-          id: '',
-          importance: 0,
-          remark: '',
-          timestamp: 0,
-          title: '',
-          subtitle:'',
-          type: '',
-          status: 'published'
-        },
-        formLabelWidth: '120px',
-        timeout:  null,
-//    	el: '#test',
         table_data: [],
         //当前页码
         currentPage: 1,
@@ -150,11 +118,7 @@
         load_data: true,
         //批量选择数组
         batch_select: [],
-        //模板类型
-        type:1,
-        currentId:'',
-        sort:''
-
+        fullscreenLoading: false
       }
     },
     components: {
@@ -166,21 +130,10 @@
     },
     created(){
       var _self = this;
+      _self.getToken()
       _self.get_table_data();
     },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        };
-        return statusMap[status]
-      },
-      typeFilter(type) {
-        return calendarTypeKeyValue[type]
-      }
-    },
+
     methods: {
       //时间格式化
       dateFormat:function(row, column) {
@@ -190,11 +143,6 @@
         }
         return moment(date).format("YYYY-MM-DD");
       },
-
-      topFormat:function(row, column) {
-        var isTop = row[column.property];
-        return isTop == 0 ? '是':'否';
-      },
       //刷新
       on_refresh(){
         this.get_table_data()
@@ -203,17 +151,12 @@
       get_table_data(){
         var _self = this;
         _self.load_data = true
-        _self.$fetch.api_verbal.verbalpage({
+        _self.$fetch.api_cloudDisk.cloudList({
           current: _self.currentPage,
-          pageSize: _self.length,
-          title:_self.formInline.title
+          pageSize: _self.length
         })
           .then(response => {
-            var list = response.data.records;
-            $.each(list, function(index, value, array) {
-//						 console.log(list[index].id)
-            });
-            this.table_data =list
+            this.table_data =response.data.records;
             this.currentPage = response.data.current
             this.total = response.data.total
             this.load_data = false
@@ -221,6 +164,17 @@
           .catch(() => {
             this.load_data = false
           })
+      },
+      getToken(){
+        this.$fetch.api_qiniu.getToken({
+        })
+          .then(response => {
+          this.postData = {token : response.data}
+        this.load_data = false
+      })
+      .catch(() => {
+          this.load_data = false
+      })
       },
       //提交
       onSubmit() {
@@ -254,10 +208,9 @@
               console.log('删除失败')
             }
             var data = {"id":this.currentId,"flag":-1}
-            this.$fetch.api_verbal.newly(data)
+            this.$fetch.api_cloudDisk.delFile(data)
               .then(({msg}) => {
                 this.get_table_data()
-//                this.$message.success(msg)
               })
               .catch(() => {
               })
@@ -270,36 +223,49 @@
         this.currentPage = val
         this.get_table_data()
       },
+      savePhoto(){
 
-      //跟换排序里面的值
-      inputsort(){
-        console.log(this.sort)
+        var arr = [];
+        $.each(this.fileList, function(index, value, array) {
+
+          var url = "";
+          if(value.url.indexOf('resources.kangxun360.com') != -1){
+            url = value.url;
+          }else{
+            url = 'https://resources.kangxun360.com/'+ value.response.key;
+          }
+          var fileSize = value.response.fsize/1024
+          var entity = {fileType:value.response.type,path:value.response.key,fileSize:fileSize,fileName:value.name,width:value.response.w,height:value.response.h,flag:0};
+
+          arr.push(entity);
+
+        });
+        this.fileList = [];
+        //去保存
+        this.$fetch.api_cloudDisk.addFile(arr);
+        setTimeout(()=>{
+            this.get_table_data();
+          },1000);
       },
-
-      handleUpdate(row) {
-        this.temp = Object.assign({}, row);
-        this.dialogStatus = 'update';
-        this.dialogFormVisible = true;
-        this.sort =this.temp.sort;
+      handleAvatarSuccess(res, file,fileList) {
+        this.fileList.push(file);
+        $(".el-upload-list").find("li").remove();
+        this.savePhoto();
+        this.get_table_data();
+      },
+      handleError(res) {
+        //显示错误
 
       },
-      create() {
-        this.dialogFormVisible = false
-//    	console.log(this.temp.id)
-        this.$fetch.api_verbal.newly({
-          sort:this.sort,
-          id:this.temp.id
-        })
-          .then(response => {
-            this.get_table_data()
-          })
-          .catch(() => {
-            this.load_data = false
-          })
+      beforeAvatarUpload(file) {
+        const isLt2M = file.size / 1024 / 1024 < 20;
 
-      }
+        if (!isLt2M) {
+          this.$message.error('上传文件大小不能超过 20MB!');
+        }
+        return isLt2M;
+      },
     },
-
     mounted() {
 
     }
