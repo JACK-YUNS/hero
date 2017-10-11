@@ -5,3 +5,5 @@ export const cloudList = "/api/cloudDisk/cloudList"
 export const addFile = "/api/cloudDisk/addFile"
 //云盘文件删除
 export const delFile = "/api/cloudDisk/delFile"
+//云盘文件下载
+export const downloadFile = "/api/cloudDisk/downloadFile"

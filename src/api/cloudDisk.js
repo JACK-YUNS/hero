@@ -26,3 +26,11 @@ export function delFile(data) {
     data
   })
 }
+//云盘文件下载
+export function downloadFile(data) {
+  return fetch({
+    url: port_cloudDisk.downloadFile,
+    method: 'post',
+    data
+  })
+}

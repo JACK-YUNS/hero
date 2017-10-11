@@ -54,7 +54,7 @@
         :show-overflow-tooltip=true
       >
         <template scope="props">
-            <span class="link-type">{{props.row.fileName}}</span>
+            <span>{{props.row.fileName}}</span>
         </template>
       </el-table-column>
 
@@ -62,13 +62,14 @@
         label="文件大小"
       >
         <template scope="props">
-          <span class="link-type">{{props.row.fileSize}} KB</span>
+          <span v-if="(props.row.fileSize/1024/1024).toFixed(2)>1">{{(props.row.fileSize/1024/1024).toFixed(2)}} MB</span>
+          <span v-else>{{(props.row.fileSize/1024).toFixed(2)}} KB</span>
         </template>
       </el-table-column>
       <el-table-column
         prop="aTime"
         :formatter="dateFormat"
-        label="时间">
+        label="上传时间">
       </el-table-column>
       <el-table-column
         label="操作"
@@ -76,7 +77,7 @@
       >
 
         <template scope="props">
-          <el-button type="primary" size="small" >下载</el-button>
+          <el-button type="primary" size="small" @click="download(props.$index,props.row.id)">下载</el-button>
           <el-button type="danger" size="small" icon="delete" @click="delete_data(props.$index,props.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -223,35 +224,35 @@
         this.currentPage = val
         this.get_table_data()
       },
-      savePhoto(){
-
+      savecloudDisk(){
         var arr = [];
         $.each(this.fileList, function(index, value, array) {
-
           var url = "";
           if(value.url.indexOf('resources.kangxun360.com') != -1){
             url = value.url;
           }else{
-            url = 'https://resources.kangxun360.com/'+ value.response.key;
+            url = 'https://resources.kangxun360.com/'+ value.response.key + '?attname='+ value.name;
           }
-          var fileSize = value.response.fsize/1024
-          var entity = {fileType:value.response.type,path:value.response.key,fileSize:fileSize,fileName:value.name,width:value.response.w,height:value.response.h,flag:0};
-
+          var fileSize = value.response.fsize;
+//          if((fileSize/1024/1024).toFixed(2)>0){
+//              fileSize = (fileSize/1024/1024).toFixed(2)
+//          }else{
+//            fileSize = (fileSize/1024).toFixed(2)
+//          }
+          var entity = {fileType:value.response.type,path:url,fileSize:fileSize,fileName:value.name,width:value.response.w,height:value.response.h,flag:0};
           arr.push(entity);
-
         });
         this.fileList = [];
         //去保存
         this.$fetch.api_cloudDisk.addFile(arr);
         setTimeout(()=>{
             this.get_table_data();
-          },1000);
+          },500);
       },
       handleAvatarSuccess(res, file,fileList) {
         this.fileList.push(file);
         $(".el-upload-list").find("li").remove();
-        this.savePhoto();
-        this.get_table_data();
+        this.savecloudDisk();
       },
       handleError(res) {
         //显示错误
@@ -259,11 +260,23 @@
       },
       beforeAvatarUpload(file) {
         const isLt2M = file.size / 1024 / 1024 < 20;
-
         if (!isLt2M) {
           this.$message.error('上传文件大小不能超过 20MB!');
         }
         return isLt2M;
+      },
+      download(item,id){
+        this.$fetch.api_cloudDisk.downloadFile({
+          id:id
+        })
+          .then(response => {
+            this.path = response.data.path;
+            console.log(this.path)
+            window.open(this.path)
+      })
+      .catch(() => {
+          this.load_data = false
+      })
       },
     },
     mounted() {
